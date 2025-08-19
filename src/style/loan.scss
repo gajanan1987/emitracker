@@ -1,0 +1,75 @@
+.loan-tracker {
+ font-family: 'Poppins', sans-serif;
+ max-width: 900px;
+ margin: auto;
+ padding: 20px;
+ background: #f7f9fc;
+ border-radius: 12px;
+ box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+
+ h1 {
+  text-align: center;
+  color: #2a4d69;
+ }
+
+ .form {
+  display: grid;
+  gap: 10px;
+  margin-bottom: 20px;
+
+  input,
+  button {
+   padding: 10px;
+   border: 1px solid #ddd;
+   border-radius: 6px;
+  }
+
+  button {
+   background: #4cafef;
+   color: white;
+   border: none;
+   cursor: pointer;
+   font-weight: bold;
+
+   &:hover {
+    background: #3b9be0;
+   }
+  }
+ }
+
+ .summary {
+  background: #fff;
+  padding: 15px;
+  border-radius: 8px;
+  margin-bottom: 20px;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.05);
+
+  p {
+   margin: 4px 0;
+  }
+ }
+
+ table {
+  width: 100%;
+  border-collapse: collapse;
+  background: white;
+  border-radius: 8px;
+  overflow: hidden;
+
+  th,
+  td {
+   padding: 10px;
+   border-bottom: 1px solid #eee;
+   text-align: center;
+  }
+
+  th {
+   background: #4cafef;
+   color: white;
+  }
+
+  tr:nth-child(even) {
+   background: #f9f9f9;
+  }
+ }
+}
