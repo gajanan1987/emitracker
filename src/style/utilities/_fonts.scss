@@ -1,0 +1,68 @@
+// @mixin font-cust($font-family, $file-path) {
+// 	@font-face {
+// 		font-family: $font-family;
+// 		src: url("#{$file-path}.woff2") format("woff2");
+// 		font-display: swap;
+// 	}
+// }
+
+// @include font-cust(JansonText55Roman, "../../public/fonts/JansonText55Roman");
+// @include font-cust(JansonText56Italic, "../../public/fonts/JansonText56Italic");
+// @include font-cust(PPNeueMontreal-Medium, "../../public/fonts/PPNeueMontreal-Medium");
+// @include font-cust(PPNeueMontreal-Book, "../../public/fonts/PPNeueMontreal-Book");
+
+// @mixin JSON {
+// 	font-family: "JansonText55Roman";
+// 	font-weight: normal;
+// }
+// @mixin JSON-i {
+// 	font-family: "JansonText56Italic";
+// 	font-weight: normal;
+// }
+// @mixin P-Medium {
+// 	font-family: "PPNeueMontreal-Medium";
+// 	font-weight: normal;
+// }
+
+// @mixin P-book {
+// 	font-family: "PPNeueMontreal-Book";
+// 	font-weight: normal;
+// }
+
+
+@import url('https://fonts.googleapis.com/css?family=Nunito+Sans:300,400,400i,600,700');
+
+@mixin font-face($font-weight, $font-style) {
+	font-family: 'Nunito Sans', sans-serif;
+	font-weight: $font-weight;
+	font-style: $font-style;
+	// font-display: swap;
+}
+
+@mixin Font-Black {
+	@include font-face(900, normal);
+}
+
+@mixin Font-Bold {
+	@include font-face(700, normal);
+}
+
+@mixin Font-Medium {
+	@include font-face(500, normal);
+}
+
+@mixin Font-Semibold {
+	@include font-face(500, normal);
+}
+
+@mixin Font-Regular {
+	@include font-face(400, normal);
+}
+
+@mixin Font-Italic {
+	@include font-face(400, italic);
+}
+
+@mixin Font-Light {
+	@include font-face(300, normal);
+}

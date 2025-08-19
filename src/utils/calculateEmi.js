@@ -73,6 +73,7 @@ export const calculateEMI = (op) => {
   const summery = {
     emi: round(emi),
     interest_rate,
+    loan_amount,
     tenure_months,
     totalInterest: round(totalInterest),
     totalPayment: round(P + totalInterest),

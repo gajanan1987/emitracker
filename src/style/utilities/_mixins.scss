@@ -1,0 +1,34 @@
+$breakpoints: (
+	"p-320": 320px,
+	"p-400": 400px,
+	"p-480": 480px,
+	"p-576": 576px,
+	"p-641": 641px,
+	"t-768": 768px,
+	"t-992": 992px,
+	"t-1024": 1024px,
+	"t-1025": 1025px,
+	"d-1200": 1200px,
+	"d-1248": 1248px,
+	"d-1280": 1280px,
+	"d-1302": 1302px,
+	"d-1336": 1336px,
+	"d-1366": 1366px,
+	"d-1440": 1440px,
+	"d-1680": 1680px,
+	"d-1920": 1920px,
+	"d-1921": 1921px,
+	"4k-2561": 2561px,
+	"4k-3840": 3840px,
+);
+@mixin mq($width, $type: min) {
+	@if map_has_key($breakpoints, $width) {
+		$width: map_get($breakpoints, $width);
+		@if $type == max {
+			$width: $width - 1px;
+		}
+		@media only screen and (#{$type}-width: $width) {
+			@content;
+		}
+	}
+}

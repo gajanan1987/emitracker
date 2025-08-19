@@ -3,7 +3,7 @@ import CustomModal from "../components/CustomModal";
 import { getAllLoanDetails, getUserLoan } from "../services/api";
 import AddLoan from "./AddLoan";
 import LoanCard from "../components/Loan/LoanCard";
-import "./../style/Loan/loan-card.scss";
+import "./../style/Loan/addLoan.scss";
 import { useAuth } from "../contex/Contex";
 
 const Dashboard = () => {
@@ -20,6 +20,7 @@ const Dashboard = () => {
     if (!user) return;
     async function test() {
       // const data = await getAllLoanDetails();
+      console.log("🚀 ~ test ~ user.id:", user.id);
       const data = await getUserLoan(user.id);
       console.log("🚀 ~ test ~ data:", data);
       setData(data);

@@ -1,0 +1,263 @@
+:root {
+	font-size: 100%;
+}
+
+body {
+	font-display: auto;
+	-webkit-overflow-scrolling: touch;
+	-webkit-font-smoothing: antialiased;
+	-moz-osx-font-smoothing: grayscale;
+	scroll-behavior: smooth;
+	color: var(--color-dark-brown);
+	@include Font-Regular;
+	overflow: initial !important;
+
+	.common-page {
+		display: flex;
+		flex-direction: column;
+		min-height: 100vh;
+		padding: 0 14px 14px;
+
+		@include mq("t-992", "max") {
+			padding: 0 8px 8px;
+		}
+
+		header {
+			&.padding-next {
+				+.body-content {
+					// padding-top: var(--header-height);
+					// padding-top: 239px;
+					padding-top: 234px;
+
+					@include mq("d-1200", "max") {
+						// padding-top: 154px;
+						padding-top: 247px;
+					}
+
+					@include mq("t-992", "max") {
+						// padding-top: 154px;
+						padding-top: 144px;
+					}
+				}
+			}
+		}
+
+		main {
+			flex: 1;
+		}
+
+		footer {}
+	}
+}
+
+a {
+	text-decoration: none;
+	cursor: pointer;
+
+	&:focus,
+	&:hover,
+	&:active {
+		outline: none;
+	}
+}
+
+img {
+	.max-100 {
+		max-width: 100%;
+	}
+
+	.w-100 {
+		width: 100%;
+	}
+}
+
+.newsletter {
+	background: var(--color-light-pink);
+}
+
+.table-reponsive {
+	overflow-x: hidden;
+
+	@include mq("t-768", "max") {
+		margin-right: -24px;
+		overflow-x: scroll;
+	}
+}
+
+table {
+	table-layout: fixed;
+	border-collapse: collapse;
+	width: 100%;
+	margin-bottom: 16px;
+
+	@include mq("t-768", "max") {
+		margin-bottom: 0px;
+		display: block;
+		max-width: -moz-fit-content;
+		max-width: fit-content;
+		// overflow-x: auto;
+		// white-space: nowrap;
+	}
+}
+
+td,
+th {
+	min-width: 170px;
+	border: 1px solid var(--color-pink);
+	// width: 50%;
+	padding: 20px 24px;
+	font-size: 14px;
+	line-height: 1.43;
+	letter-spacing: normal;
+	vertical-align: top;
+
+	@include mq("t-768", "max") {
+		min-width: 327px;
+		padding: 14px;
+		font-size: 12px;
+		line-height: 1.5;
+		letter-spacing: normal;
+	}
+}
+
+th {
+	line-height: 1.14;
+	letter-spacing: 0.51px;
+	text-transform: uppercase;
+	background-color: var(--color-light-pink);
+	white-space: nowrap;
+
+	@include mq("t-768", "max") {
+		padding: 14px;
+		font-size: 12px;
+		line-height: 1.33;
+		letter-spacing: 0.44px;
+	}
+}
+
+.p-relative {
+	position: relative;
+}
+
+//PAGE- MAIN HEADING
+
+.page-heading {
+	text-align: center;
+	margin: 55px 36px 80px;
+
+
+	@include mq("d-1200", "max") {
+		font-size: 48px;
+		line-height: 1.17;
+		letter-spacing: -3px;
+		margin: 32px 18px 64px;
+	}
+
+	@include mq("t-992", "max") {
+		font-size: 40px;
+		line-height: 1.2;
+		letter-spacing: -2.5px;
+		margin: 24px 16px 48px;
+	}
+}
+
+.hr-lines {
+	position: relative;
+
+	&::before {
+		content: " ";
+		height: 2px;
+		width: 30%;
+		background: var(--color-pink);
+		display: block;
+		position: absolute;
+		top: 35%;
+		left: 0;
+
+		@include mq("t-768", "max") {
+			width: 50px;
+		}
+	}
+
+	&::after {
+		content: " ";
+		height: 2px;
+		width: 30%;
+		background: var(--color-pink);
+		display: block;
+		position: absolute;
+		top: 35%;
+		right: 0;
+
+		@include mq("t-768", "max") {
+			width: 50px;
+		}
+	}
+}
+
+.content-div {
+	&.f-14 {
+		font-size: 14px;
+		line-height: 1.43;
+		letter-spacing: normal;
+
+		@include mq("t-992", "max") {
+			font-size: 12px;
+			line-height: 1.5;
+			letter-spacing: normal;
+		}
+	}
+}
+
+p {
+	&.f-14 {
+		font-size: 14px;
+		line-height: 1.43;
+		letter-spacing: normal;
+
+		@include mq("t-992", "max") {
+			font-size: 12px;
+			line-height: 1.5;
+			letter-spacing: normal;
+		}
+	}
+}
+
+input {
+	touch-action: manipulation;
+}
+
+.loader {
+	width: 32px;
+	height: 32px;
+	border: 2px solid var(--color-pink);
+	border-radius: 50%;
+	display: inline-block;
+	position: relative;
+	box-sizing: border-box;
+	animation: rotation 1s linear infinite;
+}
+
+.loader::after {
+	content: '';
+	box-sizing: border-box;
+	position: absolute;
+	left: 50%;
+	top: 50%;
+	transform: translate(-50%, -50%);
+	width: 39px;
+	height: 39px;
+	border-radius: 50%;
+	border: 2px solid transparent;
+	border-bottom-color: var(--color-dark-brown);
+}
+
+@keyframes rotation {
+	0% {
+		transform: rotate(0deg);
+	}
+
+	100% {
+		transform: rotate(360deg);
+	}
+}

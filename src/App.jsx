@@ -7,7 +7,9 @@ function App() {
     <>
       <AuthProvider>
         <Header />
-        <AppRoutes />
+        <div className="conatiner-common">
+          <AppRoutes />
+        </div>
       </AuthProvider>
     </>
   );

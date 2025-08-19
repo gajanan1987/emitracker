@@ -1,0 +1,45 @@
+.container-880 {
+	// padding-top: 40px;
+	max-width: 880px;
+	margin: 0 auto;
+
+	@media(min-width: 1441px) {
+		max-width: 1140px;
+	}
+
+	@include mq("t-992", "max") {
+		// padding: 0 16px;
+		margin: 0 16px;
+		max-width: 100%;
+	}
+}
+
+.container-1340 {
+	// padding-top: 40px;
+	max-width: 1340px;
+	margin: 0 auto;
+
+	@media(min-width: 1441px) {
+		max-width: 1440px;
+	}
+}
+
+.container-1412 {
+	// padding-top: 40px;
+	max-width: 1412px;
+	margin: 0 auto;
+}
+
+.conatiner-common {
+	width: 100%;
+	margin: 0 auto;
+	padding: 0 15px;
+
+	@media(min-width: 1441px) {
+		max-width: 1440px;
+	}
+
+	// @include mq('4k-1921', 'min') {
+	// 	background: red;
+	// }
+}

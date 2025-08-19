@@ -157,7 +157,7 @@
 
 import { useState } from "react";
 import { addMonths, format } from "date-fns";
-import "./../style/loanTracker.scss";
+import "./../style/loanCalculator.scss";
 
 export default function LoanCalculator() {
   const [loanAmount, setLoanAmount] = useState("");

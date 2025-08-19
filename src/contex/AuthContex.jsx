@@ -6,6 +6,7 @@ export const AuthContex = createContext();
 export const AuthProvider = ({ children }) => {
   const [user, setUser] = useState(null);
   const [loading, setLoading] = useState(true);
+  console.log("🚀 ~ AuthProvider ~ loading:", loading);
 
   // ---- Email Sign In ----
   const signIn = async (user, pwd) => {

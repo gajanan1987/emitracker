@@ -1,10 +1,11 @@
 import { useState, useEffect } from "react";
 import { useAuth } from "../contex/Contex";
 import { useNavigate } from "react-router";
-import { getAllLoanDetails } from "../services/api";
+import { getAllLoanDetails, getUser } from "../services/api";
 
 const Account = () => {
   const [loginUser, setUser] = useState(null);
+  console.log("🚀 ~ Account ~ loginUser:", loginUser);
 
   const navigatin = useNavigate();
 
@@ -19,6 +20,12 @@ const Account = () => {
     if (user) {
       setUser(user);
     }
+
+    async function ttt() {
+      const xxx = await getUser();
+      console.log("🚀 ~ ttt ~ xxx:", xxx);
+    }
+    ttt();
   }, [user]);
 
   // useEffect(() => {
