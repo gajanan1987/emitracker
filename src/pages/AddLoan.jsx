@@ -3,6 +3,7 @@ import { addMonths, format } from "date-fns";
 import "./../style/loanTracker.scss";
 import { addLoan } from "../services/api";
 import { useAuth } from "../contex/Contex";
+import { calculateEMI } from "../utils/calculateEmi";
 
 export default function AddLoan() {
   const [loanAmount, setLoanAmount] = useState(3000000);
@@ -21,92 +22,92 @@ export default function AddLoan() {
     user: { id },
   } = useAuth();
 
-  const round = (num) => Math.round(num); // ✅ rounding helper
+  // const round = (num) => Math.round(num); // ✅ rounding helper
 
-  const calculateEMI = () => {
-    const P = parseFloat(loanAmount);
-    const annualRate = parseFloat(interestRate);
-    const n = parseInt(tenure);
-    const r = annualRate / 12 / 100;
+  // const calculateEMI = () => {
+  //   const P = parseFloat(loanAmount);
+  //   const annualRate = parseFloat(interestRate);
+  //   const n = parseInt(tenure);
+  //   const r = annualRate / 12 / 100;
 
-    if (!P || !annualRate || !n || !loanDate || !emiDate) {
-      alert("Please fill all fields correctly!");
-      return;
-    }
+  //   if (!P || !annualRate || !n || !loanDate || !emiDate) {
+  //     alert("Please fill all fields correctly!");
+  //     return;
+  //   }
 
-    const loanStart = new Date(loanDate);
-    const firstEmi = new Date(emiDate);
+  //   const loanStart = new Date(loanDate);
+  //   const firstEmi = new Date(emiDate);
 
-    // ✅ validation: first EMI date should be after loan start date
-    if (firstEmi <= loanStart) {
-      alert("First EMI Date must be greater than Loan Start Date!");
-      return;
-    }
+  //   // ✅ validation: first EMI date should be after loan start date
+  //   if (firstEmi <= loanStart) {
+  //     alert("First EMI Date must be greater than Loan Start Date!");
+  //     return;
+  //   }
 
-    // EMI Formula
-    const emi = (P * r * Math.pow(1 + r, n)) / (Math.pow(1 + r, n) - 1);
-    setEmi(round(emi));
-    // Amortization
-    let balance = P;
-    let scheduleArr = [];
-    let totalInterest = 0;
-    let totalPrincipal = 0;
+  //   // EMI Formula
+  //   const emi = (P * r * Math.pow(1 + r, n)) / (Math.pow(1 + r, n) - 1);
+  //   setEmi(round(emi));
+  //   // Amortization
+  //   let balance = P;
+  //   let scheduleArr = [];
+  //   let totalInterest = 0;
+  //   let totalPrincipal = 0;
 
-    let startDate = firstEmi;
+  //   let startDate = firstEmi;
 
-    for (let i = 1; i <= n; i++) {
-      const interestForMonth = balance * r;
-      const principalForMonth = emi - interestForMonth;
-      balance -= principalForMonth;
+  //   for (let i = 1; i <= n; i++) {
+  //     const interestForMonth = balance * r;
+  //     const principalForMonth = emi - interestForMonth;
+  //     balance -= principalForMonth;
 
-      totalInterest += interestForMonth;
-      totalPrincipal += principalForMonth;
+  //     totalInterest += interestForMonth;
+  //     totalPrincipal += principalForMonth;
 
-      const emiDueDate = addMonths(startDate, i - 1);
+  //     const emiDueDate = addMonths(startDate, i - 1);
 
-      scheduleArr.push({
-        month: format(emiDueDate, "dd MMM yyyy"),
-        emi: round(emi),
-        principal: round(principalForMonth),
-        interest: round(interestForMonth),
-        balance: balance > 0 ? round(balance) : 0,
-        date: emiDueDate,
-      });
-    }
+  //     scheduleArr.push({
+  //       month: format(emiDueDate, "dd MMM yyyy"),
+  //       emi: round(emi),
+  //       principal: round(principalForMonth),
+  //       interest: round(interestForMonth),
+  //       balance: balance > 0 ? round(balance) : 0,
+  //       date: emiDueDate,
+  //     });
+  //   }
 
-    // Till date EMIs paid
-    const today = new Date();
-    const paid = scheduleArr.filter((row) => row.date <= today).length;
-    const remaining = n - paid;
+  //   // Till date EMIs paid
+  //   const today = new Date();
+  //   const paid = scheduleArr.filter((row) => row.date <= today).length;
+  //   const remaining = n - paid;
 
-    const paidPrincipal = scheduleArr
-      .slice(0, paid)
-      .reduce((sum, row) => sum + row.principal, 0);
+  //   const paidPrincipal = scheduleArr
+  //     .slice(0, paid)
+  //     .reduce((sum, row) => sum + row.principal, 0);
 
-    const paidInterest = scheduleArr
-      .slice(0, paid)
-      .reduce((sum, row) => sum + row.interest, 0);
+  //   const paidInterest = scheduleArr
+  //     .slice(0, paid)
+  //     .reduce((sum, row) => sum + row.interest, 0);
 
-    const remainingPrincipal = round(P - paidPrincipal);
-    const remainingInterest = round(totalInterest - paidInterest);
+  //   const remainingPrincipal = round(P - paidPrincipal);
+  //   const remainingInterest = round(totalInterest - paidInterest);
 
-    setSchedule(scheduleArr);
-    setSummary({
-      emi: round(emi),
-      interestRate,
-      tenure,
-      loanDate,
-      emiDate,
-      totalInterest: round(totalInterest),
-      totalPayment: round(P + totalInterest),
-      paid,
-      remaining,
-      paidPrincipal: paidPrincipal,
-      paidInterest: paidInterest,
-      remainingPrincipal,
-      remainingInterest,
-    });
-  };
+  //   setSchedule(scheduleArr);
+  //   setSummary({
+  //     emi: round(emi),
+  //     interestRate,
+  //     tenure,
+  //     loanDate,
+  //     emiDate,
+  //     totalInterest: round(totalInterest),
+  //     totalPayment: round(P + totalInterest),
+  //     paid,
+  //     remaining,
+  //     paidPrincipal: paidPrincipal,
+  //     paidInterest: paidInterest,
+  //     remainingPrincipal,
+  //     remainingInterest,
+  //   });
+  // };
 
   const saveToSupabase = async () => {
     if (!emi) {
@@ -132,6 +133,22 @@ export default function AddLoan() {
     //   alert("Loan saved successfully!");
     //   console.log(data);
     // }
+  };
+
+  const handleClick = () => {
+    const data = [
+      {
+        interest_rate: interestRate,
+        loan_amount: loanAmount,
+        start_date: loanDate,
+        emi_date: emiDate,
+        tenure_months: tenure,
+      },
+    ];
+    const op = calculateEMI(data);
+    setSummary(op[0]);
+    setEmi(op[0].emi);
+    console.log("🚀 ~ handleClick ~ op:", op);
   };
 
   return (
@@ -179,7 +196,7 @@ export default function AddLoan() {
           value={emiDate}
           onChange={(e) => setEmiDate(e.target.value)}
         />
-        <button onClick={calculateEMI}>Calculate</button>
+        <button onClick={handleClick}>Calculate</button>
       </div>
 
       {summary && (
@@ -187,8 +204,8 @@ export default function AddLoan() {
           <h2>Summary</h2>
           <p>Total Amount: ₹{summary.totalPayment - summary.totalInterest}</p>
           <p>Total Interest: ₹{summary.totalInterest}</p>
-          <p>Interest Rate: {summary.interestRate}%</p>
-          <p>Tenure: {summary.tenure} Month</p>
+          <p>Interest Rate: {summary.interest_rate}%</p>
+          <p>Tenure: {summary.tenure_months} Month</p>
 
           <p>-----------------------------------------</p>
           <p>Total Payment with Interest: ₹{summary.totalPayment}</p>
@@ -204,37 +221,6 @@ export default function AddLoan() {
           <button onClick={saveToSupabase}>Save Loan</button>
         </div>
       )}
-      {/* 
-      {schedule.length > 0 && (
-        <table>
-          <thead>
-            <tr>
-              <th>Month</th>
-              <th>EMI</th>
-              <th>Principal</th>
-              <th>Interest</th>
-              <th>Balance</th>
-            </tr>
-          </thead>
-          <tbody>
-            {schedule.map((row, index) => (
-              <tr
-                key={index}
-                style={{
-                  background:
-                    row.date <= new Date() ? "#e0ffe0" : "transparent",
-                }}
-              >
-                <td>{row.month}</td>
-                <td>{row.emi}</td>
-                <td>{row.principal}</td>
-                <td>{row.interest}</td>
-                <td>{row.balance}</td>
-              </tr>
-            ))}
-          </tbody>
-        </table>
-      )} */}
     </div>
   );
 }

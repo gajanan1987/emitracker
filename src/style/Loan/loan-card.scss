@@ -12,3 +12,27 @@
   cursor: pointer;
  }
 }
+
+table {
+ width: 100%;
+ border-collapse: collapse;
+ background: white;
+ border-radius: 8px;
+ overflow: hidden;
+
+ th,
+ td {
+  padding: 10px;
+  border-bottom: 1px solid #eee;
+  text-align: center;
+ }
+
+ th {
+  background: #4cafef;
+  color: white;
+ }
+
+ tr:nth-child(even) {
+  background: #f9f9f9;
+ }
+}

@@ -1,5 +1,4 @@
 import { useEffect, useState } from "react";
-import AddNewLoan from "./AddNewLoan";
 import CustomModal from "../components/CustomModal";
 import { getAllLoanDetails, getUserLoan } from "../services/api";
 import AddLoan from "./AddLoan";
@@ -9,7 +8,6 @@ import { useAuth } from "../contex/Contex";
 
 const Dashboard = () => {
   const [data, setData] = useState([]);
-  console.log("🚀 ~ Dashboard ~ data:", data);
   //cust modal
   const [open, setOpen] = useState(false);
   const onOpenModal = () => setOpen(true);
@@ -17,15 +15,14 @@ const Dashboard = () => {
   //cust modal
 
   const { user } = useAuth();
-  console.log("🚀 ~ Dashboard ~ user:", user);
 
   useEffect(() => {
     if (!user) return;
     async function test() {
       // const data = await getAllLoanDetails();
       const data = await getUserLoan(user.id);
+      console.log("🚀 ~ test ~ data:", data);
       setData(data);
-      // console.log("🚀 ~ Account ~ data:", data);
     }
     test();
   }, [user]);
@@ -40,7 +37,6 @@ const Dashboard = () => {
         onOpenModal={onOpenModal}
         onCloseModal={onCloseModal}
       >
-        {/* <AddNewLoan /> */}
         <AddLoan />
       </CustomModal>
 
