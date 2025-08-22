@@ -5,6 +5,7 @@ import AddLoan from "./AddLoan";
 import LoanCard from "../components/Loan/LoanCard";
 import "./../style/Loan/addLoan.scss";
 import { useAuth } from "../contex/Contex";
+import { Link } from "react-router";
 
 const Dashboard = () => {
   const [data, setData] = useState([]);
@@ -28,25 +29,43 @@ const Dashboard = () => {
     test();
   }, [user]);
   return (
-    <div>
-      <h1>Loan</h1>
-      <div></div>
-      <button onClick={() => onOpenModal()}>Add New Loan</button>
-      <CustomModal
-        open={open}
-        setOpen={setOpen}
-        onOpenModal={onOpenModal}
-        onCloseModal={onCloseModal}
-      >
-        <AddLoan />
-      </CustomModal>
+    <>
+      <div className="home-bg"></div>
+      <div className="home-banner">
+        <h1 className="color-title">
+          Simplifying Loan Management for Everyone
+        </h1>
 
-      <div className="loan-card-wrapper">
-        {data?.map((item) => {
-          return <LoanCard item={item} key={item.id} />;
-        })}
+        <p>
+          Managing loans doesn’t have to be complicated. Our platform makes it
+          easy to:
+        </p>
+        <ul>
+          <li>Track loan applications in real-time</li>
+          <li>Automate EMI schedules and reminders</li>
+          <li>Monitor payments and defaulters with accuracy</li>
+          <li>Get insightful reports and dashboards</li>
+        </ul>
+
+        <CustomModal
+          open={open}
+          setOpen={setOpen}
+          onOpenModal={onOpenModal}
+          onCloseModal={onCloseModal}
+        >
+          <AddLoan />
+        </CustomModal>
+
+        <div className="loan-card-wrapper">
+          {data?.map((item) => {
+            return <LoanCard item={item} key={item.id} />;
+          })}
+        </div>
       </div>
-    </div>
+      <button className="add-new-loan" onClick={() => onOpenModal()}>
+        +
+      </button>
+    </>
   );
 };
 

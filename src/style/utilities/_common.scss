@@ -2,15 +2,22 @@
 	font-size: 100%;
 }
 
+#root {
+	min-height: 100svh;
+	display: flex;
+	flex-direction: column;
+}
+
 body {
 	font-display: auto;
 	-webkit-overflow-scrolling: touch;
 	-webkit-font-smoothing: antialiased;
 	-moz-osx-font-smoothing: grayscale;
 	scroll-behavior: smooth;
-	color: var(--color-dark-brown);
+	color: var(--color-text);
 	@include Font-Regular;
 	overflow: initial !important;
+	font-size: 16px;
 
 	.common-page {
 		display: flex;
@@ -71,9 +78,6 @@ img {
 	}
 }
 
-.newsletter {
-	background: var(--color-light-pink);
-}
 
 .table-reponsive {
 	overflow-x: hidden;
@@ -139,27 +143,6 @@ th {
 	position: relative;
 }
 
-//PAGE- MAIN HEADING
-
-.page-heading {
-	text-align: center;
-	margin: 55px 36px 80px;
-
-
-	@include mq("d-1200", "max") {
-		font-size: 48px;
-		line-height: 1.17;
-		letter-spacing: -3px;
-		margin: 32px 18px 64px;
-	}
-
-	@include mq("t-992", "max") {
-		font-size: 40px;
-		line-height: 1.2;
-		letter-spacing: -2.5px;
-		margin: 24px 16px 48px;
-	}
-}
 
 .hr-lines {
 	position: relative;
@@ -192,72 +175,5 @@ th {
 		@include mq("t-768", "max") {
 			width: 50px;
 		}
-	}
-}
-
-.content-div {
-	&.f-14 {
-		font-size: 14px;
-		line-height: 1.43;
-		letter-spacing: normal;
-
-		@include mq("t-992", "max") {
-			font-size: 12px;
-			line-height: 1.5;
-			letter-spacing: normal;
-		}
-	}
-}
-
-p {
-	&.f-14 {
-		font-size: 14px;
-		line-height: 1.43;
-		letter-spacing: normal;
-
-		@include mq("t-992", "max") {
-			font-size: 12px;
-			line-height: 1.5;
-			letter-spacing: normal;
-		}
-	}
-}
-
-input {
-	touch-action: manipulation;
-}
-
-.loader {
-	width: 32px;
-	height: 32px;
-	border: 2px solid var(--color-pink);
-	border-radius: 50%;
-	display: inline-block;
-	position: relative;
-	box-sizing: border-box;
-	animation: rotation 1s linear infinite;
-}
-
-.loader::after {
-	content: '';
-	box-sizing: border-box;
-	position: absolute;
-	left: 50%;
-	top: 50%;
-	transform: translate(-50%, -50%);
-	width: 39px;
-	height: 39px;
-	border-radius: 50%;
-	border: 2px solid transparent;
-	border-bottom-color: var(--color-dark-brown);
-}
-
-@keyframes rotation {
-	0% {
-		transform: rotate(0deg);
-	}
-
-	100% {
-		transform: rotate(360deg);
 	}
 }

@@ -1,6 +1,7 @@
 import React, { useActionState } from "react";
 import "./../style/signupPage.scss";
 import { useAuth } from "../contex/Contex";
+import { Link } from "react-router";
 
 const SignupPage = () => {
   const [state, formAction, isPending] = useActionState(signupForm, {
@@ -26,20 +27,30 @@ const SignupPage = () => {
   return (
     <div className="signup-container">
       <form className="signup-form" action={formAction}>
-        <h2>Create Account</h2>
+        <h1>Create Account</h1>
 
-        <input type="email" name="email" placeholder="Email" required />
+        <div className="input-wrapper">
+          <input type="email" name="email" placeholder="Email" required />
+        </div>
+        <div className="input-wrapper">
+          <input
+            type="password"
+            name="password"
+            placeholder="Password (min 6 characters)"
+            required
+          />
+        </div>
 
-        <input
-          type="password"
-          name="password"
-          placeholder="Password (min 6 characters)"
-          required
-        />
-
-        <button disabled={isPending} type="submit">
+        <button className="color-primary" disabled={isPending} type="submit">
           {isPending ? "Loading...." : "Sign Up"}
         </button>
+
+        <p className="no-account">
+          Already have an account?{" "}
+          <Link to="/login" style={{ textDecoration: "underline" }}>
+            Sign In
+          </Link>
+        </p>
       </form>
     </div>
   );

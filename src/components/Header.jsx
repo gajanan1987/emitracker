@@ -1,40 +1,30 @@
 import { Link, NavLink } from "react-router";
 import "./../style/header.scss";
 import { useAuth } from "../contex/Contex";
+import logo from "../../public/logo.svg";
 
 const Header = () => {
   const { user } = useAuth();
   return (
     <nav className="header-nav">
       <NavLink to="/" exact="true">
-        EMI Tracker
+        <img src={logo} />
       </NavLink>
       <ul className="nav-links">
         <li>
-          <NavLink to="/loancalculator" activeclassname="active">
-            Loan Calculator
-          </NavLink>
+          <NavLink to="/loancalculator">Loan Calculator</NavLink>
         </li>
         {!user && (
           <>
             <li>
-              <NavLink to="/login" activeclassname="active">
-                Login
-              </NavLink>
-            </li>
-            <li>
-              <NavLink to="/signup" activeclassname="active">
-                Signup
-              </NavLink>
+              <NavLink to="/login">Login</NavLink>
             </li>
           </>
         )}
 
         {user && (
           <li>
-            <NavLink to="/account" activeclassname="active">
-              Account
-            </NavLink>
+            <NavLink to="/account">Account</NavLink>
           </li>
         )}
       </ul>

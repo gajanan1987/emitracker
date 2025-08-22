@@ -2,9 +2,11 @@
  display: flex;
  justify-content: space-between;
  align-items: center;
- padding: 1rem 2rem;
- background-color: #4a90e2;
- color: white;
+ padding: 10px 15px;
+ // background-color: #4a90e2;
+ position: sticky;
+ top: 0;
+ border-bottom: 1px solid var(--color-border);
 
  .logo {
   font-size: 1.5rem;
@@ -18,23 +20,28 @@
   margin: 0;
   padding: 0;
 
+
   li {
    a {
     text-decoration: none;
-    color: white;
+    color: var(--color-text);
     font-weight: 500;
     font-size: 1rem;
     transition: color 0.3s;
 
     &:hover {
-     color: #d3e6fd;
+     color: var(--color-primary);
     }
 
     &.active {
-     border-bottom: 2px solid white;
-     padding-bottom: 2px;
+     color: var(--color-primary);
     }
    }
   }
+ }
+
+ +div {
+  flex: 1;
+  padding-top: 24px;
  }
 }

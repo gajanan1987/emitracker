@@ -1,1 +1,77 @@
-@import "./utilities/utilities-dir"
+@import "./utilities/utilities-dir";
+
+.home-bg {
+ background-image: url("./home-bg.jpg");
+ position: absolute;
+ left: 0;
+ width: 100%;
+ bottom: 0;
+ height: 50vh;
+ background-size: cover;
+ background-repeat: no-repeat;
+ background-position: 50% 0;
+}
+
+.home-banner {
+ max-width: 65%;
+ margin: 0 auto;
+
+ h1 {
+  text-align: center;
+ }
+
+ p {
+  @include Font-Medium;
+ }
+
+ ul {
+  list-style-type: inherit;
+  padding-left: 41px;
+  margin-top: 15px;
+
+  li {}
+ }
+}
+
+.add-new-loan {
+ background-color: var(--color-primary);
+ color: var(--color-white);
+ font-size: 48px;
+ @include Font-Bold;
+ position: fixed;
+ z-index: 1;
+ border-radius: 50%;
+ border: none;
+ display: flex;
+ align-items: center;
+ justify-content: center;
+ height: 50px;
+ width: 50px;
+ right: 30px;
+ bottom: 50px;
+ animation-name: bounce;
+ animation-duration: 1s;
+ /* Adjust for faster/slower bounce */
+ animation-timing-function: ease-in-out;
+ /* Controls acceleration/deceleration */
+ animation-iteration-count: infinite;
+
+ /* Makes the animation repeat continuously */
+ &:hover {
+  animation-play-state: paused;
+ }
+}
+
+@keyframes bounce {
+
+ 0%,
+ 100% {
+  transform: translateY(0);
+  /* Start and end at original position */
+ }
+
+ 50% {
+  transform: translateY(-15px);
+  /* Adjust for desired bounce height */
+ }
+}

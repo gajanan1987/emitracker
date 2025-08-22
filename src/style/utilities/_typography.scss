@@ -1,66 +1,34 @@
 h1 {
-	@include Font-Bold;
-	font-size: 72px;
-	line-height: 1.06;
-	letter-spacing: -4.5px;
+	font-size: 38px;
+	@include Font-Medium;
+	margin-bottom: 16px;
 
-	@include mq("d-1200", "max") {
-		font-size: 52px;
-		line-height: 1.05;
-		letter-spacing: -3px;
-	}
+	@include mq("d-1200", "max") {}
 
-	@include mq("t-768", "max") {
-		font-size: 32px;
-		line-height: 1.25;
-		letter-spacing: -2px;
-	}
+	@include mq("t-768", "max") {}
 }
 
 h2 {
 	@include Font-Bold;
-	font-size: 56px;
-	line-height: 1.13;
-	letter-spacing: -1.6px;
 
-	@include mq("d-1200", "max") {
-		font-size: 40px;
-		line-height: 1.2;
-		letter-spacing: -1.35px;
-	}
 
-	@include mq("t-768", "max") {
-		font-size: 32px;
-		line-height: 1.07;
-		letter-spacing: -1.75px;
-	}
+	@include mq("d-1200", "max") {}
+
+	@include mq("t-768", "max") {}
 }
 
 h3 {
 	@include Font-Bold;
-	font-size: 44px;
-	// line-height: 1.05;
-	line-height: 1.23;
-	letter-spacing: -2.75px;
 
-	@include mq("d-1200", "max") {
-		font-size: 32px;
-		line-height: 1.25;
-		letter-spacing: -2px;
-	}
 
-	@include mq("t-992", "max") {
-		font-size: 28px;
-		line-height: 1.07;
-		letter-spacing: -1.75px;
-	}
+	@include mq("d-1200", "max") {}
+
+	@include mq("t-992", "max") {}
 }
 
 h4 {
 	@include Font-Medium;
-	font-size: 24px;
-	line-height: 1.17;
-	letter-spacing: -1.5px;
+
 	// @include mq("t-768", "max") {
 	// 	font-size: 18px;
 	// }
@@ -68,12 +36,7 @@ h4 {
 
 h5 {
 	@include Font-Bold;
-	font-size: 18px;
-	line-height: 1.33;
-	letter-spacing: -1px;
+
 }
 
-h6 {
-	font-size: 12px;
-	line-height: 2;
-}
+h6 {}

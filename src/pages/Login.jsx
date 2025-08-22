@@ -1,6 +1,6 @@
 import { useActionState } from "react";
 import "./../style/loginpage.scss";
-import { useNavigate } from "react-router";
+import { Link, useNavigate } from "react-router";
 import { useAuth } from "../contex/Contex";
 
 const LoginPage = () => {
@@ -33,24 +33,36 @@ const LoginPage = () => {
 
   return (
     <div className="login-container">
+      {/* <div className="animated-bg"></div> */}
       <form className="login-form" action={formAction}>
-        <h2>Login</h2>
-        <input type="email" name="name" placeholder="Email" required />
+        <h1>Sign In</h1>
+        <div className="input-wrapper">
+          <input type="email" name="name" placeholder="Email" required />
+        </div>
 
-        <input
-          type="password"
-          name="password"
-          placeholder="Password"
-          required
-        />
+        <div className="input-wrapper">
+          <input
+            type="password"
+            name="password"
+            placeholder="Password"
+            required
+          />
+        </div>
 
-        <button disabled={isPending} type="submit">
-          {isPending ? "Loging...." : "Login"}
+        <button className="color-primary" disabled={isPending} type="submit">
+          {isPending ? "Signing...." : "Sign In"}
         </button>
+
+        <p className="no-account">
+          Don't have an account?{" "}
+          <Link to="/signup" style={{ textDecoration: "underline" }}>
+            Sign Up
+          </Link>
+        </p>
 
         {state?.error && (
           <p className="message">
-            {state.error.message || "Login failed, please try again."}
+            {state.error.message || "Sign In failed, please try again."}
           </p>
         )}
       </form>

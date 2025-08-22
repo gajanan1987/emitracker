@@ -1,0 +1,19 @@
+button {
+ height: 40px;
+ border-radius: 5px;
+ cursor: pointer;
+ font-size: 16px;
+ @include Font-Bold;
+}
+
+.color-primary {
+ background-color: var(--color-primary);
+ color: var(--color-white);
+ border: none;
+ transition: all .5s;
+
+ &:hover {
+  background-color: darken($color: #5233ed, $amount: 10%);
+  transition: all .5s;
+ }
+}
