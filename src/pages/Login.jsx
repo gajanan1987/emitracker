@@ -2,6 +2,8 @@ import { useActionState } from "react";
 import "./../style/loginpage.scss";
 import { Link, useNavigate } from "react-router";
 import { useAuth } from "../contex/Contex";
+import VantaWaves from "../components/VantaWaves";
+import VantaBirds from "../components/VantaBirds";
 
 const LoginPage = () => {
   const { signIn } = useAuth();
@@ -32,41 +34,49 @@ const LoginPage = () => {
   }
 
   return (
-    <div className="login-container">
-      {/* <div className="animated-bg"></div> */}
-      <form className="login-form" action={formAction}>
-        <h1>Sign In</h1>
-        <div className="input-wrapper">
-          <input type="email" name="name" placeholder="Email" required />
-        </div>
+    <>
+      <div className="login-container">
+        {/* <div className="animated-bg"></div> */}
+        {/* <VantaWaves /> */}
+        <form className="login-form" action={formAction}>
+          <h1>Sign In</h1>
+          <div className="input-wrapper">
+            <input type="email" name="name" placeholder="Email" required />
+          </div>
 
-        <div className="input-wrapper">
-          <input
-            type="password"
-            name="password"
-            placeholder="Password"
-            required
-          />
-        </div>
+          <div className="input-wrapper">
+            <input
+              type="password"
+              name="password"
+              placeholder="Password"
+              required
+            />
+          </div>
 
-        <button className="color-primary" disabled={isPending} type="submit">
-          {isPending ? "Signing...." : "Sign In"}
-        </button>
+          <button
+            className="btn btn-primary"
+            disabled={isPending}
+            type="submit"
+          >
+            {isPending ? "Signing...." : "Sign In"}
+          </button>
 
-        <p className="no-account">
-          Don't have an account?{" "}
-          <Link to="/signup" style={{ textDecoration: "underline" }}>
-            Sign Up
-          </Link>
-        </p>
-
-        {state?.error && (
-          <p className="message">
-            {state.error.message || "Sign In failed, please try again."}
+          <p className="no-account">
+            Don't have an account?{" "}
+            <Link to="/signup" style={{ textDecoration: "underline" }}>
+              Sign Up
+            </Link>
           </p>
-        )}
-      </form>
-    </div>
+
+          {state?.error && (
+            <p className="message">
+              {state.error.message || "Sign In failed, please try again."}
+            </p>
+          )}
+        </form>
+      </div>
+      <VantaBirds />
+    </>
   );
 };
 

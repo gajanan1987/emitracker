@@ -15,19 +15,23 @@
 .home-banner {
  max-width: 65%;
  margin: 0 auto;
+ margin-top: 20vh;
+ text-align: center;
 
  h1 {
   text-align: center;
+  font-size: 58px
  }
 
  p {
-  @include Font-Medium;
+  @include Font-Bold;
+  font-size: 18px;
  }
 
  ul {
-  list-style-type: inherit;
   padding-left: 41px;
   margin-top: 15px;
+  margin-bottom: 15px;
 
   li {}
  }
@@ -74,4 +78,13 @@
   transform: translateY(-15px);
   /* Adjust for desired bounce height */
  }
+}
+
+.vanta-birds {
+ height: 100vh;
+ width: 100%;
+ position: absolute;
+ top: 0;
+ left: 0;
+ z-index: -1;
 }

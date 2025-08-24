@@ -1,12 +1,13 @@
-button {
+.btn {
  height: 40px;
- border-radius: 5px;
+ border-radius: 25px;
  cursor: pointer;
  font-size: 16px;
+ padding: 5px 15px;
  @include Font-Bold;
 }
 
-.color-primary {
+.btn-primary {
  background-color: var(--color-primary);
  color: var(--color-white);
  border: none;

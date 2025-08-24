@@ -41,7 +41,7 @@ const SignupPage = () => {
           />
         </div>
 
-        <button className="color-primary" disabled={isPending} type="submit">
+        <button className="btn btn-primary" disabled={isPending} type="submit">
           {isPending ? "Loading...." : "Sign Up"}
         </button>
 
