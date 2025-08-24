@@ -288,7 +288,9 @@ export default function LoanCalculator() {
           value={emiDate}
           onChange={(e) => setEmiDate(e.target.value)}
         />
-        <button onClick={calculateEMI}>Calculate</button>
+        <button className="btn btn-primary" onClick={calculateEMI}>
+          Calculate
+        </button>
       </div>
 
       {summary && (

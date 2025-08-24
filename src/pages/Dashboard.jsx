@@ -3,22 +3,26 @@ import CustomModal from "../components/CustomModal";
 import { getAllLoanDetails, getUserLoan } from "../services/api";
 import AddLoan from "./AddLoan";
 import LoanCard from "../components/Loan/LoanCard";
-import "./../style/Loan/addLoan.scss";
 import { useAuth } from "../contex/Contex";
-import { Link } from "react-router";
+import { Link, useNavigate } from "react-router";
 import VantaBirds from "../components/VantaBirds";
 
 const Dashboard = () => {
   const [data, setData] = useState([]);
+  console.log("🚀 ~ Dashboard ~ data:", data);
   //cust modal
   const [open, setOpen] = useState(false);
   const onOpenModal = () => setOpen(true);
   const onCloseModal = () => setOpen(false);
   //cust modal
 
-  const { user } = useAuth();
+  const { user, signOut } = useAuth();
+  const navigatin = useNavigate();
 
-  const handleClick = () => {};
+  async function expire() {
+    await signOut();
+    navigatin("/");
+  }
 
   useEffect(() => {
     if (!user) return;
@@ -26,11 +30,18 @@ const Dashboard = () => {
       // const data = await getAllLoanDetails();
       console.log("🚀 ~ test ~ user.id:", user.id);
       const data = await getUserLoan(user.id);
-      console.log("🚀 ~ test ~ data:", data);
-      setData(data);
+
+      if (data === "JWT expired") {
+        expire();
+        console.log("🚀 ~ test ~ data:", data);
+      } else {
+        setData(data);
+      }
     }
     test();
   }, [user]);
+
+  useEffect(() => {});
   return (
     <>
       {/* <div className="home-bg"></div> */}
@@ -57,25 +68,45 @@ const Dashboard = () => {
           <VantaBirds />
         </div>
       ) : (
-        <div className="loan-card-wrapper">
-          {data?.map((item) => {
-            return <LoanCard item={item} key={item.id} />;
-          })}
-        </div>
+        <>
+          <div className="loan-card-wrapper">
+            {data?.map((item) => {
+              const targetDate = new Date(item.emi_date);
+              const tenure = item.tenure_months;
+
+              function getEmiCount(startDate, today = new Date()) {
+                let years = today.getFullYear() - startDate.getFullYear();
+                let months = today.getMonth() - startDate.getMonth();
+                let totalMonths = years * 12 + months;
+
+                if (today.getDate() < startDate.getDate()) {
+                  totalMonths -= 1;
+                }
+
+                return tenure - (totalMonths + 1);
+              }
+
+              const remaningEmi = getEmiCount(targetDate);
+
+              return (
+                <LoanCard item={item} key={item.id} remaningEmi={remaningEmi} />
+              );
+            })}
+          </div>
+          <CustomModal
+            open={open}
+            setOpen={setOpen}
+            onOpenModal={onOpenModal}
+            onCloseModal={onCloseModal}
+          >
+            <AddLoan />
+          </CustomModal>
+
+          <button className="add-new-loan" onClick={() => onOpenModal()}>
+            +
+          </button>
+        </>
       )}
-
-      {/* <CustomModal
-        open={open}
-        setOpen={setOpen}
-        onOpenModal={onOpenModal}
-        onCloseModal={onCloseModal}
-      >
-        <AddLoan />
-      </CustomModal> */}
-
-      {/* <button className="add-new-loan" onClick={() => onOpenModal()}>
-        +
-      </button> */}
     </>
   );
 };

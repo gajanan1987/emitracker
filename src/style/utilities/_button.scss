@@ -5,6 +5,10 @@
  font-size: 16px;
  padding: 5px 15px;
  @include Font-Bold;
+
+ @include mq("t-768", "max") {
+  font-size: 14px;
+ }
 }
 
 .btn-primary {

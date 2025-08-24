@@ -98,7 +98,8 @@ export async function getUserLoan(id) {
     .eq("user_id", id);
 
   if (error) {
-    throw new Error("data not be lodaded");
+    // throw new Error("data not be lodaded", { error });
+    return error.message;
   }
   return data;
 }

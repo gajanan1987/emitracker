@@ -3,6 +3,11 @@
 .loan-details-page {
  display: flex;
  flex-direction: row;
+ margin-bottom: 24px;
+
+ @include mq("t-768", "max") {
+  flex-direction: column;
+ }
 
  >div {
   flex: 1;
@@ -10,6 +15,10 @@
 
  .loan-details {
   flex: 1;
+
+  @include mq("t-768", "max") {
+   margin-bottom: 16px;
+  }
  }
 
  .chart-wrapper {

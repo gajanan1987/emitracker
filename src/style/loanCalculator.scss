@@ -7,34 +7,28 @@
  border-radius: 12px;
  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
 
- h1 {
-  text-align: center;
-  color: #2a4d69;
- }
-
  .form {
   display: grid;
   gap: 10px;
   margin-bottom: 20px;
 
-  input,
-  button {
+  input {
    padding: 10px;
    border: 1px solid #ddd;
    border-radius: 6px;
   }
 
-  button {
-   background: #4cafef;
-   color: white;
-   border: none;
-   cursor: pointer;
-   font-weight: bold;
+  // button {
+  //  background: #4cafef;
+  //  color: white;
+  //  border: none;
+  //  cursor: pointer;
+  //  font-weight: bold;
 
-   &:hover {
-    background: #3b9be0;
-   }
-  }
+  //  &:hover {
+  //   background: #3b9be0;
+  //  }
+  // }
  }
 
  .summary {

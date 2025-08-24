@@ -1,4 +1,6 @@
 @import "./utilities/utilities-dir";
+@import "./header.scss";
+@import "./Loan/addLoan.scss";
 
 .home-bg {
  background-image: url("https://qodgdfkdugrkqbhcpcba.supabase.co/storage/v1/object/public/emi/home-bg.jpg");
@@ -18,14 +20,27 @@
  margin-top: 20vh;
  text-align: center;
 
+ @include mq("t-768", "max") {
+  margin-top: 30px;
+  max-width: 100%;
+ }
+
  h1 {
   text-align: center;
-  font-size: 58px
+  font-size: 58px;
+
+  @include mq("t-768", "max") {
+   font-size: 28px;
+  }
  }
 
  p {
   @include Font-Bold;
   font-size: 18px;
+
+  @include mq("t-768", "max") {
+   font-size: 15px;
+  }
  }
 
  ul {

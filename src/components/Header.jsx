@@ -1,5 +1,4 @@
 import { Link, NavLink } from "react-router";
-import "./../style/header.scss";
 import { useAuth } from "../contex/Contex";
 import logo from "../../public/logo.svg";
 
@@ -7,7 +6,7 @@ const Header = () => {
   const { user } = useAuth();
   return (
     <nav className="header-nav">
-      <NavLink to="/" exact="true">
+      <NavLink className="logo" to="/" exact="true">
         <img src={logo} />
       </NavLink>
       <ul className="nav-links">

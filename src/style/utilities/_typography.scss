@@ -3,7 +3,9 @@ h1 {
 	@include Font-Medium;
 	margin-bottom: 16px;
 
-	@include mq("d-1200", "max") {}
+	@include mq("d-1200", "max") {
+		font-size: 32px;
+	}
 
 	@include mq("t-768", "max") {}
 }

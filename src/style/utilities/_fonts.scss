@@ -120,3 +120,11 @@
 @mixin Font-Light {
 	@include font-face(300, normal);
 }
+
+.font-bold {
+	@include Font-Bold;
+}
+
+.f14 {
+	font-size: 14px;
+}

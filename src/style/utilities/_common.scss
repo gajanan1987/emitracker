@@ -19,6 +19,10 @@ body {
 	overflow: initial !important;
 	font-size: 16px;
 
+	@include mq("t-768", "max") {
+		font-size: 14px;
+	}
+
 	.common-page {
 		display: flex;
 		flex-direction: column;
