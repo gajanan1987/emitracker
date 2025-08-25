@@ -1,18 +1,19 @@
 import { useState, useEffect } from "react";
 import { useAuth } from "../contex/Contex";
 import { useNavigate } from "react-router";
-import { getAllLoanDetails, getUser } from "../services/api";
+import { signOut } from "../redux/authSlice";
+import { useDispatch, useSelector } from "react-redux";
 
 const Account = () => {
   const [loginUser, setUser] = useState(null);
-  console.log("🚀 ~ Account ~ loginUser:", loginUser);
 
+  const dispatch = useDispatch();
   const navigatin = useNavigate();
 
-  const { signOut, user } = useAuth();
+  const { status, error, user } = useSelector((s) => s.auth);
 
   const handleLogout = async () => {
-    await signOut();
+    dispatch(signOut());
     navigatin("/");
   };
 
@@ -20,21 +21,8 @@ const Account = () => {
     if (user) {
       setUser(user);
     }
-
-    async function ttt() {
-      const xxx = await getUser();
-      console.log("🚀 ~ ttt ~ xxx:", xxx);
-    }
-    ttt();
   }, [user]);
 
-  // useEffect(() => {
-  //   async function test() {
-  //     const data = await getAllLoanDetails();
-  //     console.log("🚀 ~ Account ~ data:", data);
-  //   }
-  //   test();
-  // }, [user]);
   return (
     <div className="account-container">
       <div className="account-card">

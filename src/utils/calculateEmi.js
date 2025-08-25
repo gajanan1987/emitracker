@@ -1,7 +1,7 @@
 import { addMonths, format } from "date-fns";
 const round = (num) => Math.round(num);
 export const calculateEMI = (op) => {
-  const { emi_date, interest_rate, loan_amount, start_date, tenure_months } =
+  const { emi_date, interest_rate, loan_amount, loan_date, tenure_months } =
     op[0];
 
   const P = parseFloat(loan_amount);
@@ -9,12 +9,12 @@ export const calculateEMI = (op) => {
   const n = parseInt(tenure_months);
   const r = annualRate / 12 / 100;
 
-  if (!P || !annualRate || !n || !start_date || !emi_date) {
+  if (!P || !annualRate || !n || !loan_date || !emi_date) {
     alert("Please fill all fields correctly!");
     return;
   }
 
-  const loanStart = new Date(start_date);
+  const loanStart = new Date(loan_date);
   const firstEmi = new Date(emi_date);
 
   // ✅ validation: first EMI date should be after loan start date

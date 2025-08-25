@@ -1,4 +1,3 @@
-// utils/number.ts or utils/number.js
 export const formatIN = (value) => {
   const num = Number(value);
   if (!isFinite(num)) return value ?? "";
@@ -11,7 +10,7 @@ export const formatINR = (value, withSymbol = false) => {
   return new Intl.NumberFormat("en-IN", {
     style: withSymbol ? "currency" : undefined,
     currency: withSymbol ? "INR" : undefined,
-    maximumFractionDigits: 0, // no paise
-    minimumFractionDigits: 0,
+    maximumFractionDigits: 2, // no paise
+    minimumFractionDigits: 2,
   }).format(num);
 };

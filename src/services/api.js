@@ -34,7 +34,6 @@ export async function updateUser({ email, password }) {
   });
 
   if (error) {
-    console.log("errro");
     throw new Error("Demo did not be lodaded");
   }
   return data;
@@ -59,7 +58,7 @@ export async function addLoan(
         interest_rate: interestRate,
         tenure_months: tenure,
         emi_amount: emi,
-        start_date: loanDate,
+        loan_date: loanDate,
         emi_date: emiDate,
         loan_name: loanName,
       },
@@ -67,7 +66,6 @@ export async function addLoan(
     .select();
 
   if (error) {
-    console.log("errro");
     throw new Error("Demo did not be lodaded");
   }
   return data;
@@ -109,7 +107,6 @@ export async function logoutUser() {
   let { error } = await supabase.auth.signOut();
 
   if (error) {
-    console.log("errro");
     throw new Error("Demo did not be lodaded");
   }
 }

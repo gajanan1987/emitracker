@@ -1,4 +1,3 @@
-// import viteLogo from '/vite.svg'
 import Header from "./components/Header";
 import { AuthProvider } from "./contex/AuthContex";
 import AppRoutes from "./routes/AppRoute";

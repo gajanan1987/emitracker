@@ -1,9 +1,10 @@
 import { Link, NavLink } from "react-router";
 import { useAuth } from "../contex/Contex";
 import logo from "../../public/logo.svg";
+import { useSelector } from "react-redux";
 
 const Header = () => {
-  const { user } = useAuth();
+  const { status, error, user } = useSelector((s) => s.auth);
   return (
     <nav className="header-nav">
       <NavLink className="logo" to="/" exact="true">
@@ -22,9 +23,14 @@ const Header = () => {
         )}
 
         {user && (
-          <li>
-            <NavLink to="/account">Account</NavLink>
-          </li>
+          <>
+            <li>
+              <NavLink to="/loans-list">Loans</NavLink>
+            </li>
+            <li>
+              <NavLink to="/account">Account</NavLink>
+            </li>
+          </>
         )}
       </ul>
     </nav>

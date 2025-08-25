@@ -1,4 +1,3 @@
-// VantaWaves.js
 import { useEffect, useRef, useState } from "react";
 import * as THREE from "three";
 
@@ -20,7 +19,7 @@ export default function VantaWaves() {
             minWidth: 200.0,
             scale: 1.0,
             scaleMobile: 1.0,
-            color: 0x4f46e5, // Indigo color
+            color: 0x4f46e5,
             shininess: 50,
             waveHeight: 20,
             waveSpeed: 0.8,

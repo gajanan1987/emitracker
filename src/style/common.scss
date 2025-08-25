@@ -57,6 +57,7 @@
  color: var(--color-white);
  font-size: 48px;
  @include Font-Bold;
+ cursor: pointer;
  position: fixed;
  z-index: 1;
  border-radius: 50%;
