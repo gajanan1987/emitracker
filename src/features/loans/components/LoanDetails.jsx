@@ -45,13 +45,14 @@ const LoanDetails = () => {
         <>
           <div className="loan-details-page">
             <div className="loan-details">
+              <p>Loan Name: {emiSummary.loan_name}</p>
               <p>Loan Amount: {formatINR(emiSummary.loan_amount, true)}</p>
               <p>EMI: {formatINR(emiSummary.emi, true)}</p>
               <p>Interest Rate : {emiSummary.interest_rate}%</p>
               <p>Emi Paid: {emiSummary.paid}</p>
               <p>Paid Interest: {formatINR(emiSummary.paidInterest, true)}</p>
               <p>Paid Principal: {formatINR(emiSummary.paidPrincipal, true)}</p>
-              <p>Remaining Tenure: {emiSummary.remaining}</p>
+              {/* <p>Remaining Tenure: {emiSummary.remaining}</p> */}
               <p>
                 Remaining Interest:{" "}
                 {formatINR(emiSummary.remainingInterest, true)}

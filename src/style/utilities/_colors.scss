@@ -10,8 +10,13 @@
 	--color-link: #348bff;
 	--color-primary: #5233ed;
 	--color-title: #171768;
+	--color-gray: #5e5656;
 }
 
 .color-title {
 	color: var(--color-title)
+}
+
+.color-gray {
+	color: var(--color-gray)
 }

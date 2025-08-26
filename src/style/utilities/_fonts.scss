@@ -125,6 +125,23 @@
 	@include Font-Bold;
 }
 
+////
 .f14 {
 	font-size: 14px;
+}
+
+.f12 {
+	font-size: 12px;
+}
+
+.font-medium {
+	@include Font-Medium;
+}
+
+.font-semibold {
+	@include Font-Semibold;
+}
+
+.font-bold {
+	@include Font-Bold;
 }

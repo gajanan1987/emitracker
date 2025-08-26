@@ -60,8 +60,14 @@ export const loanDetails = createAsyncThunk(
 const round = (n) => Math.round(n);
 
 export const recalcSchedule = (op) => {
-  console.log("🚀 ~ recalcSchedule ~ op:", op);
-  const { emi_date, interest_rate, loan_amount, loan_date, tenure_months } = op;
+  const {
+    emi_date,
+    interest_rate,
+    loan_amount,
+    loan_date,
+    tenure_months,
+    loan_name,
+  } = op;
 
   const P = parseFloat(loan_amount);
   const annualRate = parseFloat(interest_rate);
@@ -108,14 +114,14 @@ export const recalcSchedule = (op) => {
       principal: round(principalForMonth),
       interest: round(interestForMonth),
       balance: balance > 0 ? round(balance) : 0,
-      // date: emiDueDate,
-      date: emiDueDate.toISOString(),
+      date: emiDueDate,
+      // date1: emiDueDate.toISOString(),
     });
   }
 
   // Till date EMIs paid
   const today = new Date();
-  const paid = scheduleArr.filter((row) => row.date <= today).length;
+  const paid = scheduleArr.filter((row) => new Date(row.date) <= today).length;
   const remaining = n - paid;
 
   const paidPrincipal = scheduleArr
@@ -143,6 +149,7 @@ export const recalcSchedule = (op) => {
     paidInterest: paidInterest,
     remainingPrincipal,
     remainingInterest,
+    loan_name,
   };
 
   return { summery, scheduleArr };
