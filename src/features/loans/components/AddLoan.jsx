@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
-import { useAuth } from "../../../contex/Contex";
 import { computeScheduleFor, createLoan } from "../../../redux/loanSlice";
 import { useDispatch, useSelector } from "react-redux";
+import { formatINR } from "../../../utils/number";
 
 const AddLoan = ({ emiSummary, onCloseModal }) => {
   const dispatch = useDispatch();
@@ -17,8 +17,8 @@ const AddLoan = ({ emiSummary, onCloseModal }) => {
   });
 
   const {
-    user: { id },
-  } = useAuth();
+    user: { id, email },
+  } = useSelector((s) => s.auth);
 
   const saveToSupabase = async () => {
     const payload = {
@@ -30,6 +30,7 @@ const AddLoan = ({ emiSummary, onCloseModal }) => {
       loan_date: formData.loanDate,
       emi_date: formData.loanEmiDate,
       loan_name: formData.loanName,
+      email,
     };
 
     const res = dispatch(createLoan(payload));
@@ -61,8 +62,8 @@ const AddLoan = ({ emiSummary, onCloseModal }) => {
   }, [emiSummary]);
 
   return (
-    <div className="loan-tracker">
-      <h1>Loan EMI Tracker</h1>
+    <div className="add-loan-form">
+      <h2>Add New Loan EMI</h2>
 
       <div className="form">
         <label>Enter Bank Name / Loan Number Account </label>
@@ -111,31 +112,47 @@ const AddLoan = ({ emiSummary, onCloseModal }) => {
           name="loanEmiDate"
           onChange={(e) => handleChange(e)}
         />
-        <button onClick={handleCalculate}>Calculate</button>
+        <button className="btn btn-primary" onClick={handleCalculate}>
+          Calculate
+        </button>
       </div>
 
       {emiSummary && (
         <div className="summary">
           <h2>Summary</h2>
           <p>
-            Total Amount: ₹{emiSummary.totalPayment - emiSummary.totalInterest}
+            Total Amount:{" "}
+            {formatINR(
+              emiSummary.totalPayment - emiSummary.totalInterest,
+              true
+            )}
           </p>
-          <p>Total Interest: ₹{emiSummary.totalInterest}</p>
+          <p>Total Interest: {formatINR(emiSummary.totalInterest, true)}</p>
           <p>Interest Rate: {emiSummary.interest_rate}%</p>
           <p>Tenure: {emiSummary.tenure_months} Month</p>
 
           <p>-----------------------------------------</p>
-          <p>Total Payment with Interest: ₹{emiSummary.totalPayment}</p>
+          <p>
+            Total Payment with Interest:{" "}
+            {formatINR(emiSummary.totalPayment, true)}
+          </p>
 
-          <p>EMI: ₹{emiSummary.emi}</p>
+          <p>EMI: {formatINR(emiSummary.emi, true)}</p>
 
           <p>Paid EMIs: {emiSummary.paid}</p>
           <p>Remaining EMIs: {emiSummary.remaining}</p>
-          <p>Principal Paid: ₹{emiSummary.paidPrincipal}</p>
-          <p>Interest Paid: ₹{emiSummary.paidInterest}</p>
-          <p>Remaining Principal: ₹{emiSummary.remainingPrincipal}</p>
-          <p>Remaining Interest: ₹{emiSummary.remainingInterest}</p>
-          <button onClick={saveToSupabase}>Save Loan</button>
+          <p>Principal Paid: {formatINR(emiSummary.paidPrincipal, true)}</p>
+          <p>Interest Paid: {formatINR(emiSummary.paidInterest, true)}</p>
+          <p>
+            Remaining Principal:{" "}
+            {formatINR(emiSummary.remainingPrincipal, true)}
+          </p>
+          <p>
+            Remaining Interest: {formatINR(emiSummary.remainingInterest, true)}
+          </p>
+          <button className="btn btn-primary" onClick={saveToSupabase}>
+            Save Loan
+          </button>
         </div>
       )}
     </div>

@@ -1,23 +1,19 @@
-import { useEffect, useState } from "react";
-import { Link, useNavigate } from "react-router";
+import { useEffect } from "react";
+import { Link } from "react-router";
 import VantaBirds from "../components/VantaBirds";
 import { useDispatch, useSelector } from "react-redux";
-import { fetchSession, signOut } from "../redux/authSlice";
 import { fetchLoans } from "../redux/loanSlice";
 
 const Home = () => {
   const dispatch = useDispatch();
   const { status, error, user } = useSelector((s) => s.auth);
+  const { items } = useSelector((s) => s.loans);
 
   useEffect(() => {
-    dispatch(fetchLoans());
-  }, [dispatch]);
-
-  useEffect(() => {
-    if (!user) {
-      dispatch(fetchSession());
+    if (user && items.length < 0) {
+      dispatch(fetchLoans());
     }
-  }, [dispatch]);
+  }, [dispatch, user]);
 
   return (
     <>

@@ -1,5 +1,4 @@
 import { Link, NavLink } from "react-router";
-import { useAuth } from "../contex/Contex";
 import logo from "../../public/logo.svg";
 import { useSelector } from "react-redux";
 

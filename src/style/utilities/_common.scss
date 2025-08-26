@@ -15,7 +15,7 @@ body {
 	-moz-osx-font-smoothing: grayscale;
 	scroll-behavior: smooth;
 	color: var(--color-text);
-	@include Font-Regular;
+	@include Font-Medium;
 	overflow: initial !important;
 	font-size: 16px;
 

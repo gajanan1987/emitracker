@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { Link, useNavigate } from "react-router";
 import { useDispatch, useSelector } from "react-redux";
-import { fetchSession, signOut } from "../../redux/authSlice";
+import { signOut } from "../../redux/authSlice";
 import {
   computeScheduleFor,
   deleteLoan,
@@ -45,14 +45,12 @@ const LoansList = () => {
   }
 
   useEffect(() => {
-    dispatch(fetchLoans());
+    if (loanStatus === "idle") {
+      dispatch(fetchLoans());
+    }
   }, [dispatch, loanStatus]);
 
-  useEffect(() => {
-    if (!user) {
-      dispatch(fetchSession());
-    }
-  }, [dispatch]);
+  useEffect(() => {}, [dispatch]);
 
   // useEffect(() => {
   //   if (!user) return;
@@ -69,6 +67,7 @@ const LoansList = () => {
   // }, [user]);
 
   const deleteLoanById = (id) => {
+    console.log("🚀 ~ deleteLoanById ~ id:", id);
     dispatch(deleteLoan(id))
       .unwrap()
       .then((data) => {

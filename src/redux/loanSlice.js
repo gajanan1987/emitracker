@@ -163,9 +163,6 @@ const loansSlice = createSlice({
       console.log("🚀 ~ data:", data);
       const { summery, scheduleArr } = recalcSchedule(data);
 
-      // state.currentSchedule = scheduleArr;
-      // state.emiSummary = summery;
-
       if (type !== "addLoan") {
         state.currentSchedule = scheduleArr;
         state.emiSummary = summery;
@@ -195,14 +192,28 @@ const loansSlice = createSlice({
       })
 
       ////
+      .addCase(fetchLoans.pending, (s, a) => {
+        s.status = "loading";
+      })
       .addCase(fetchLoans.fulfilled, (s, a) => {
+        s.status = "succeeded";
+        s.items = a.payload || [];
+      })
+      .addCase(fetchLoans.rejected, (s, a) => {
+        s.status = "failed";
         s.items = a.payload || [];
       })
       ////
       .addCase(loanDetails.fulfilled, (s, a) => {})
       ////
+      .addCase(deleteLoan.pending, (s, a) => {
+        s.status = "loading";
+      })
       .addCase(deleteLoan.fulfilled, (s, a) => {
-        s.status = "succeeded";
+        s.status = "idle";
+      })
+      .addCase(deleteLoan.rejected, (s, a) => {
+        s.status = "failed";
       });
   },
 });

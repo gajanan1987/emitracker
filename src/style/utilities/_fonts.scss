@@ -105,12 +105,12 @@
 	@include font-face(700, normal);
 }
 
-@mixin Font-Medium {
-	@include font-face(500, normal);
-}
-
 @mixin Font-Semibold {
 	@include font-face(600, normal);
+}
+
+@mixin Font-Medium {
+	@include font-face(500, normal);
 }
 
 @mixin Font-Regular {

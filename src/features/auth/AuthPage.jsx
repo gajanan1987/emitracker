@@ -2,7 +2,7 @@ import { useActionState, useEffect, useState } from "react";
 import "./../../style/loginpage.scss";
 import { Link, useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
-import { fetchSession, signIn, signUp } from "../../redux/authSlice";
+import { signIn, signUp } from "../../redux/authSlice";
 import VantaBirds from "../../components/VantaBirds";
 import custMessage from "../../utils/toast";
 
@@ -11,13 +11,6 @@ const AuthPage = () => {
   const { status, error, user } = useSelector((s) => s.auth);
   const navigate = useNavigate();
   const dispatch = useDispatch();
-
-  // Fetch session only once (root App usually handles this)
-  useEffect(() => {
-    if (!user) {
-      dispatch(fetchSession());
-    }
-  }, [dispatch]);
 
   // Redirect only after successful login
   useEffect(() => {

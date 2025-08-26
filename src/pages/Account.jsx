@@ -1,5 +1,4 @@
 import { useState, useEffect } from "react";
-import { useAuth } from "../contex/Contex";
 import { useNavigate } from "react-router";
 import { signOut } from "../redux/authSlice";
 import { useDispatch, useSelector } from "react-redux";
