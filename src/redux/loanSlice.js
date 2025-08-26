@@ -61,37 +61,6 @@ const round = (n) => Math.round(n);
 
 export const recalcSchedule = (op) => {
   console.log("🚀 ~ recalcSchedule ~ op:", op);
-  // const P = Number(loan.loan_amount);
-  // const annual = Number(loan.interest_rate);
-  // const n = Number(loan.tenure_months);
-  // const r = annual / 12 / 100;
-  // const firstEmi = new Date(loan.emi_date);
-  // const emi = (P * r * Math.pow(1 + r, n)) / (Math.pow(1 + r, n) - 1);
-  // let balance = P;
-  // const rows = [];
-  // for (let i = 1; i <= n; i++) {
-  //   const interest = balance * r;
-  //   const principal = emi - interest;
-  //   balance -= principal;
-  //   const d = new Date(firstEmi);
-  //   d.setMonth(d.getMonth() + (i - 1));
-  //   rows.push({
-  //     index: i,
-  //     dateISO: d.toISOString(),
-  //     dateLabel: d.toLocaleDateString("en-IN", {
-  //       day: "2-digit",
-  //       month: "short",
-  //       year: "numeric",
-  //     }),
-  //     emi: round(emi),
-  //     principal: round(principal),
-  //     interest: round(interest),
-  //     balance: round(balance < 0 ? 0 : balance),
-  //   });
-  // }
-  // const today = new Date();
-  // const paid = rows.filter((r) => new Date(r.dateISO) <= today).length;
-  // return { rows, paid, remaining: n - paid };
   const { emi_date, interest_rate, loan_amount, loan_date, tenure_months } = op;
 
   const P = parseFloat(loan_amount);
@@ -190,8 +159,17 @@ const loansSlice = createSlice({
   },
   reducers: {
     computeScheduleFor: (state, action) => {
-      const { summery, scheduleArr } = recalcSchedule(action.payload);
-      state.currentSchedule = scheduleArr;
+      const { data, type } = action.payload;
+      console.log("🚀 ~ data:", data);
+      const { summery, scheduleArr } = recalcSchedule(data);
+
+      // state.currentSchedule = scheduleArr;
+      // state.emiSummary = summery;
+
+      if (type !== "addLoan") {
+        state.currentSchedule = scheduleArr;
+        state.emiSummary = summery;
+      }
       state.emiSummary = summery;
     },
     removeSummery: (state) => {
@@ -223,14 +201,8 @@ const loansSlice = createSlice({
       ////
       .addCase(loanDetails.fulfilled, (s, a) => {})
       ////
-      .addCase(deleteLoan.pending, (s, a) => {
-        s.status = "loading";
-      })
       .addCase(deleteLoan.fulfilled, (s, a) => {
         s.status = "succeeded";
-      })
-      .addCase(deleteLoan.rejected, (s, a) => {
-        s.status = "failed";
       });
   },
 });

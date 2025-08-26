@@ -14,6 +14,7 @@ import CustomModal from "../../components/CustomModal";
 import AddLoan from "./components/AddLoan";
 import LoanCard from "./components/LoanCard";
 import LoanDetails from "./components/LoanDetails";
+import custMessage from "../../utils/toast";
 
 const LoansList = () => {
   const [data, setData] = useState([]);
@@ -68,7 +69,12 @@ const LoansList = () => {
   // }, [user]);
 
   const deleteLoanById = (id) => {
-    dispatch(deleteLoan(id));
+    dispatch(deleteLoan(id))
+      .unwrap()
+      .then((data) => {
+        custMessage.success("Loan Deleted successfully");
+      })
+      .catch((err) => {});
   };
 
   const getLoanDetails = async (id) => {
@@ -78,7 +84,8 @@ const LoansList = () => {
 
   useEffect(() => {
     if (!loanData) return;
-    dispatch(computeScheduleFor(loanData));
+    // dispatch(computeScheduleFor(loanData));
+    dispatch(computeScheduleFor({ data: loanData, type: "loanDetails" }));
   }, [loanData]);
 
   return (

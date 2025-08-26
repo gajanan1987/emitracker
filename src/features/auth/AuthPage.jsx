@@ -4,6 +4,7 @@ import { Link, useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import { fetchSession, signIn, signUp } from "../../redux/authSlice";
 import VantaBirds from "../../components/VantaBirds";
+import custMessage from "../../utils/toast";
 
 const AuthPage = () => {
   const [mode, setMode] = useState("login");
@@ -34,14 +35,30 @@ const AuthPage = () => {
     const email = formData.get("name");
     const password = formData.get("password");
 
-    if (!email || !password) return;
+    if (!email || !password) {
+      custMessage.warning("Please enter email and password");
+      return;
+    }
 
     if (mode === "login") {
-      dispatch(signIn({ email, password }));
+      dispatch(signIn({ email, password }))
+        .unwrap()
+        .then(() => {
+          custMessage.success("Login successfully");
+        })
+        .catch((err) => {
+          custMessage.error(err.message || "Login failed");
+        });
     } else {
-      dispatch(signUp({ email, password }));
-      alert("Signup initiated. Verify email, then login.");
-      setMode("login");
+      dispatch(signUp({ email, password }))
+        .unwrap()
+        .then(() => {
+          custMessage.info("Signup successful. Verify your email, then login");
+          setMode("login");
+        })
+        .catch((err) => {
+          custMessage.error(err.message || "Signup failed");
+        });
     }
   }
 
@@ -56,16 +73,11 @@ const AuthPage = () => {
           <h1>{mode === "login" ? "Sign In" : "Sign Up"}</h1>
 
           <div className="input-wrapper">
-            <input type="email" name="name" placeholder="Email" required />
+            <input type="email" name="name" placeholder="Email" />
           </div>
 
           <div className="input-wrapper">
-            <input
-              type="password"
-              name="password"
-              placeholder="Password"
-              required
-            />
+            <input type="password" name="password" placeholder="Password" />
           </div>
 
           <button
@@ -92,11 +104,11 @@ const AuthPage = () => {
             </Link>
           </p>
 
-          {error && (
+          {/* {error && (
             <p className="message">
               {error.message || "Sign In failed, please try again."}
             </p>
-          )}
+          )} */}
         </form>
       </div>
       <VantaBirds />

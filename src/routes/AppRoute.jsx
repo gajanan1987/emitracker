@@ -4,8 +4,8 @@ import ProtectedRotes from "./ProtectedRotes";
 import LoanCalculator from "../pages/LoanCalculator";
 // import LoanDetails from "../pages/LoanDetails";
 import AuthPage from "../features/auth/AuthPage";
-import Home from "../pages/Home";
 import LoansList from "../features/loans/LoansList";
+import Home from "../features/Home";
 
 const AppRoutes = () => {
   return (

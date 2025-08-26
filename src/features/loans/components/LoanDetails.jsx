@@ -17,7 +17,6 @@ const LoanDetails = () => {
   const { items, currentSchedule, emiSummary, status } = useSelector(
     (s) => s.loans
   );
-  console.log("🚀 ~ LoanDetails ~ emiSummary:", emiSummary);
 
   const navigatin = useNavigate();
 
@@ -70,10 +69,10 @@ const LoanDetails = () => {
               </p>
             </div>
             <div className="chart-wrapper">
-              <EmiChart
+              {/* <EmiChart
                 paid={emiSummary.paid}
                 total={emiSummary.tenure_months}
-              />
+              /> */}
               <p>Remaining Tenure: {emiSummary.remaining}</p>
             </div>
           </div>

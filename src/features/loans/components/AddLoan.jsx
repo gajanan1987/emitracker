@@ -45,7 +45,8 @@ const AddLoan = ({ emiSummary, onCloseModal }) => {
       emi_date: formData.loanEmiDate,
     };
     // const op = calculateEMI(data);
-    dispatch(computeScheduleFor(data));
+    // dispatch(computeScheduleFor(data));
+    dispatch(computeScheduleFor({ data, type: "addLoan" }));
   };
 
   const handleChange = (e) => {
