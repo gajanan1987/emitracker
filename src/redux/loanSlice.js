@@ -114,8 +114,8 @@ export const recalcSchedule = (op) => {
       principal: round(principalForMonth),
       interest: round(interestForMonth),
       balance: balance > 0 ? round(balance) : 0,
-      date: emiDueDate,
-      // date1: emiDueDate.toISOString(),
+      // date: emiDueDate,
+      date: emiDueDate.toISOString(),
     });
   }
 
