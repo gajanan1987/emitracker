@@ -40,7 +40,7 @@ export const deleteLoan = createAsyncThunk(
       .delete()
       .eq("id", loanId);
     if (error) return rejectWithValue(error.message);
-    return data;
+    return { id: loanId };
   }
 );
 
@@ -160,7 +160,6 @@ const loansSlice = createSlice({
   reducers: {
     computeScheduleFor: (state, action) => {
       const { data, type } = action.payload;
-      console.log("🚀 ~ data:", data);
       const { summery, scheduleArr } = recalcSchedule(data);
 
       if (type !== "addLoan") {
@@ -210,6 +209,9 @@ const loansSlice = createSlice({
         s.status = "loading";
       })
       .addCase(deleteLoan.fulfilled, (s, a) => {
+        s.items = s.items.filter((item) => {
+          return item.id !== a.payload.id;
+        });
         s.status = "idle";
       })
       .addCase(deleteLoan.rejected, (s, a) => {

@@ -10,7 +10,7 @@ const LoanCard = ({ item, remaningEmi, deleteLoanById, getLoanDetails }) => {
   };
 
   const handleDelete = (e) => {
-    deleteLoanById(id);
+    deleteLoanById(id, loan_name);
     e.stopPropagation();
   };
   return (

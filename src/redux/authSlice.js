@@ -39,6 +39,7 @@ const authSlice = createSlice({
   extraReducers: (builder) => {
     builder
       .addCase(fetchSession.fulfilled, (state, action) => {
+        state.status = "succeeded";
         state.user = action.payload;
       })
 

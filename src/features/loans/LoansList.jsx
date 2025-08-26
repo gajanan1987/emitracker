@@ -44,13 +44,15 @@ const LoansList = () => {
     navigatin("/");
   }
 
-  useEffect(() => {
-    if (loanStatus === "idle") {
-      dispatch(fetchLoans());
-    }
-  }, [dispatch, loanStatus]);
+  // useEffect(() => {
+  //   if (loanStatus === "idle") {
+  //     dispatch(fetchLoans());
+  //   }
+  // }, [dispatch, loanStatus]);
 
-  useEffect(() => {}, [dispatch]);
+  useEffect(() => {
+    dispatch(fetchLoans());
+  }, []);
 
   // useEffect(() => {
   //   if (!user) return;
@@ -66,12 +68,12 @@ const LoansList = () => {
   //   test();
   // }, [user]);
 
-  const deleteLoanById = (id) => {
-    console.log("🚀 ~ deleteLoanById ~ id:", id);
+  const deleteLoanById = (id, lname) => {
+    console.log("🚀 ~ deleteLoanById ~ lname:", lname);
     dispatch(deleteLoan(id))
       .unwrap()
       .then((data) => {
-        custMessage.success("Loan Deleted successfully");
+        custMessage.success(`${lname} Loan Deleted successfully`);
       })
       .catch((err) => {});
   };

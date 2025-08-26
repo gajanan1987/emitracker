@@ -20,7 +20,7 @@ const AddLoan = ({ emiSummary, onCloseModal }) => {
     user: { id, email },
   } = useSelector((s) => s.auth);
 
-  const saveToSupabase = async () => {
+  const addNewLoan = async () => {
     const payload = {
       user_id: id,
       loan_amount: formData.loanAmount,
@@ -33,7 +33,9 @@ const AddLoan = ({ emiSummary, onCloseModal }) => {
       email,
     };
 
-    const res = dispatch(createLoan(payload));
+    dispatch(createLoan(payload)).then((data) => {
+      console.log("🚀 ~ addNewLoan ~ data:", data);
+    });
     onCloseModal();
   };
 
@@ -150,7 +152,7 @@ const AddLoan = ({ emiSummary, onCloseModal }) => {
           <p>
             Remaining Interest: {formatINR(emiSummary.remainingInterest, true)}
           </p>
-          <button className="btn btn-primary" onClick={saveToSupabase}>
+          <button className="btn btn-primary" onClick={addNewLoan}>
             Save Loan
           </button>
         </div>

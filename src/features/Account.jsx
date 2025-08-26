@@ -3,7 +3,7 @@ import { useNavigate } from "react-router";
 import { signOut } from "../redux/authSlice";
 import { useDispatch, useSelector } from "react-redux";
 
-const Account = () => {
+const AccountPage = () => {
   const [loginUser, setUser] = useState(null);
 
   const dispatch = useDispatch();
@@ -42,4 +42,4 @@ const Account = () => {
   );
 };
 
-export default Account;
+export default AccountPage;
