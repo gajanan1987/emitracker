@@ -70,10 +70,10 @@ const LoanDetails = () => {
               </p>
             </div>
             <div className="chart-wrapper">
-              {/* <EmiChart
+              <EmiChart
                 paid={emiSummary.paid}
                 total={emiSummary.tenure_months}
-              /> */}
+              />
               <p>Remaining Tenure: {emiSummary.remaining}</p>
             </div>
           </div>
