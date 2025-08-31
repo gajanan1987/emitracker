@@ -17,7 +17,6 @@ import LoanDetails from "./components/LoanDetails";
 import custMessage from "../../utils/toast";
 
 const LoansList = () => {
-  const [data, setData] = useState([]);
   const [loanData, setLoanData] = useState();
   const [open, setOpen] = useState(false);
   const onOpenModal = () => setOpen(true);
@@ -44,32 +43,17 @@ const LoansList = () => {
     navigatin("/");
   }
 
-  // useEffect(() => {
-  //   if (loanStatus === "idle") {
-  //     dispatch(fetchLoans());
-  //   }
-  // }, [dispatch, loanStatus]);
-
   useEffect(() => {
     dispatch(fetchLoans());
   }, []);
 
-  // useEffect(() => {
-  //   if (!user) return;
-  //   async function test() {
-  //     const data = await getUserLoan(user.id);
-
-  //     if (data === "JWT expired") {
-  //       expire();
-  //     } else {
-  //       setData(data);
-  //     }
-  //   }
-  //   test();
-  // }, [user]);
+  useEffect(() => {
+    if (loanStatus === "failed") {
+      expire();
+    }
+  }, [items]);
 
   const deleteLoanById = (id, lname) => {
-    console.log("🚀 ~ deleteLoanById ~ lname:", lname);
     dispatch(deleteLoan(id))
       .unwrap()
       .then((data) => {
@@ -85,7 +69,6 @@ const LoansList = () => {
 
   useEffect(() => {
     if (!loanData) return;
-    // dispatch(computeScheduleFor(loanData));
     dispatch(computeScheduleFor({ data: loanData, type: "loanDetails" }));
   }, [loanData]);
 
@@ -95,6 +78,7 @@ const LoansList = () => {
         <LoanDetails />
       ) : (
         <>
+          {items === "JWT expired"}
           <div className="loan-card-wrapper">
             {items?.map((item) => {
               const targetDate = new Date(item.emi_date);

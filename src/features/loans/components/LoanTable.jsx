@@ -1,7 +1,10 @@
-import React from "react";
+import React, { useState } from "react";
 import { formatINR } from "../../../utils/number";
 
 const LoanTable = ({ currentSchedule }) => {
+  // State to track which year's details are expanded
+  const [expandedYear, setExpandedYear] = useState(null);
+
   const allYears = [
     ...new Set(
       currentSchedule?.map((item) => new Date(item.date).getFullYear())
@@ -43,6 +46,11 @@ const LoanTable = ({ currentSchedule }) => {
     };
   });
 
+  // Function to toggle visibility of the details for the clicked year
+  const toggleYearDetails = (year) => {
+    setExpandedYear((prevYear) => (prevYear === year ? null : year));
+  };
+
   return (
     <>
       <table className="table-reponsive loan-table">
@@ -61,13 +69,21 @@ const LoanTable = ({ currentSchedule }) => {
             return (
               <React.Fragment key={year}>
                 <tr className="tr-year">
-                  <td>{year}</td>
+                  <td onClick={() => toggleYearDetails(year)}>
+                    <span>+</span> {year}
+                  </td>
                   <td>{formatINR(summary?.principal, true)}</td>
                   <td>{formatINR(summary?.interest, true)}</td>
                   <td>{formatINR(summary?.emi, true)}</td>
                   <td>{formatINR(summary?.balance, true)}</td>
                 </tr>
-                <tr className="tr-details">
+
+                {/* Toggleable details row */}
+                <tr
+                  className={`tr-details ${
+                    expandedYear === year ? "open" : ""
+                  }`}
+                >
                   <td colSpan={5}>
                     <div>
                       <table>
@@ -88,9 +104,7 @@ const LoanTable = ({ currentSchedule }) => {
                                 </td>
                                 <td>{formatINR(row.principal, true)}</td>
                                 <td>{formatINR(row.interest, true)}</td>
-
                                 <td>{formatINR(row.emi, true)}</td>
-
                                 <td>{formatINR(row.balance, true)}</td>
                               </tr>
                             ))}
@@ -109,25 +123,3 @@ const LoanTable = ({ currentSchedule }) => {
 };
 
 export default LoanTable;
-
-// {
-//   allYears?.map((year) => (
-//     <div key={year}>
-//       <h3>{year}</h3>
-//       <ul>
-//         {currentSchedule
-//           ?.filter((row) => new Date(row.date).getFullYear() === year) // ✅ only this year's rows
-//           .map((row, index) => (
-//             <li key={index}>
-//               {new Date(row.date).toLocaleDateString("en-US", {
-//                 month: "short",
-//                 year: "numeric",
-//               })}{" "}
-//               - EMI: {row.emi}, Principal: {row.principal}, Interest:{" "}
-//               {row.interest}, Balance: {row.balance}
-//             </li>
-//           ))}
-//       </ul>
-//     </div>
-//   ));
-// }

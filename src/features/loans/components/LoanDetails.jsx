@@ -9,7 +9,7 @@ import { removeSummery } from "../../../redux/loanSlice";
 import LoanTable from "./LoanTable";
 
 const LoanDetails = () => {
-  const [view, setView] = useState("card");
+  const [view, setView] = useState("table");
   const dispatch = useDispatch();
   const { items, currentSchedule, emiSummary, status } = useSelector(
     (s) => s.loans
@@ -63,10 +63,10 @@ const LoanDetails = () => {
               </p>
             </div>
             <div className="chart-wrapper">
-              {/* <EmiChart
+              <EmiChart
                 paid={emiSummary.paid}
                 total={emiSummary.tenure_months}
-              /> */}
+              />
               <p>Remaining Tenure: {emiSummary.remaining}</p>
             </div>
           </div>
@@ -89,37 +89,6 @@ const LoanDetails = () => {
         ) : (
           <LoanTable currentSchedule={currentSchedule} />
         ))}
-
-      {/* <table>
-            <thead>
-              <tr>
-                <th>Month</th>
-                <th>EMI</th>
-                <th>Principal</th>
-                <th>Interest</th>
-                <th>Balance</th>
-              </tr>
-            </thead>
-            <tbody>
-              {currentSchedule.map((row, index) => (
-                <tr
-                  key={index}
-                  style={{
-                    background:
-                      new Date(row.date) <= new Date()
-                        ? "#e0ffe0"
-                        : "transparent",
-                  }}
-                >
-                  <td>{row.month}</td>
-                  <td>{row.emi}</td>
-                  <td>{row.principal}</td>
-                  <td>{row.interest}</td>
-                  <td>{row.balance}</td>
-                </tr>
-              ))}
-            </tbody>
-          </table> */}
     </div>
   );
 };
