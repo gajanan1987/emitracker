@@ -11,6 +11,16 @@
 ///
 .input-wrapper {
   margin-bottom: 15px;
+  display: flex;
+  flex-direction: column;
+
+  label {
+    font-size: 14px;
+    margin-bottom: 3px;
+    // color: var(--color-gray);
+    color: var(--color-sub);
+    @include Font-Semibold;
+  }
 
   input {
     touch-action: manipulation;
@@ -51,7 +61,7 @@
   input[type="number"],
   input[type="email"],
   input[type="url"] {
-    font-size: 16px;
+    font-size: 14px;
   }
 }
 
@@ -70,6 +80,6 @@
   input[type="number"],
   input[type="email"],
   input[type="url"] {
-    font-size: 16px;
+    font-size: 14px;
   }
 }

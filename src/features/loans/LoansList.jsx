@@ -39,11 +39,13 @@ const LoansList = () => {
   //cust modal
 
   async function expire() {
+    console.log("sadsad");
     dispatch(signOut());
     navigatin("/");
   }
 
   useEffect(() => {
+    dispatch(removeSummery());
     dispatch(fetchLoans());
   }, []);
 
@@ -64,6 +66,7 @@ const LoansList = () => {
 
   const getLoanDetails = async (id) => {
     const fetchLoan = await dispatch(loanDetails(id)).unwrap();
+    console.log("🚀 ~ getLoanDetails ~ fetchLoan:", fetchLoan);
     setLoanData(fetchLoan);
   };
 
@@ -78,22 +81,22 @@ const LoansList = () => {
         <LoanDetails />
       ) : (
         <>
-          {items === "JWT expired"}
           <div className="loan-card-wrapper">
-            {items?.map((item) => {
-              const targetDate = new Date(item.emi_date);
-              const tenure = item.tenure_months;
-              const remaningEmi = pendingEmi(targetDate, tenure);
-              return (
-                <LoanCard
-                  item={item}
-                  key={item.id}
-                  remaningEmi={remaningEmi}
-                  deleteLoanById={deleteLoanById}
-                  getLoanDetails={getLoanDetails}
-                />
-              );
-            })}
+            {Array.isArray(items) &&
+              items?.map((item) => {
+                const targetDate = new Date(item.emi_date);
+                const tenure = item.tenure_months;
+                const remaningEmi = pendingEmi(targetDate, tenure);
+                return (
+                  <LoanCard
+                    item={item}
+                    key={item.id}
+                    remaningEmi={remaningEmi}
+                    deleteLoanById={deleteLoanById}
+                    getLoanDetails={getLoanDetails}
+                  />
+                );
+              })}
           </div>
           <CustomModal
             open={open}

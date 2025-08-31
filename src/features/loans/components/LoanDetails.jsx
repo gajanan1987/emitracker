@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { data, Link, useLocation, useNavigate } from "react-router";
-import { calculateEMI } from "../../../utils/calculateEmi";
+// import { calculateEMI } from "../../../utils/calculateEmi";
 import LoanDetailsCard from "./LoanDetailsCard";
 import { formatIN, formatINR } from "../../../utils/number";
 import EmiChart from "../../../components/EmiChart";
@@ -14,8 +14,6 @@ const LoanDetails = () => {
   const { items, currentSchedule, emiSummary, status } = useSelector(
     (s) => s.loans
   );
-
-  const navigatin = useNavigate();
 
   const handleBack = () => {
     dispatch(removeSummery());
@@ -31,42 +29,63 @@ const LoanDetails = () => {
 
   return (
     <div className="loan-details-wrapper">
-      <Link className="btn btn-primary" onClick={handleBack}>
+      <Link className="btn btn-primary btn-back" onClick={handleBack}>
         Back
       </Link>
       {emiSummary && (
         <>
           <div className="loan-details-header">
             <div className="loan-details">
-              <p>Loan Name: {emiSummary.loan_name}</p>
-              <p>Loan Amount: {formatINR(emiSummary.loan_amount, true)}</p>
-              <p>EMI: {formatINR(emiSummary.emi, true)}</p>
-              <p>Interest Rate : {emiSummary.interest_rate}%</p>
-              <p>Emi Paid: {emiSummary.paid}</p>
-              <p>Paid Interest: {formatINR(emiSummary.paidInterest, true)}</p>
-              <p>Paid Principal: {formatINR(emiSummary.paidPrincipal, true)}</p>
+              <p>
+                <span>Loan Name:</span> {emiSummary.loan_name}
+              </p>
+              <p>
+                <span>Loan Amount:</span>
+                {formatINR(emiSummary.loan_amount, true)}
+              </p>
+              <p>
+                <span>EMI:</span> {formatINR(emiSummary.emi, true)}
+              </p>
+              <p>
+                <span>Interest Rate :</span> {emiSummary.interest_rate}%
+              </p>
+              <p>
+                <span>Emi Paid:</span> {emiSummary.paid}
+              </p>
+              <p>
+                <span>Paid Interest:</span>
+                {formatINR(emiSummary.paidInterest, true)}
+              </p>
+              <p>
+                <span>Paid Principal:</span>
+                {formatINR(emiSummary.paidPrincipal, true)}
+              </p>
               {/* <p>Remaining Tenure: {emiSummary.remaining}</p> */}
               <p>
-                Remaining Interest:{" "}
+                <span>Remaining Interest: </span>
                 {formatINR(emiSummary.remainingInterest, true)}
               </p>
               <p>
-                Remaining Principal:{" "}
+                <span>Remaining Principal: </span>
                 {formatINR(emiSummary.remainingPrincipal, true)}
               </p>
-              <p>Total Tenure: {emiSummary.tenure_months}</p>
               <p>
-                Total Interest Paid: {formatINR(emiSummary.totalInterest, true)}
+                <span>Total Tenure: </span> {emiSummary.tenure_months}
               </p>
               <p>
-                Total Principal Paid: {formatINR(emiSummary.totalPayment, true)}
+                <span>Total Interest Paid: </span>{" "}
+                {formatINR(emiSummary.totalInterest, true)}
+              </p>
+              <p>
+                <span>Total Principal Paid: </span>{" "}
+                {formatINR(emiSummary.totalPayment, true)}
               </p>
             </div>
             <div className="chart-wrapper">
-              <EmiChart
+              {/* <EmiChart
                 paid={emiSummary.paid}
                 total={emiSummary.tenure_months}
-              />
+              /> */}
               <p>Remaining Tenure: {emiSummary.remaining}</p>
             </div>
           </div>

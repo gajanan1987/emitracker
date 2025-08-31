@@ -1,4 +1,8 @@
-import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
+import {
+  createSlice,
+  createAsyncThunk,
+  createSelector,
+} from "@reduxjs/toolkit";
 import supabase from "../services/supabase";
 import { addMonths, format } from "date-fns";
 
@@ -168,6 +172,7 @@ const loansSlice = createSlice({
     computeScheduleFor: (state, action) => {
       const { data, type } = action.payload;
       const { summery, scheduleArr } = recalcSchedule(data);
+      console.log("🚀 ~ data:", data);
 
       if (type !== "addLoan") {
         state.currentSchedule = scheduleArr;
@@ -188,7 +193,7 @@ const loansSlice = createSlice({
       })
       .addCase(createLoan.fulfilled, (s, a) => {
         s.status = "succeeded";
-        s.items.unshift(a.payload);
+        s.items.push(a.payload);
         s.currentSchedule = null;
         s.emiSummary = null;
       })
@@ -226,6 +231,18 @@ const loansSlice = createSlice({
       });
   },
 });
+
+////
+const selectLoansState = (state) => state.loans;
+// export const selectAllLoans = createSelector(
+//   [selectLoansState],
+//   (loansState) => loansState
+// );
+
+export const selectScheduleState = createSelector(
+  [selectLoansState],
+  (state) => state.currentSchedule
+);
 
 export const { computeScheduleFor, removeSummery } = loansSlice.actions;
 export default loansSlice.reducer;

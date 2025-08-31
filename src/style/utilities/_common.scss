@@ -87,7 +87,7 @@ img {
 	overflow-x: hidden;
 
 	@include mq("t-768", "max") {
-		margin-right: -24px;
+		// margin-right: -24px;
 		overflow-x: scroll;
 	}
 }

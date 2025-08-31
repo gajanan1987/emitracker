@@ -92,6 +92,10 @@
   background-color: #dedede;
   font-size: 16px;
 
+  @include mq("t-768", "max") {
+   font-size: 13px;
+  }
+
   &:nth-child(2) {
    background-color: #88a825;
    color: var(--color-white);

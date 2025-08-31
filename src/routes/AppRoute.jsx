@@ -4,7 +4,7 @@ import AuthPage from "../features/auth/AuthPage";
 import LoansList from "../features/loans/LoansList";
 import Home from "../features/Home";
 import AccountPage from "../features/Account";
-import LoanCalculator from "../features/LoanCalculator";
+import LoanCalculator from "../features/calculator/LoanCalculator";
 
 const AppRoutes = () => {
   return (

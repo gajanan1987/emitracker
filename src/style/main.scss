@@ -1,6 +1,8 @@
 @import "./utilities/utilities-dir";
+@import "./modal.scss";
 @import "./header.scss";
 @import "./Loan/addLoan.scss";
+@import "./loanCalculator.scss";
 
 .home-bg {
  background-image: url("https://qodgdfkdugrkqbhcpcba.supabase.co/storage/v1/object/public/emi/home-bg.jpg");

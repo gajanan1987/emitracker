@@ -42,17 +42,7 @@ const EmiChart = ({ paid, total }) => {
       </ResponsiveContainer>
 
       {/* Centered Label */}
-      <div
-        style={{
-          position: "absolute",
-          top: "50%",
-          left: "50%",
-          transform: "translate(-50%, -50%)",
-          fontSize: "18px",
-          fontWeight: "bold",
-          color: "#333",
-        }}
-      >
+      <div className="remaning-emi">
         {paid} / {total}
       </div>
     </div>

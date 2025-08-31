@@ -99,6 +99,7 @@ const LoanTable = ({ currentSchedule }) => {
                                     "en-US",
                                     {
                                       month: "short",
+                                      day: "numeric",
                                     }
                                   )}
                                 </td>

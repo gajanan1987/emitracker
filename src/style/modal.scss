@@ -1,0 +1,10 @@
+.react-responsive-modal-root {
+ .react-responsive-modal-modal {
+  border-radius: 10px;
+  padding-top: 50px;
+
+  @include mq("t-768", "min") {
+   min-width: 450px;
+  }
+ }
+}
