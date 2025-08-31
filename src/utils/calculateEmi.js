@@ -87,3 +87,53 @@ export const calculateEMI = (op) => {
 
   return [summery, scheduleArr];
 };
+
+export function calculateLoanAmount(EMI, r, n) {
+  let monthlyRate = r / 12 / 100;
+  const P =
+    (EMI * (Math.pow(1 + monthlyRate, n) - 1)) /
+    (monthlyRate * Math.pow(1 + monthlyRate, n));
+  return Math.round(P);
+}
+
+export function calculateROI(P, EMI, n) {
+  let low = 0,
+    high = 1,
+    r,
+    guessEMI;
+
+  for (let i = 0; i < 100; i++) {
+    r = (low + high) / 2;
+    guessEMI = (P * r * Math.pow(1 + r, n)) / (Math.pow(1 + r, n) - 1);
+
+    if (guessEMI > EMI) {
+      high = r;
+    } else {
+      low = r;
+    }
+  }
+  return (r * 12 * 100).toFixed(2); // Annual ROI %
+}
+
+export function calculateRemainingTenure(balance, EMI, annualROI, emiDay) {
+  const r = annualROI / 12 / 100; // monthly rate
+
+  if (EMI <= balance * r) {
+    throw new Error("Invalid: EMI too low for this interest rate");
+  }
+
+  const n = Math.log(EMI / (EMI - balance * r)) / Math.log(1 + r);
+
+  const today = new Date();
+  const thisMonthEMIDate = new Date(
+    today.getFullYear(),
+    today.getMonth(),
+    emiDay
+  );
+
+  if (today >= thisMonthEMIDate) {
+    return Math.floor(n);
+  } else {
+    return Math.ceil(n);
+  }
+}

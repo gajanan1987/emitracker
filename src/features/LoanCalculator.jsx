@@ -2,19 +2,21 @@ import { useState } from "react";
 import { addMonths, format } from "date-fns";
 import "./../style/loanCalculator.scss";
 import { formatINR } from "../utils/number";
+import {
+  calculateLoanAmount,
+  calculateRemainingTenure,
+  calculateROI,
+} from "../utils/calculateEmi";
 
 export default function LoanCalculator() {
   const [loanAmount, setLoanAmount] = useState("");
   const [interestRate, setInterestRate] = useState("");
   const [tenure, setTenure] = useState("");
 
-  const [loanDate, setLoanDate] = useState("");
-  const [emiDate, setEmiDate] = useState("");
-
   const [schedule, setSchedule] = useState([]);
   const [summary, setSummary] = useState(null);
 
-  const round = (num) => Math.round(num); // ✅ rounding helper
+  const round = (num) => Math.round(num);
 
   const calculateEMI = () => {
     const P = parseFloat(loanAmount);
@@ -22,19 +24,14 @@ export default function LoanCalculator() {
     const n = parseInt(tenure);
     const r = annualRate / 12 / 100;
 
-    if (!P || !annualRate || !n || !loanDate || !emiDate) {
+    if (!P || !annualRate || !n) {
       alert("Please fill all fields correctly!");
       return;
     }
 
-    const loanStart = new Date(loanDate);
-    const firstEmi = new Date(emiDate);
-
-    // ✅ validation: first EMI date should be after loan start date
-    if (firstEmi <= loanStart) {
-      alert("First EMI Date must be greater than Loan Start Date!");
-      return;
-    }
+    // ---- Assumptions ----
+    const loanStart = new Date(); // today
+    const firstEmi = addMonths(loanStart, 1); // first EMI after 1 month
 
     // EMI Formula
     const emi = (P * r * Math.pow(1 + r, n)) / (Math.pow(1 + r, n) - 1);
@@ -45,8 +42,6 @@ export default function LoanCalculator() {
     let totalInterest = 0;
     let totalPrincipal = 0;
 
-    let startDate = firstEmi;
-
     for (let i = 1; i <= n; i++) {
       const interestForMonth = balance * r;
       const principalForMonth = emi - interestForMonth;
@@ -55,7 +50,7 @@ export default function LoanCalculator() {
       totalInterest += interestForMonth;
       totalPrincipal += principalForMonth;
 
-      const emiDueDate = addMonths(startDate, i - 1);
+      const emiDueDate = addMonths(firstEmi, i - 1);
 
       scheduleArr.push({
         month: format(emiDueDate, "dd MMM yyyy"),
@@ -97,9 +92,16 @@ export default function LoanCalculator() {
     });
   };
 
+  const op = calculateLoanAmount(32500, 7.4, 54);
+  console.log("🚀 ~ LoanCalculator ~ op:", op);
+  const op1 = calculateROI(1488833, 32500, 54);
+  console.log("🚀 ~ LoanCalculator ~ op1:", op1);
+  const op2 = calculateRemainingTenure(1488833, 32500, 7.4, 20);
+  console.log("🚀 ~ LoanCalculator ~ op2:", op2);
+
   return (
     <div className="loan-tracker">
-      <h1>Loan EMI Tracker</h1>
+      <h1>EMI Calculator</h1>
 
       <div className="form">
         <input
@@ -108,6 +110,7 @@ export default function LoanCalculator() {
           value={loanAmount}
           onChange={(e) => setLoanAmount(e.target.value)}
         />
+        {/* <input type="range" id="volume" name="volume" min="0" max="100" /> */}
         <input
           type="number"
           placeholder="Annual Interest Rate (%)"
@@ -119,18 +122,6 @@ export default function LoanCalculator() {
           placeholder="Tenure (Months)"
           value={tenure}
           onChange={(e) => setTenure(e.target.value)}
-        />
-        <label>Loan Start Date</label>
-        <input
-          type="date"
-          value={loanDate}
-          onChange={(e) => setLoanDate(e.target.value)}
-        />
-        <label>First EMI Date</label>
-        <input
-          type="date"
-          value={emiDate}
-          onChange={(e) => setEmiDate(e.target.value)}
         />
         <button className="btn btn-primary" onClick={calculateEMI}>
           Calculate

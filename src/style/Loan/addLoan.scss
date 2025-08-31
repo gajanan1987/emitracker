@@ -1,6 +1,14 @@
 @import "./loan-card.scss";
 
-.loan-details-page {
+.loan-details-wrapper {
+ .btn-wrapper {
+  display: flex;
+  justify-content: flex-end;
+  margin-bottom: 16px;
+ }
+}
+
+.loan-details-header {
  display: flex;
  flex-direction: row;
  margin-bottom: 24px;

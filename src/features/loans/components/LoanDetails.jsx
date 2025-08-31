@@ -1,49 +1,42 @@
 import React, { useEffect, useState } from "react";
-import { Link, useLocation, useNavigate } from "react-router";
+import { data, Link, useLocation, useNavigate } from "react-router";
 import { calculateEMI } from "../../../utils/calculateEmi";
 import LoanDetailsCard from "./LoanDetailsCard";
 import { formatIN, formatINR } from "../../../utils/number";
 import EmiChart from "../../../components/EmiChart";
 import { useDispatch, useSelector } from "react-redux";
 import { removeSummery } from "../../../redux/loanSlice";
+import LoanTable from "./LoanTable";
 
 const LoanDetails = () => {
-  const [data, setData] = useState([]);
-  const [summary, setSummary] = useState([]);
-  const [schedule, setSchedule] = useState([]);
+  const [view, setView] = useState("card");
   const dispatch = useDispatch();
-  // const location = useLocation();
-  // const id = location.state.loanId;
   const { items, currentSchedule, emiSummary, status } = useSelector(
     (s) => s.loans
   );
 
   const navigatin = useNavigate();
 
-  // useEffect(() => {
-  //   async function fetchData() {
-  //     const data = await getUserLoanDetailsbyId(id);
-  //     setData(data);
-  //     const op = calculateEMI(data);
-  //     setSummary(op[0]);
-  //     setSchedule(op[1]);
-  //   }
-  //   fetchData();
-  // }, [id]);
-
   const handleBack = () => {
-    // navigatin(-1);
     dispatch(removeSummery());
   };
 
+  const handleView = () => {
+    if (view === "card") {
+      setView("table");
+    } else {
+      setView("card");
+    }
+  };
+
   return (
-    <div>
+    <div className="loan-details-wrapper">
       <Link className="btn btn-primary" onClick={handleBack}>
         Back
       </Link>
       {emiSummary && (
         <>
-          <div className="loan-details-page">
+          <div className="loan-details-header">
             <div className="loan-details">
               <p>Loan Name: {emiSummary.loan_name}</p>
               <p>Loan Amount: {formatINR(emiSummary.loan_amount, true)}</p>
@@ -70,58 +63,63 @@ const LoanDetails = () => {
               </p>
             </div>
             <div className="chart-wrapper">
-              <EmiChart
+              {/* <EmiChart
                 paid={emiSummary.paid}
                 total={emiSummary.tenure_months}
-              />
+              /> */}
               <p>Remaining Tenure: {emiSummary.remaining}</p>
             </div>
           </div>
         </>
       )}
 
-      {currentSchedule.length > 0 && (
-        <>
-          <div className="loandetails-card">
-            {currentSchedule.map((item, index) => {
-              return (
-                <LoanDetailsCard item={item} key={item.month} index={index} />
-              );
-            })}
-          </div>
-        </>
-      )}
+      <div className="btn-wrapper">
+        <button className="btn btn-primary" onClick={() => handleView()}>
+          {view === "card" ? "Switch Table view" : "Switch Card View"}
+        </button>
+      </div>
 
-      {/* {currentSchedule.length > 0 && (
-        <table>
-          <thead>
-            <tr>
-              <th>Month</th>
-              <th>EMI</th>
-              <th>Principal</th>
-              <th>Interest</th>
-              <th>Balance</th>
-            </tr>
-          </thead>
-          <tbody>
-            {currentSchedule.map((row, index) => (
-              <tr
-                key={index}
-                style={{
-                  background:
-                    row.date <= new Date() ? "#e0ffe0" : "transparent",
-                }}
-              >
-                <td>{row.month}</td>
-                <td>{row.emi}</td>
-                <td>{row.principal}</td>
-                <td>{row.interest}</td>
-                <td>{row.balance}</td>
-              </tr>
+      {currentSchedule.length > 0 &&
+        (view === "card" ? (
+          <div className="loandetails-card">
+            {currentSchedule.map((item, index) => (
+              <LoanDetailsCard item={item} key={item.month} index={index} />
             ))}
-          </tbody>
-        </table>
-      )} */}
+          </div>
+        ) : (
+          <LoanTable currentSchedule={currentSchedule} />
+        ))}
+
+      {/* <table>
+            <thead>
+              <tr>
+                <th>Month</th>
+                <th>EMI</th>
+                <th>Principal</th>
+                <th>Interest</th>
+                <th>Balance</th>
+              </tr>
+            </thead>
+            <tbody>
+              {currentSchedule.map((row, index) => (
+                <tr
+                  key={index}
+                  style={{
+                    background:
+                      new Date(row.date) <= new Date()
+                        ? "#e0ffe0"
+                        : "transparent",
+                  }}
+                >
+                  <td>{row.month}</td>
+                  <td>{row.emi}</td>
+                  <td>{row.principal}</td>
+                  <td>{row.interest}</td>
+                  <td>{row.balance}</td>
+                </tr>
+              ))}
+            </tbody>
+          </table> */}
     </div>
   );
 };

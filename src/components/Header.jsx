@@ -11,7 +11,7 @@ const Header = () => {
       </NavLink>
       <ul className="nav-links">
         <li>
-          <NavLink to="/loancalculator">Loan Calculator</NavLink>
+          <NavLink to="/loancalculator">EMI Calculator</NavLink>
         </li>
         {!user && (
           <>
