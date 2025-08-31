@@ -92,12 +92,12 @@ export default function LoanCalculator() {
     });
   };
 
-  const op = calculateLoanAmount(32500, 7.4, 54);
-  console.log("🚀 ~ LoanCalculator ~ op:", op);
-  const op1 = calculateROI(1488833, 32500, 54);
-  console.log("🚀 ~ LoanCalculator ~ op1:", op1);
-  const op2 = calculateRemainingTenure(1488833, 32500, 7.4, 20);
-  console.log("🚀 ~ LoanCalculator ~ op2:", op2);
+  // const op = calculateLoanAmount(32500, 7.4, 54);
+  // console.log("🚀 ~ LoanCalculator ~ op:", op);
+  // const op1 = calculateROI(1488833, 32500, 54);
+  // console.log("🚀 ~ LoanCalculator ~ op1:", op1);
+  // const op2 = calculateRemainingTenure(1488833, 32500, 7.4, 20);
+  // console.log("🚀 ~ LoanCalculator ~ op2:", op2);
 
   return (
     <div className="loan-tracker">
@@ -132,18 +132,18 @@ export default function LoanCalculator() {
         <div className="summary">
           <h2>Summary</h2>
           <p>EMI: {formatINR(summary.emi, true)}</p>
-          <p>Total Interest: {formatINR(summary.totalInterest, true)}</p>
-          <p>Total Payment: {formatINR(summary.totalPayment, true)}</p>
-          <p>Paid EMIs: {summary.paid}</p>
-          <p>Remaining EMIs: {summary.remaining}</p>
-          <p>Principal Paid: {formatINR(summary.paidPrincipal, true)}</p>
-          <p>Interest Paid: {formatINR(summary.paidInterest, true)}</p>
-          <p>
+          <p>Interest: {formatINR(summary.totalInterest, true)}</p>
+          <p>Loan + Interest: {formatINR(summary.totalPayment, true)}</p>
+          {/* <p>Paid EMIs: {summary.paid}</p> */}
+          {/* <p>Remaining EMIs: {summary.remaining}</p> */}
+          {/* <p>Principal Paid: {formatINR(summary.paidPrincipal, true)}</p>
+          <p>Interest Paid: {formatINR(summary.paidInterest, true)}</p> */}
+          {/* <p>
             Remaining Principal: {formatINR(summary.remainingPrincipal, true)}
           </p>
           <p>
             Remaining Interest: {formatINR(summary.remainingInterest, true)}
-          </p>
+          </p> */}
         </div>
       )}
 

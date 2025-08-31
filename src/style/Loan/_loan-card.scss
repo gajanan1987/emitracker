@@ -81,26 +81,44 @@
  }
 }
 
-table {
- width: 100%;
- border-collapse: collapse;
- background: white;
+.loan-table {
+
+ background-color: #eee;
  border-radius: 8px;
- overflow: hidden;
+
+ th {
+  background-color: #dedede;
+ }
+
+ // #88a825
+ //#ed8c2b
 
  th,
  td {
   padding: 10px;
-  border-bottom: 1px solid #eee;
+  border-bottom: 1px solid var(--color-border);
+  color: var(--color-black);
   text-align: center;
  }
 
- th {
-  background: #4cafef;
-  color: white;
+
+ .tr-year {
+  td {
+   font-weight: 600;
+  }
  }
 
- tr:nth-child(even) {
-  background: #f9f9f9;
+ .tr-details {
+  >td {
+   padding: 0;
+  }
+
+  table {
+   margin: 0;
+
+   td {
+    background-color: #dedede;
+   }
+  }
  }
 }
