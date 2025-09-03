@@ -20,11 +20,11 @@ const PrincipalCalc = () => {
     const op = calculateLoanAmount(emi, roi, tenure);
     setPrinc(op);
 
-    // return {
-    //   ...prevState,
-    //   data: op,
-    //   error: null,
-    // };
+    return {
+      ...prevState,
+      data: op,
+      error: null,
+    };
   }
   return (
     <>

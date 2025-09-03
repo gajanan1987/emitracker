@@ -10,6 +10,7 @@ const RoiCalc = () => {
   const [state, formAction, isPending] = useActionState(formData, initialstate);
 
   async function formData(prevState, formData) {
+    console.log("🚀 ~ formData ~ formData:", formData);
     const emi = formData.get("emi");
     const loanAmount = formData.get("loanAmount");
     const tenure = formData.get("tenure");
