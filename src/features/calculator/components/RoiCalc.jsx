@@ -1,56 +1,70 @@
-import { useActionState, useState } from "react";
+import { useState } from "react";
 import { calculateROI } from "../../../utils/calculateEmi";
 
 const RoiCalc = () => {
   const [roi, setRoi] = useState(null);
-  const initialstate = {
-    data: null,
-    error: null,
-  };
-  const [state, formAction, isPending] = useActionState(formData, initialstate);
+  const [formdata, setFormdata] = useState({});
 
-  async function formData(prevState, formData) {
-    console.log("🚀 ~ formData ~ formData:", formData);
-    const emi = formData.get("emi");
-    const loanAmount = formData.get("loanAmount");
-    const tenure = formData.get("tenure");
+  const handleChange = (e) => {
+    const { name, value } = e.target;
+    const data = { ...formdata, [name]: value };
+    setFormdata(data);
+  };
+
+  const handleSubmit = () => {
+    const { emi, loanAmount, tenure } = formdata;
+    console.log("🚀 ~ handleSubmit ~ formdata:", formdata);
 
     const op = calculateROI(loanAmount, emi, tenure);
     console.log("🚀 ~ formData ~ op:", op);
     setRoi(op);
-  }
+  };
   return (
     <>
       <h1>Calculate ROI</h1>
-      <form className="form" action={formAction}>
+      <div className="form">
         <div className="input-wrapper">
           <label>Enter EMI</label>
-          <input type="number" name="emi" placeholder="EMI Amount" />
+          <input
+            type="number"
+            value={formdata.emi}
+            name="emi"
+            placeholder="EMI Amount"
+            onChange={(e) => handleChange(e)}
+          />
         </div>
 
         <div className="input-wrapper">
           <label>Enter Outstanding Amount</label>
           <input
             type="number"
+            value={formdata.loanAmount}
             placeholder="Outstanding Amount"
             name="loanAmount"
+            onChange={(e) => handleChange(e)}
           />
         </div>
 
         <div className="input-wrapper">
           <label>Enter Tenure</label>
-          <input type="number" placeholder="Tenure (Months)" name="tenure" />
+          <input
+            type="number"
+            value={formdata.tenure}
+            placeholder="Tenure (Months)"
+            name="tenure"
+            onChange={(e) => handleChange(e)}
+          />
         </div>
 
         <div className="btn-wrapper">
-          <button className="btn btn-primary" type="submit">
-            {isPending ? "Calculating..." : "Calculate"}
+          <button className="btn btn-primary" onClick={() => handleSubmit()}>
+            Calculate
           </button>
         </div>
-      </form>
+      </div>
       {roi && (
         <h1>
-          Remaning Principal : <span>{roi} %</span>
+          ROI is : <span>{roi} %</span>
         </h1>
       )}
     </>
