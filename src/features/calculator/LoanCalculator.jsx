@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { addMonths, format } from "date-fns";
 import { formatINR } from "../../utils/number";
 import {
@@ -8,13 +8,17 @@ import {
 } from "../../utils/calculateEmi";
 import LoanTable from "../loans/components/LoanTable";
 import { useDispatch, useSelector } from "react-redux";
-import { computeScheduleFor, selectScheduleState } from "../../redux/loanSlice";
+import {
+  computeScheduleFor,
+  removeSummery,
+  selectScheduleState,
+} from "../../redux/loanSlice";
 import { Link, NavLink } from "react-router";
 import RoiCalc from "./components/RoiCalc";
 import PrincipalCalc from "./components/PrincipalCalc";
 
 export default function LoanCalculator() {
-  const menu = ["Calculate EMI", "Calculate ROI", "Calculate Loan Amount"];
+  const menu = ["Calculate EMI", "Calculate ROI", "Calculate Principal"];
   const dispatch = useDispatch();
   const currentSchedule = useSelector(selectScheduleState);
   console.log("🚀 ~ LoanCalculator ~ currentSchedule:", currentSchedule);
@@ -47,6 +51,9 @@ export default function LoanCalculator() {
 
   const handleChange = (item) => {
     setBtn(item);
+    if (currentSchedule) {
+      dispatch(removeSummery());
+    }
   };
 
   // const op = calculateLoanAmount(32500, 7.4, 54);
@@ -119,7 +126,7 @@ export default function LoanCalculator() {
         </>
       )}
       {btn === "Calculate ROI" && <RoiCalc />}
-      {btn === "Calculate Loan Amount" && <PrincipalCalc />}
+      {btn === "Calculate Principal" && <PrincipalCalc />}
 
       {summary && (
         <div className="summary">

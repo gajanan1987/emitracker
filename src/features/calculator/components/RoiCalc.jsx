@@ -1,6 +1,8 @@
-import { useActionState } from "react";
+import { useActionState, useState } from "react";
+import { calculateROI } from "../../../utils/calculateEmi";
 
 const RoiCalc = () => {
+  const [roi, setRoi] = useState(null);
   const initialstate = {
     data: null,
     error: null,
@@ -9,9 +11,12 @@ const RoiCalc = () => {
 
   async function formData(prevState, formData) {
     const emi = formData.get("emi");
-    console.log("🚀 ~ formData ~ emi:", emi);
     const loanAmount = formData.get("loanAmount");
     const tenure = formData.get("tenure");
+
+    const op = calculateROI(loanAmount, emi, tenure);
+    console.log("🚀 ~ formData ~ op:", op);
+    setRoi(op);
   }
   return (
     <>
@@ -42,6 +47,11 @@ const RoiCalc = () => {
           </button>
         </div>
       </form>
+      {roi && (
+        <h1>
+          Remaning Principal : <span>{roi} %</span>
+        </h1>
+      )}
     </>
   );
 };

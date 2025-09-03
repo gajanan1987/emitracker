@@ -1,6 +1,9 @@
-import { useActionState } from "react";
+import { useActionState, useState } from "react";
+import { calculateLoanAmount } from "../../../utils/calculateEmi";
+import { formatINR } from "../../../utils/number";
 
 const PrincipalCalc = () => {
+  const [princ, setPrinc] = useState(null);
   const initialstate = {
     data: null,
     error: null,
@@ -11,10 +14,21 @@ const PrincipalCalc = () => {
     const emi = formData.get("emi");
     const roi = formData.get("roi");
     const tenure = formData.get("tenure");
+
+    if (!emi || !roi || !tenure) return;
+
+    const op = calculateLoanAmount(emi, roi, tenure);
+    setPrinc(op);
+
+    // return {
+    //   ...prevState,
+    //   data: op,
+    //   error: null,
+    // };
   }
   return (
     <>
-      <h1>Calculate Loan Amount</h1>
+      <h1>Calculate Principal</h1>
       <form className="form" action={formAction}>
         <div className="input-wrapper">
           <label>Enter EMI</label>
@@ -26,6 +40,7 @@ const PrincipalCalc = () => {
           <input
             type="number"
             placeholder="Annual Interest Rate (%)"
+            step="any"
             name="roi"
           />
         </div>
@@ -41,6 +56,12 @@ const PrincipalCalc = () => {
           </button>
         </div>
       </form>
+
+      {princ && (
+        <h1>
+          Remaning Principal : <span>{formatINR(princ, true)}</span>
+        </h1>
+      )}
     </>
   );
 };
