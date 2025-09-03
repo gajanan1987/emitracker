@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { calculateLoanAmount } from "../../../utils/calculateEmi";
 import { formatINR } from "../../../utils/number";
+import custMessage from "../../../utils/toast";
 
 const PrincipalCalc = () => {
   const [princ, setPrinc] = useState(null);
@@ -15,9 +16,13 @@ const PrincipalCalc = () => {
   const handleSubmit = () => {
     const { emi, roi, tenure } = formdata;
 
+    if (!emi || !roi || !tenure) {
+      custMessage.warning("Please fill all fields");
+      return;
+    }
+
     const op = calculateLoanAmount(emi, roi, tenure);
-    console.log("🚀 ~ handleSubmit ~ op:", op);
-    setPrinc(op);
+    if (!op) setPrinc(op);
   };
 
   return (

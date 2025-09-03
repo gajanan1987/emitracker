@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { calculateROI } from "../../../utils/calculateEmi";
+import custMessage from "../../../utils/toast";
 
 const RoiCalc = () => {
   const [roi, setRoi] = useState(null);
@@ -13,10 +14,12 @@ const RoiCalc = () => {
 
   const handleSubmit = () => {
     const { emi, loanAmount, tenure } = formdata;
-    console.log("🚀 ~ handleSubmit ~ formdata:", formdata);
+    if (!emi || !loanAmount || !tenure) {
+      custMessage.warning("Please fill all fields");
+      return;
+    }
 
     const op = calculateROI(loanAmount, emi, tenure);
-    console.log("🚀 ~ formData ~ op:", op);
     setRoi(op);
   };
   return (
