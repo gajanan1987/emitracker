@@ -12,8 +12,8 @@ const AddLoan = ({ emiSummary, onCloseModal }) => {
     loanAmount: 1234567,
     loanIntrest: 12,
     loanTenure: 40,
-    loanDate: "2025-08-01",
-    loanEmiDate: "2025-08-05",
+    loanDate: "2025-09-01",
+    loanEmiDate: "2025-09-05",
     loanName: "testing",
   });
 

@@ -1,22 +1,28 @@
-import { BrowserRouter, Routes, Route } from "react-router";
+import { lazy, Suspense } from "react";
+import { Routes, Route } from "react-router";
 import ProtectedRotes from "./ProtectedRotes";
-import AuthPage from "../features/auth/AuthPage";
-import LoansList from "../features/loans/LoansList";
-import Home from "../features/Home";
-import AccountPage from "../features/Account";
-import LoanCalculator from "../features/calculator/LoanCalculator";
+
+const Home = lazy(() => import("../features/Home"));
+const AuthPage = lazy(() => import("../features/auth/AuthPage"));
+const LoanCalculator = lazy(() =>
+  import("../features/calculator/LoanCalculator")
+);
+const LoansList = lazy(() => import("../features/loans/LoansList"));
+const AccountPage = lazy(() => import("../features/Account"));
 
 const AppRoutes = () => {
   return (
-    <Routes>
-      <Route path="/" element={<Home />} />
-      <Route path="/login" element={<AuthPage />} />
-      <Route path="/loancalculator" element={<LoanCalculator />} />
-      <Route element={<ProtectedRotes />}>
-        <Route path="/loans-list" element={<LoansList />} />
-        <Route path="/account" element={<AccountPage />} />
-      </Route>
-    </Routes>
+    <Suspense fallback="Loading.....">
+      <Routes>
+        <Route path="/" element={<Home />} />
+        <Route path="/login" element={<AuthPage />} />
+        <Route path="/loancalculator" element={<LoanCalculator />} />
+        <Route element={<ProtectedRotes />}>
+          <Route path="/loans-list" element={<LoansList />} />
+          <Route path="/account" element={<AccountPage />} />
+        </Route>
+      </Routes>
+    </Suspense>
   );
 };
 

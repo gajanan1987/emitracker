@@ -22,7 +22,7 @@ const PrincipalCalc = () => {
     }
 
     const op = calculateLoanAmount(emi, roi, tenure);
-    if (!op) setPrinc(op);
+    setPrinc(op);
   };
 
   return (
