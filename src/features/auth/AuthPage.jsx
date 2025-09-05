@@ -15,7 +15,7 @@ const AuthPage = () => {
   // Redirect only after successful login
   useEffect(() => {
     if (user && mode === "login") {
-      navigate("/loans-list", { replace: true });
+      navigate("/", { replace: true });
     }
   }, [status, user, mode, navigate]);
 

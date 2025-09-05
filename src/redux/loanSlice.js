@@ -5,6 +5,7 @@ import {
 } from "@reduxjs/toolkit";
 import supabase from "../services/supabase";
 import { addMonths, format } from "date-fns";
+import { signOut } from "./authSlice";
 
 // Save only summary to DB
 export const createLoan = createAsyncThunk(
@@ -159,15 +160,17 @@ export const recalcSchedule = (op) => {
   return { summery, scheduleArr };
 };
 
+const initialState = {
+  items: [],
+  status: "idle",
+  error: null,
+  currentSchedule: null,
+  emiSummary: null,
+};
+
 const loansSlice = createSlice({
   name: "loans",
-  initialState: {
-    items: [],
-    status: "idle",
-    error: null,
-    currentSchedule: null,
-    emiSummary: null,
-  },
+  initialState,
   reducers: {
     computeScheduleFor: (state, action) => {
       const { data, type } = action.payload;
@@ -228,7 +231,8 @@ const loansSlice = createSlice({
       })
       .addCase(deleteLoan.rejected, (s, a) => {
         s.status = "failed";
-      });
+      })
+      .addCase(signOut.fulfilled, () => initialState);
   },
 });
 

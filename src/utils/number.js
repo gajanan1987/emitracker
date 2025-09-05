@@ -23,7 +23,7 @@ export const formatINR = (value, withSymbol = false) => {
     style: withSymbol ? "currency" : undefined,
     currency: withSymbol ? "INR" : undefined,
     maximumFractionDigits: 2, // no paise
-    minimumFractionDigits: 2,
+    minimumFractionDigits: 0,
   }).format(num);
 
   if (withSymbol) {

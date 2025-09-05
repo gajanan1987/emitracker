@@ -17,19 +17,19 @@
 }
 
 .home-banner {
- max-width: 65%;
- margin: 0 auto;
- margin-top: 20vh;
- text-align: center;
+ >div {
+  max-width: 65%;
+  margin: 0 auto;
+  text-align: center;
+  margin-bottom: 24px;
 
- @include mq("t-768", "max") {
-  margin-top: 30px;
-  max-width: 100%;
+  @include mq("t-768", "max") {
+   max-width: 100%;
+  }
  }
 
  h1 {
   text-align: center;
-  font-size: 58px;
 
   @include mq("t-768", "max") {
    font-size: 28px;
@@ -51,6 +51,25 @@
   margin-bottom: 15px;
 
   li {}
+ }
+
+ &.logedout {
+  >div {
+   margin-top: 20vh;
+
+   @include mq("t-768", "max") {
+    margin-top: 30px;
+   }
+  }
+
+  h1 {
+   font-size: 58px;
+  }
+ }
+
+ &.logedin {
+  border-bottom: 1px solid var(--color-border);
+
  }
 }
 
@@ -105,4 +124,29 @@
  top: 0;
  left: 0;
  z-index: -1;
+}
+
+.home-table {
+ th {
+  &:nth-child(5) {
+   background-color: #dedede;
+   color: initial;
+  }
+ }
+
+ .tr-year {
+  td {
+   @include Font-Bold;
+
+   &.Today {}
+
+   &.Pending {
+    color: #ed8c2b;
+   }
+
+   &.Done {
+    color: green;
+   }
+  }
+ }
 }
