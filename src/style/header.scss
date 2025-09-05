@@ -25,11 +25,43 @@
   padding: 0;
 
   @include mq("t-768", "max") {
-   gap: 12px;
+   gap: 0px;
+   position: fixed;
+   transition: all .3s;
+   height: 0;
+   top: 60px;
+   visibility: hidden;
+   left: 0;
+   width: 100%;
+   background: #fff;
+   display: flex;
+   flex-direction: column;
+   z-index: -10;
+   overflow: hidden;
+  }
+
+  &.show {
+   @include mq("t-768", "max") {
+    visibility: visible;
+    height: 100svh;
+    z-index: 10;
+    transition: all .3s;
+   }
+
   }
 
 
   li {
+   @include mq("t-768", "max") {
+    padding: 10px 30px;
+   }
+
+   &:nth-child(1) {
+    @include mq("t-768", "max") {
+     padding-top: 20px;
+    }
+   }
+
    a {
     text-decoration: none;
     color: var(--color-text);
@@ -49,6 +81,19 @@
      color: var(--color-primary);
     }
    }
+  }
+ }
+
+ .hamburger {
+  @include mq("t-768", "min") {
+   display: none;
+  }
+
+  >div {
+   width: 35px;
+   height: 5px;
+   background-color: black;
+   margin: 6px 0;
   }
  }
 

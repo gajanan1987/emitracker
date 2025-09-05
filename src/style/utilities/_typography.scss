@@ -7,7 +7,9 @@ h1 {
 		font-size: 32px;
 	}
 
-	@include mq("t-768", "max") {}
+	@include mq("t-768", "max") {
+		font-size: 28px;
+	}
 }
 
 h2 {

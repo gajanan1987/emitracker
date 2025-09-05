@@ -32,7 +32,7 @@
   text-align: center;
 
   @include mq("t-768", "max") {
-   font-size: 28px;
+   font-size: 26px;
   }
  }
 
@@ -46,9 +46,13 @@
  }
 
  ul {
-  padding-left: 41px;
+  // padding-left: 41px;
   margin-top: 15px;
   margin-bottom: 15px;
+
+  // @include mq("t-768", "max") {
+  //  padding-left: 0px;
+  // }
 
   li {}
  }
@@ -98,6 +102,14 @@
  animation-iteration-count: infinite;
 
  /* Makes the animation repeat continuously */
+ @include mq("t-768", "max") {
+  height: 40px;
+  width: 40px;
+  right: 15px;
+  bottom: 20px;
+  font-size: 30px;
+ }
+
  &:hover {
   animation-play-state: paused;
  }
@@ -126,8 +138,11 @@
  z-index: -1;
 }
 
-.home-table {
+.loan-table.home-table {
+ margin-top: 24px;
+
  th {
+
   &:nth-child(5) {
    background-color: #dedede;
    color: initial;
@@ -137,6 +152,10 @@
  .tr-year {
   td {
    @include Font-Bold;
+
+   @include mq("t-768", "max") {
+    font-size: 14px;
+   }
 
    &.Today {}
 

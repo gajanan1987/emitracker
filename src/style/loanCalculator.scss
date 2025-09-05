@@ -26,6 +26,10 @@
      border-top-right-radius: 5px;
      @include Font-Semibold;
 
+     @include mq("t-768", "max") {
+      font-size: 13px;
+     }
+
      &:hover {
       color: var(--color-primary);
       transition: all .3s;
