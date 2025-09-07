@@ -68,6 +68,10 @@
 
   h1 {
    font-size: 58px;
+
+   @include mq("t-768", "max") {
+    font-size: 26px;
+   }
   }
  }
 
