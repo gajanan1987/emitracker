@@ -35,7 +35,9 @@ const Header = () => {
         {!user && (
           <>
             <li>
-              <NavLink to="/login">Login</NavLink>
+              <NavLink to="/login" onClick={() => setNav(false)}>
+                Login
+              </NavLink>
             </li>
           </>
         )}
