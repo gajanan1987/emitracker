@@ -12,7 +12,7 @@ const AccountPage = lazy(() => import("../features/Account"));
 
 const AppRoutes = () => {
   return (
-    <Suspense fallback="fallback.....">
+    <Suspense fallback="Loading.....">
       <Routes>
         <Route path="/" element={<Home />} />
         <Route path="/login" element={<AuthPage />} />

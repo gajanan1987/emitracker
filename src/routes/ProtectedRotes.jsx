@@ -5,7 +5,7 @@ const ProtectedRotes = () => {
   const { status, error, user } = useSelector((s) => s.auth);
   const { status: s } = useSelector((s) => s.loans);
 
-  if (status === "loading") return <p>protectedRotes...</p>;
+  if (status === "loading") return <p>Loading.....</p>;
   if (!user) return <Navigate to="/login" />;
 
   return (
