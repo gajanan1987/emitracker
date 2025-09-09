@@ -1,4 +1,4 @@
-import React, { useEffect, useMemo } from "react";
+import React, { useEffect, useMemo, useState } from "react";
 import { Link } from "react-router";
 import VantaBirds from "../components/VantaBirds";
 import { useDispatch, useSelector } from "react-redux";
@@ -10,6 +10,9 @@ const Home = () => {
   const dispatch = useDispatch();
   const { user } = useSelector((s) => s.auth);
   const { items } = useSelector((s) => s.loans);
+
+  const [sortKey, setSortKey] = useState("nextDueDate"); // default sort
+  const [sortOrder, setSortOrder] = useState("asc"); // asc or desc
 
   useEffect(() => {
     if (user && items.length < 1) {
@@ -55,6 +58,41 @@ const Home = () => {
       };
     }, [items]);
 
+  const sortedLoans = useMemo(() => {
+    const sorted = [...activeLoans];
+    sorted.sort((a, b) => {
+      let valA = a[sortKey];
+      let valB = b[sortKey];
+
+      // If date field
+      if (sortKey === "nextDueDate") {
+        valA = new Date(valA);
+        valB = new Date(valB);
+      }
+
+      if (typeof valA === "string") {
+        valA = valA.toLowerCase();
+        valB = valB.toLowerCase();
+      }
+
+      if (valA < valB) return sortOrder === "asc" ? -1 : 1;
+      if (valA > valB) return sortOrder === "asc" ? 1 : -1;
+      return 0;
+    });
+    return sorted;
+  }, [activeLoans, sortKey, sortOrder]);
+
+  // ✅ Handle sort change
+  const handleSort = (key) => {
+    if (sortKey === key) {
+      // toggle order if same column
+      setSortOrder(sortOrder === "asc" ? "desc" : "asc");
+    } else {
+      setSortKey(key);
+      setSortOrder("asc");
+    }
+  };
+
   return (
     <>
       <div
@@ -85,21 +123,21 @@ const Home = () => {
         </div>
       </div>
 
-      {user && activeLoans.length > 0 && (
+      {user && sortedLoans.length > 0 && (
         <table className="table-reponsive loan-table home-table">
           <thead>
             <tr>
-              <th>Loan</th>
-              <th>Loan Amount</th>
-              <th>EMI</th>
-              <th>Due Date</th>
-              <th>Remaining</th>
-              <th>Status</th>
+              <th onClick={() => handleSort("loan_name")}>Loan</th>
+              <th onClick={() => handleSort("loan_amount")}>Loan Amount</th>
+              <th onClick={() => handleSort("emi_amount")}>EMI</th>
+              <th onClick={() => handleSort("nextDueDate")}>Due Date</th>
+              <th onClick={() => handleSort("remaningEmi")}>Remaining</th>
+              <th onClick={() => handleSort("emiStatus")}>Status</th>
             </tr>
           </thead>
 
           <tbody>
-            {activeLoans.map((item) => (
+            {sortedLoans.map((item) => (
               <tr className="tr-year" key={item.id}>
                 <td>{item.loan_name}</td>
                 <td>{formatINR(item.loan_amount, true)}</td>
