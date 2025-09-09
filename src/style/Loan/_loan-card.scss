@@ -165,12 +165,19 @@
    margin: 0;
    border: none;
 
+
    td {
     background-color: #dedede;
 
     &:nth-child(1) {
      color: var(--color-title);
      font-weight: 600;
+    }
+   }
+
+   tr.done {
+    td {
+     background-color: rgb(180, 250, 227);
     }
    }
   }

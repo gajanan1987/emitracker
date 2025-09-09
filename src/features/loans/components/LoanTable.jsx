@@ -92,30 +92,32 @@ const LoanTable = ({ currentSchedule }) => {
                             ?.filter(
                               (row) => new Date(row.date).getFullYear() === year
                             ) // ✅ only this year's rows
-                            .map((row, index) => (
-                              <tr
-                                key={index}
-                                className={`${
-                                  currentSchedule.emiStatus === "Done"
-                                    ? "done"
-                                    : "pending"
-                                }`}
-                              >
-                                <td>
-                                  {new Date(row.date).toLocaleDateString(
-                                    "en-US",
-                                    {
-                                      month: "short",
-                                      day: "numeric",
-                                    }
-                                  )}
-                                </td>
-                                <td>{formatINR(row.principal, true)}</td>
-                                <td>{formatINR(row.interest, true)}</td>
-                                <td>{formatINR(row.emi, true)}</td>
-                                <td>{formatINR(row.balance, true)}</td>
-                              </tr>
-                            ))}
+                            .map((row, index) => {
+                              return (
+                                <tr
+                                  key={index}
+                                  className={`${
+                                    row.emiStatus === "Done"
+                                      ? "done"
+                                      : "pending"
+                                  }`}
+                                >
+                                  <td>
+                                    {new Date(row.date).toLocaleDateString(
+                                      "en-US",
+                                      {
+                                        month: "short",
+                                        day: "numeric",
+                                      }
+                                    )}
+                                  </td>
+                                  <td>{formatINR(row.principal, true)}</td>
+                                  <td>{formatINR(row.interest, true)}</td>
+                                  <td>{formatINR(row.emi, true)}</td>
+                                  <td>{formatINR(row.balance, true)}</td>
+                                </tr>
+                              );
+                            })}
                         </tbody>
                       </table>
                     </div>

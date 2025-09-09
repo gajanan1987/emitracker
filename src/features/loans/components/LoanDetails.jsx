@@ -81,17 +81,6 @@ const LoanDetails = () => {
                 <span>Remaining Principal: </span>
                 {formatINR(emiSummary.remainingPrincipal, true)}
               </p>
-              {/* <p>
-                <span>Total Tenure: </span> {emiSummary.tenure_months}
-              </p> */}
-              {/* <p>
-                <span>Total Interest Paid: </span>{" "}
-                {formatINR(emiSummary.totalInterest, true)}
-              </p> */}
-              {/* <p>
-                <span>Total Principal Paid: </span>{" "}
-                {formatINR(emiSummary.totalPayment, true)}
-              </p> */}
             </div>
             <div className="chart-wrapper">
               <EmiChart
