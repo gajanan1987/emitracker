@@ -21,7 +21,6 @@ export default function LoanCalculator() {
   const menu = ["Calculate EMI", "Calculate ROI", "Calculate Principal"];
   const dispatch = useDispatch();
   const currentSchedule = useSelector(selectScheduleState);
-  console.log("🚀 ~ LoanCalculator ~ currentSchedule:", currentSchedule);
 
   const [loanAmount, setLoanAmount] = useState(3000000);
   const [interestRate, setInterestRate] = useState(12);
@@ -45,7 +44,6 @@ export default function LoanCalculator() {
       emi_date,
     };
 
-    console.log("🚀 ~ handleCalc ~ data:", data);
     dispatch(computeScheduleFor({ data, type: "loanDetails" }));
   };
 
@@ -55,15 +53,6 @@ export default function LoanCalculator() {
       dispatch(removeSummery());
     }
   };
-
-  // const op = calculateLoanAmount(32500, 7.4, 54);
-  // console.log("🚀 ~ LoanCalculator ~ op:", op);
-
-  // const op1 = calculateROI(1488833, 32500, 54);
-  // console.log("🚀 ~ LoanCalculator ~ op1:", op1);
-
-  // const op2 = calculateRemainingTenure(1488833, 32500, 7.4, 20);
-  // console.log("🚀 ~ LoanCalculator ~ op2:", op2);
 
   return (
     <div className="loan-tracker">

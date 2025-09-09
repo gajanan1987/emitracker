@@ -38,7 +38,6 @@ const LoansList = () => {
   //cust modal
 
   async function expire() {
-    console.log("sadsad");
     dispatch(signOut());
     navigatin("/");
   }
@@ -65,7 +64,6 @@ const LoansList = () => {
 
   const getLoanDetails = async (id) => {
     const fetchLoan = await dispatch(loanDetails(id)).unwrap();
-    // console.log("🚀 ~ getLoanDetails ~ fetchLoan:", fetchLoan);
     setLoanData(fetchLoan);
   };
 

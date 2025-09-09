@@ -1,7 +1,6 @@
 import { formatINR } from "../../../utils/number";
 
 const LoanDetailsCard = ({ item, index }) => {
-  // console.log("🚀 ~ LoanDetailsCard ~ item:", item);
   return (
     <div
       className={new Date(item.date) <= new Date() ? "emi-done" : "emi-pending"}

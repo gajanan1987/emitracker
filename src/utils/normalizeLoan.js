@@ -3,7 +3,6 @@ import { isToday, isBefore } from "date-fns";
 import { pendingEmi } from "./pendingEmi";
 
 export const normalizeLoan = (item) => {
-  console.log("🚀 ~ normalizeLoan ~ item:", item);
   const targetDate = new Date(item.emi_date);
   const today = new Date();
   const newDate = new Date(

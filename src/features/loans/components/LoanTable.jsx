@@ -2,7 +2,6 @@ import React, { useState } from "react";
 import { formatINR } from "../../../utils/number";
 
 const LoanTable = ({ currentSchedule }) => {
-  console.log("🚀 ~ LoanTable ~ currentSchedule:", currentSchedule);
   // State to track which year's details are expanded
   const [expandedYear, setExpandedYear] = useState(null);
 
