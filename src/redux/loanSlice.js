@@ -1,5 +1,4 @@
-import { isBefore, isToday } from "date-fns";
-import { pendingEmi } from "../utils/pendingEmi";
+import { isBefore } from "date-fns";
 import {
   createSlice,
   createAsyncThunk,
@@ -8,18 +7,20 @@ import {
 import supabase from "../services/supabase";
 import { addMonths, format } from "date-fns";
 import { signOut } from "./authSlice";
+import { normalizeLoan } from "../utils/normalizeLoan";
 
 // Save only summary to DB
 export const createLoan = createAsyncThunk(
   "loans/createLoan",
-  async (payload, { rejectWithValue }) => {
+  async ({ loan, remaining }, { rejectWithValue }) => {
     const { error, data } = await supabase
       .from("loan")
-      .insert([payload])
+      .insert([loan])
       .select()
       .single();
     if (error) return rejectWithValue(error.message);
-    return data;
+    const u = { ...data, remaningEmi: remaining };
+    return u;
   }
 );
 
@@ -104,36 +105,6 @@ export const recalcSchedule = (op) => {
   let totalPrincipal = 0;
 
   let startDate = firstEmi;
-
-  // for (let i = 1; i <= n; i++) {
-  //   const interestForMonth = balance * r;
-  //   const principalForMonth = emi - interestForMonth;
-  //   balance -= principalForMonth;
-
-  //   totalInterest += interestForMonth;
-  //   totalPrincipal += principalForMonth;
-
-  //   const emiDueDate = addMonths(startDate, i - 1);
-
-  //   const normalizeDate = (date) => new Date(date.setHours(0, 0, 0, 0));
-
-  //   const emiStatus = isToday(normalizeDate(newDate))
-  //     ? "Today"
-  //     : isBefore(normalizeDate(newDate), normalizeDate(today))
-  //     ? "Done"
-  //     : "Pending";
-
-  //   scheduleArr.push({
-  //     // month: format(emiDueDate, "dd MMM yyyy"),
-  //     emi: round(emi),
-  //     principal: round(principalForMonth),
-  //     interest: round(interestForMonth),
-  //     balance: balance > 0 ? round(balance) : 0,
-  //     // date: emiDueDate,
-  //     date: emiDueDate.toISOString(),
-  //     emiStatus,
-  //   });
-  // }
 
   for (let i = 1; i <= n; i++) {
     const interestForMonth = balance * r;
@@ -237,7 +208,7 @@ const loansSlice = createSlice({
       })
       .addCase(createLoan.fulfilled, (s, a) => {
         s.status = "succeeded";
-        s.items.push(a.payload);
+        s.items.push(normalizeLoan(a.payload));
         s.currentSchedule = null;
         s.emiSummary = null;
       })
@@ -252,33 +223,7 @@ const loansSlice = createSlice({
       })
       .addCase(fetchLoans.fulfilled, (s, a) => {
         s.status = "succeeded";
-        s.items = (a.payload || []).map((item) => {
-          const targetDate = new Date(item.emi_date);
-          const today = new Date();
-          const newDate = new Date(
-            today.getFullYear(),
-            today.getMonth(),
-            targetDate.getDate()
-          );
-
-          // Loan Status
-          const emiStatus = isToday(newDate)
-            ? "Today"
-            : isBefore(newDate, new Date())
-            ? "Done"
-            : "Pending";
-
-          // Remaining EMIs
-          const remaningEmi = pendingEmi(targetDate, item.tenure_months);
-          const loanStatus = remaningEmi > 0 ? "pending" : "fullypaid";
-          return {
-            ...item,
-            emiStatus,
-            loanStatus,
-            remaningEmi,
-            nextDueDate: newDate.toISOString(),
-          };
-        });
+        s.items = (a.payload || []).map(normalizeLoan);
       })
       .addCase(fetchLoans.rejected, (s, a) => {
         s.status = "failed";

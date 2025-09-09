@@ -34,7 +34,12 @@ const AddLoan = ({ emiSummary, onCloseModal }) => {
       email,
     };
 
-    dispatch(createLoan(payload)).then((data) => {
+    dispatch(
+      createLoan({
+        loan: payload,
+        remaining: emiSummary.remaining,
+      })
+    ).then((data) => {
       custMessage.success("Loan Added successfully");
     });
     onCloseModal();

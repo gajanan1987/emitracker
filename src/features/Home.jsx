@@ -12,7 +12,7 @@ const Home = () => {
   const { items } = useSelector((s) => s.loans);
 
   useEffect(() => {
-    if (user && items.length < 1) {
+    if (user) {
       dispatch(fetchLoans());
     }
   }, [dispatch, user]);

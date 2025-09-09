@@ -94,7 +94,15 @@ const LoansList = () => {
                 );
               })
             ) : (
-              <h1>No Loans pls add....</h1>
+              <h1>
+                No Loans pls....{" "}
+                <button
+                  className="btn btn-primary"
+                  onClick={() => onOpenModal()}
+                >
+                  Add Loan
+                </button>
+              </h1>
             )}
           </div>
           <CustomModal
