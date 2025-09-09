@@ -1,50 +1,27 @@
 import { useEffect, useState } from "react";
-import { computeScheduleFor, createLoan } from "../../../redux/loanSlice";
+import { computeScheduleFor, editLoan } from "../../../redux/loanSlice";
 import { useDispatch, useSelector } from "react-redux";
 import { formatINR } from "../../../utils/number";
 import custMessage from "../../../utils/toast";
 
-const AddLoan = ({ emiSummary, onCloseModal }) => {
-  console.log("🚀 ~ AddLoan ~ emiSummary:", emiSummary);
+const EditLoan = ({ loanEditData, onCloseModal }) => {
+  // console.log("🚀 ~ EditLoan ~ loanEditData:", loanEditData);
   const dispatch = useDispatch();
+  const { emiSummary } = useSelector((s) => s.loans);
 
   // const [formData, setFormData] = useState([]);
   const [formData, setFormData] = useState({
-    loanAmount: 1234567,
-    loanIntrest: 12,
-    loanTenure: 40,
-    loanDate: "2025-09-01",
-    loanEmiDate: "2025-09-05",
-    loanName: "testing",
+    loanAmount: loanEditData.loan_amount,
+    loanIntrest: loanEditData.interest_rate,
+    loanTenure: loanEditData.tenure_months,
+    loanDate: loanEditData.loan_date,
+    loanEmiDate: loanEditData.emi_date,
+    loanName: loanEditData.loan_name,
   });
 
   const {
     user: { id, email },
   } = useSelector((s) => s.auth);
-
-  const addNewLoan = async () => {
-    const payload = {
-      user_id: id,
-      loan_amount: formData.loanAmount,
-      interest_rate: formData.loanIntrest,
-      tenure_months: formData.loanTenure,
-      emi_amount: emiSummary.emi,
-      loan_date: formData.loanDate,
-      emi_date: formData.loanEmiDate,
-      loan_name: formData.loanName,
-      email,
-    };
-
-    dispatch(
-      createLoan({
-        loan: payload,
-        remaining: emiSummary.remaining,
-      })
-    ).then((data) => {
-      custMessage.success("Loan Added successfully");
-    });
-    onCloseModal();
-  };
 
   const handleCalculate = () => {
     const data = {
@@ -59,6 +36,32 @@ const AddLoan = ({ emiSummary, onCloseModal }) => {
     dispatch(computeScheduleFor({ data, type: "addLoan" }));
   };
 
+  const editLoanSave = async () => {
+    const payload = {
+      user_id: id,
+      loan_amount: formData.loanAmount,
+      interest_rate: formData.loanIntrest,
+      tenure_months: formData.loanTenure,
+      emi_amount: emiSummary.emi,
+      loan_date: formData.loanDate,
+      emi_date: formData.loanEmiDate,
+      loan_name: formData.loanName,
+      email,
+    };
+    console.log("🚀 ~ editLoan ~ payload:", payload);
+
+    dispatch(
+      editLoan({
+        loan: payload,
+        remaining: emiSummary.remaining,
+        loanId: loanEditData.id,
+      })
+    ).then((data) => {
+      custMessage.success("Loan Added successfully");
+    });
+    onCloseModal();
+  };
+
   const handleChange = (e) => {
     const { name, value } = e.target;
 
@@ -66,13 +69,13 @@ const AddLoan = ({ emiSummary, onCloseModal }) => {
     setFormData(data);
   };
 
-  useEffect(() => {
-    // setSummary(emiSummary);
-  }, [emiSummary]);
+  // useEffect(() => {
+  //   // setSummary(emiSummary);
+  // }, [emiSummary]);
 
   return (
     <div className="add-loan-form">
-      <h2>Add New Loan EMI</h2>
+      <h2>Edit Loan EMI</h2>
 
       <div className="form">
         <div className="input-wrapper">
@@ -172,7 +175,7 @@ const AddLoan = ({ emiSummary, onCloseModal }) => {
           <p>
             Remaining Interest: {formatINR(emiSummary.remainingInterest, true)}
           </p>
-          <button className="btn btn-primary" onClick={addNewLoan}>
+          <button className="btn btn-primary" onClick={editLoanSave}>
             Save Loan
           </button>
         </div>
@@ -181,4 +184,4 @@ const AddLoan = ({ emiSummary, onCloseModal }) => {
   );
 };
 
-export default AddLoan;
+export default EditLoan;

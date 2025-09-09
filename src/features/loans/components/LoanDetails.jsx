@@ -1,4 +1,4 @@
-import { useState } from "react";
+import React, { useState } from "react";
 import { Link } from "react-router";
 import LoanDetailsCard from "./LoanDetailsCard";
 import { formatINR } from "../../../utils/number";
@@ -13,6 +13,7 @@ const LoanDetails = () => {
   const { items, currentSchedule, emiSummary, status } = useSelector(
     (s) => s.loans
   );
+  console.log("🚀 ~ LoanDetails ~ currentSchedule:", currentSchedule);
 
   const handleBack = () => {
     dispatch(removeSummery());
@@ -93,10 +94,10 @@ const LoanDetails = () => {
               </p> */}
             </div>
             <div className="chart-wrapper">
-              <EmiChart
+              {/* <EmiChart
                 paid={emiSummary.paid}
                 total={emiSummary.tenure_months}
-              />
+              /> */}
               <p>Remaining Tenure: {emiSummary.remaining}</p>
             </div>
           </div>
@@ -113,7 +114,9 @@ const LoanDetails = () => {
         (view === "card" ? (
           <div className="loandetails-card">
             {currentSchedule.map((item, index) => (
-              <LoanDetailsCard item={item} key={item.month} index={index} />
+              <React.Fragment key={index}>
+                <LoanDetailsCard item={item} key={item.month} index={index} />
+              </React.Fragment>
             ))}
           </div>
         ) : (

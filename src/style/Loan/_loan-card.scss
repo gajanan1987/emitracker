@@ -32,7 +32,12 @@
   }
 
   .right {
-   .btn-danger {
+   display: flex;
+   flex-direction: column;
+   row-gap: 10px;
+
+   .btn-danger,
+   .btn-green {
     font-size: 12px;
     height: auto;
    }

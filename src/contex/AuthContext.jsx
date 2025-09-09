@@ -1,7 +1,7 @@
 import { createContext, useEffect, useState } from "react";
 import { addNewUser, getUser, loginUser, logoutUser } from "../services/api";
 
-export const AuthContex = createContext();
+export const AuthContext = createContext();
 
 export const AuthProvider = ({ children }) => {
   const [user, setUser] = useState(null);
@@ -39,10 +39,10 @@ export const AuthProvider = ({ children }) => {
   }, []);
 
   return (
-    <AuthContex.Provider
+    <AuthContext.Provider
       value={{ signIn, signOut, signUpWithEmail, user, loading }}
     >
       {children}
-    </AuthContex.Provider>
+    </AuthContext.Provider>
   );
 };

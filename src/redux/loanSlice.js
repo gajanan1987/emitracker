@@ -24,6 +24,34 @@ export const createLoan = createAsyncThunk(
   }
 );
 
+export const editLoan = createAsyncThunk(
+  "loans/editLoan",
+  async ({ loan, remaining, loanId }, { rejectWithValue }) => {
+    console.log("LoanId being passed:", loanId, typeof loanId);
+
+    const { error, data } = await supabase
+      .from("loan")
+      .update({
+        loan_name: loan.loan_name,
+        loan_amount: loan.loan_amount,
+        interest_rate: loan.interest_rate,
+        tenure_months: loan.tenure_months,
+        emi_amount: loan.emi_amount,
+        loan_date: loan.loan_date,
+        emi_date: loan.emi_date,
+      })
+      .eq("id", Number(loanId))
+      .select()
+      .single();
+    if (error) return rejectWithValue(error.message);
+    console.log("🚀 ~ data: vbcbcbv", data);
+    if (!data || data.length === 0) {
+      return rejectWithValue("No loan found with that ID");
+    }
+    return { ...data, remaningEmi: remaining };
+  }
+);
+
 export const fetchLoans = createAsyncThunk(
   "loans/fetchLoans",
   async (_, { rejectWithValue, getState }) => {
@@ -213,6 +241,37 @@ const loansSlice = createSlice({
         s.emiSummary = null;
       })
       .addCase(createLoan.rejected, (s, a) => {
+        s.status = "failed";
+        s.error = a.payload;
+      })
+
+      .addCase(editLoan.pending, (s) => {
+        s.status = "loading";
+        s.error = null;
+      })
+      .addCase(editLoan.fulfilled, (s, a) => {
+        s.status = "succeeded";
+        // s.items.push(normalizeLoan(a.payload));
+        // s.currentSchedule = null;
+        // s.emiSummary = null;
+        // fetchLoans();
+
+        const updated = normalizeLoan(a.payload);
+        console.log("🚀 ~ updated:", updated);
+
+        // Find existing loan index
+        const idx = s.items.findIndex((item) => item.id === updated.id);
+
+        if (idx !== -1) {
+          s.items[idx] = updated; // replace
+        } else {
+          s.items.push(updated); // fallback
+        }
+
+        s.currentSchedule = null;
+        s.emiSummary = null;
+      })
+      .addCase(editLoan.rejected, (s, a) => {
         s.status = "failed";
         s.error = a.payload;
       })

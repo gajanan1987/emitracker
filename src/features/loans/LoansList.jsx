@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Link, useNavigate } from "react-router";
 import { useDispatch, useSelector } from "react-redux";
 import { signOut } from "../../redux/authSlice";
@@ -14,13 +14,29 @@ import AddLoan from "./components/AddLoan";
 import LoanCard from "./components/LoanCard";
 import LoanDetails from "./components/LoanDetails";
 import custMessage from "../../utils/toast";
+import EditLoan from "./components/EditLoan";
 
 const LoansList = () => {
-  const [loanData, setLoanData] = useState();
-  const [open, setOpen] = useState(false);
-  const onOpenModal = () => setOpen(true);
   const dispatch = useDispatch();
   const navigatin = useNavigate();
+  const [loanData, setLoanData] = useState();
+  const [loanEditData, setLoanEditData] = useState();
+
+  const [open, setOpen] = useState(false);
+  const onOpenModal = () => setOpen(true);
+  const onCloseModal = () => {
+    setOpen(false);
+    dispatch(removeSummery());
+  };
+
+  //Modal Edit
+  const [editOpen, setEditOpen] = useState(false);
+  const onEditOpenModal = () => setEditOpen(true);
+
+  const onEditCloseModal = () => {
+    setEditOpen(false);
+    dispatch(removeSummery());
+  };
 
   const {
     items,
@@ -28,13 +44,10 @@ const LoansList = () => {
     emiSummary,
     status: loanStatus,
   } = useSelector((s) => s.loans);
+  console.log("🚀 ~ LoansList ~ items:", items);
 
   const { status, error, user } = useSelector((s) => s.auth);
 
-  const onCloseModal = () => {
-    setOpen(false);
-    dispatch(removeSummery());
-  };
   //cust modal
 
   async function expire() {
@@ -62,9 +75,15 @@ const LoansList = () => {
       .catch((err) => {});
   };
 
-  const getLoanDetails = async (id) => {
+  const getLoanDetails = async (id, type) => {
     const fetchLoan = await dispatch(loanDetails(id)).unwrap();
-    setLoanData(fetchLoan);
+
+    if (type === "click") {
+      setLoanData(fetchLoan);
+    } else {
+      setLoanEditData(fetchLoan);
+      onEditOpenModal();
+    }
   };
 
   useEffect(() => {
@@ -103,18 +122,32 @@ const LoansList = () => {
               </h1>
             )}
           </div>
-          <CustomModal
-            open={open}
-            setOpen={setOpen}
-            onOpenModal={onOpenModal}
-            onCloseModal={onCloseModal}
-          >
-            <AddLoan emiSummary={emiSummary} onCloseModal={onCloseModal} />
-          </CustomModal>
+          <div>
+            <CustomModal
+              open={open}
+              setOpen={setOpen}
+              onOpenModal={onOpenModal}
+              onCloseModal={onCloseModal}
+            >
+              <AddLoan emiSummary={emiSummary} onCloseModal={onCloseModal} />
+            </CustomModal>
 
-          <button className="add-new-loan" onClick={() => onOpenModal()}>
-            +
-          </button>
+            <button className="add-new-loan" onClick={() => onOpenModal()}>
+              +
+            </button>
+
+            <CustomModal
+              open={editOpen}
+              setOpen={setEditOpen}
+              onOpenModal={onEditOpenModal}
+              onCloseModal={onEditCloseModal}
+            >
+              <EditLoan
+                loanEditData={loanEditData}
+                onCloseModal={onEditCloseModal}
+              />
+            </CustomModal>
+          </div>
         </>
       )}
     </>

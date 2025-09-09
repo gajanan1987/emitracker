@@ -1,22 +1,24 @@
-import { useNavigate } from "react-router";
 import { formatINR } from "../../../utils/number";
 
 const LoanCard = ({ item, remaningEmi, deleteLoanById, getLoanDetails }) => {
   const { loan_name, emi_amount, id } = item;
-  const navigate = useNavigate();
+  const remEmi = remaningEmi === 0;
 
   const handleClick = () => {
-    getLoanDetails(id);
-    // navigate("/loandetails", { state: { loanId: id } });
+    getLoanDetails(id, "click");
   };
 
   const handleDelete = (e) => {
     deleteLoanById(id, loan_name);
     e.stopPropagation();
   };
+  const handleEdit = async (e) => {
+    e.stopPropagation();
+    getLoanDetails(id, "edit");
+  };
   return (
     <div
-      className={`loan-card ${remaningEmi === 0 ? "loan-done" : ""}`}
+      className={`loan-card ${remEmi ? "loan-done" : ""}`}
       onClick={handleClick}
     >
       <div className="left">
@@ -28,7 +30,7 @@ const LoanCard = ({ item, remaningEmi, deleteLoanById, getLoanDetails }) => {
         </p>
 
         <p className="f14 color-gray">
-          {remaningEmi === 0 ? (
+          {remEmi ? (
             <span className="font-bold">Loan fully paid 🎉</span>
           ) : (
             <>
@@ -41,6 +43,11 @@ const LoanCard = ({ item, remaningEmi, deleteLoanById, getLoanDetails }) => {
         <button className="btn btn-danger" onClick={handleDelete}>
           Delete
         </button>
+        {!remEmi && (
+          <button className="btn btn-green" onClick={handleEdit}>
+            Edit
+          </button>
+        )}
       </div>
     </div>
   );
