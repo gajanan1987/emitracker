@@ -81,7 +81,7 @@ const LoansList = () => {
       ) : (
         <>
           <div className="loan-card-wrapper">
-            {Array.isArray(items) &&
+            {items?.length > 0 ? (
               items?.map((item) => {
                 return (
                   <LoanCard
@@ -92,7 +92,10 @@ const LoansList = () => {
                     getLoanDetails={getLoanDetails}
                   />
                 );
-              })}
+              })
+            ) : (
+              <h1>No Loans pls add....</h1>
+            )}
           </div>
           <CustomModal
             open={open}

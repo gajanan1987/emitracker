@@ -92,7 +92,7 @@ const Home = () => {
               <th>Loan</th>
               <th>Loan Amount</th>
               <th>EMI</th>
-              <th>Date</th>
+              <th>Due Date</th>
               <th>Remaining</th>
               <th>Status</th>
             </tr>
