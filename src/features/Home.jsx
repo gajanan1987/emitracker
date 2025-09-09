@@ -1,23 +1,59 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useMemo } from "react";
 import { Link } from "react-router";
 import VantaBirds from "../components/VantaBirds";
 import { useDispatch, useSelector } from "react-redux";
 import { fetchLoans } from "../redux/loanSlice";
 import { formatINR } from "../utils/number";
-import { format, isBefore, isToday } from "date-fns";
-import { pendingEmi } from "../utils/pendingEmi";
+import { format } from "date-fns";
 
 const Home = () => {
   const dispatch = useDispatch();
-  const { status, error, user } = useSelector((s) => s.auth);
+  const { user } = useSelector((s) => s.auth);
   const { items } = useSelector((s) => s.loans);
-  console.log("🚀 ~ Home ~ items:", items);
 
   useEffect(() => {
     if (user && items.length < 1) {
       dispatch(fetchLoans());
     }
   }, [dispatch, user]);
+
+  // ✅ Precompute active loans + totals
+  const { activeLoans, totalLoan, totalEmi, paidMonth, remaningMonth } =
+    useMemo(() => {
+      const active = items
+        .map((item) => {
+          return item;
+        })
+        .filter((item) => {
+          return item.loanStatus !== "fullypaid";
+        }); // Exclude fully paid
+
+      const paidMonth = items
+        .filter((item) => {
+          return item.emiStatus === "Done" && item.loanStatus !== "fullypaid";
+        })
+        .reduce((sum, item) => {
+          return sum + item.emi_amount;
+        }, 0);
+
+      const remaningMonth = items
+        .filter((item) => {
+          return (
+            item.emiStatus === "Pending" && item.loanStatus !== "fullypaid"
+          );
+        })
+        .reduce((sum, item) => {
+          return sum + item.emi_amount;
+        }, 0);
+
+      return {
+        activeLoans: active,
+        totalLoan: active.reduce((sum, item) => sum + item.loan_amount, 0),
+        totalEmi: active.reduce((sum, item) => sum + item.emi_amount, 0),
+        paidMonth,
+        remaningMonth,
+      };
+    }, [items]);
 
   return (
     <>
@@ -28,7 +64,6 @@ const Home = () => {
           <h1 className="color-title">
             Simplifying Loan Management for Everyone
           </h1>
-
           <p>
             Managing loans doesn’t have to be complicated. Our platform makes it
             easy to:
@@ -50,7 +85,7 @@ const Home = () => {
         </div>
       </div>
 
-      {user && (
+      {user && activeLoans.length > 0 && (
         <table className="table-reponsive loan-table home-table">
           <thead>
             <tr>
@@ -58,40 +93,40 @@ const Home = () => {
               <th>Loan Amount</th>
               <th>EMI</th>
               <th>Date</th>
-              <th>Remaning</th>
+              <th>Remaining</th>
               <th>Status</th>
             </tr>
           </thead>
-          <tbody>
-            {items?.map((item) => {
-              const targetDate = new Date(item.emi_date);
-              const today = new Date();
-              const newDate = new Date(
-                today.getFullYear(),
-                today.getMonth(),
-                targetDate.getDate()
-              );
-              const status = isToday(newDate)
-                ? "Today"
-                : isBefore(newDate, new Date())
-                ? "Done"
-                : "Pending";
 
-              const tenure = item.tenure_months;
-              const remaningEmi = pendingEmi(targetDate, tenure);
-              return (
-                <React.Fragment key={item.id}>
-                  <tr className="tr-year">
-                    <td>{item.loan_name}</td>
-                    <td>{formatINR(item.loan_amount, true)}</td>
-                    <td>{formatINR(item.emi_amount, true)}</td>
-                    <td>{format(newDate, "dd MMM yyyy")}</td>
-                    <td>{remaningEmi} months</td>
-                    <td className={`${status}`}>{status}</td>
-                  </tr>
-                </React.Fragment>
-              );
-            })}
+          <tbody>
+            {activeLoans.map((item) => (
+              <tr className="tr-year" key={item.id}>
+                <td>{item.loan_name}</td>
+                <td>{formatINR(item.loan_amount, true)}</td>
+                <td>{formatINR(item.emi_amount, true)}</td>
+                <td>{format(new Date(item.nextDueDate), "dd MMM yyyy")}</td>
+                <td>{item.remaningEmi} months</td>
+                <td className={item.emiStatus}>{item.emiStatus}</td>
+              </tr>
+            ))}
+
+            {/* ✅ Summary row */}
+            <tr className="summary-row">
+              <td>Total</td>
+              <td>{formatINR(totalLoan, true)}</td>
+              <td>{formatINR(totalEmi, true)}</td>
+              <td colSpan="3">
+                <div>
+                  <div className="paid">
+                    <span>Paid Monthaly EMI:</span> {formatINR(paidMonth, true)}
+                  </div>
+                  <div className="rem">
+                    <span>Remaning Monthaly EMI:</span>{" "}
+                    {formatINR(remaningMonth, true)}
+                  </div>
+                </div>
+              </td>
+            </tr>
           </tbody>
         </table>
       )}

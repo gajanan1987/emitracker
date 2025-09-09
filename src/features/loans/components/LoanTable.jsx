@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import { formatINR } from "../../../utils/number";
 
 const LoanTable = ({ currentSchedule }) => {
+  console.log("🚀 ~ LoanTable ~ currentSchedule:", currentSchedule);
   // State to track which year's details are expanded
   const [expandedYear, setExpandedYear] = useState(null);
 
@@ -93,7 +94,14 @@ const LoanTable = ({ currentSchedule }) => {
                               (row) => new Date(row.date).getFullYear() === year
                             ) // ✅ only this year's rows
                             .map((row, index) => (
-                              <tr key={index}>
+                              <tr
+                                key={index}
+                                className={`${
+                                  currentSchedule.emiStatus === "Done"
+                                    ? "done"
+                                    : "pending"
+                                }`}
+                              >
                                 <td>
                                   {new Date(row.date).toLocaleDateString(
                                     "en-US",

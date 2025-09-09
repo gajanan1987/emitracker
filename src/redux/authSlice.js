@@ -38,9 +38,15 @@ const authSlice = createSlice({
   reducers: {},
   extraReducers: (builder) => {
     builder
+      .addCase(fetchSession.pending, (state, action) => {
+        state.status = "loading";
+      })
       .addCase(fetchSession.fulfilled, (state, action) => {
         state.status = "succeeded";
         state.user = action.payload;
+      })
+      .addCase(fetchSession.rejected, (state, action) => {
+        state.status = "failed";
       })
 
       ////
@@ -72,6 +78,7 @@ const authSlice = createSlice({
 
       ////
       .addCase(signOut.fulfilled, (state) => {
+        state.status = "idle";
         state.user = null;
       });
   },

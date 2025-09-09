@@ -37,6 +37,11 @@
     height: auto;
    }
   }
+
+  &.loan-done {
+   background-color: rgba(32, 173, 3, .5);
+   border-color: #008515;
+  }
  }
 
 

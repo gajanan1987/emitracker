@@ -9,7 +9,6 @@ import {
   loanDetails,
   removeSummery,
 } from "../../redux/loanSlice";
-import { pendingEmi } from "../../utils/pendingEmi";
 import CustomModal from "../../components/CustomModal";
 import AddLoan from "./components/AddLoan";
 import LoanCard from "./components/LoanCard";
@@ -66,7 +65,7 @@ const LoansList = () => {
 
   const getLoanDetails = async (id) => {
     const fetchLoan = await dispatch(loanDetails(id)).unwrap();
-    console.log("🚀 ~ getLoanDetails ~ fetchLoan:", fetchLoan);
+    // console.log("🚀 ~ getLoanDetails ~ fetchLoan:", fetchLoan);
     setLoanData(fetchLoan);
   };
 
@@ -84,14 +83,11 @@ const LoansList = () => {
           <div className="loan-card-wrapper">
             {Array.isArray(items) &&
               items?.map((item) => {
-                const targetDate = new Date(item.emi_date);
-                const tenure = item.tenure_months;
-                const remaningEmi = pendingEmi(targetDate, tenure);
                 return (
                   <LoanCard
                     item={item}
                     key={item.id}
-                    remaningEmi={remaningEmi}
+                    remaningEmi={item.remaningEmi}
                     deleteLoanById={deleteLoanById}
                     getLoanDetails={getLoanDetails}
                   />

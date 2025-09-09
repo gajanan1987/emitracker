@@ -172,4 +172,34 @@
    }
   }
  }
+
+ .summary-row {
+  background-color: #3c3838;
+  @include Font-Bold;
+
+  td {
+   vertical-align: middle;
+   color: var(--color-white);
+   font-size: 16px;
+
+   @include mq("t-768", "max") {
+    font-size: 14px;
+   }
+
+   div {
+    .paid {
+     color: #88a825;
+    }
+
+    .rem {
+     color: #ed8c2b
+    }
+
+    span {
+     @include Font-Medium;
+     color: var(--color-white);
+    }
+   }
+  }
+ }
 }

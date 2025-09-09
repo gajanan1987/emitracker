@@ -2,7 +2,7 @@ import { useNavigate } from "react-router";
 import { formatINR } from "../../../utils/number";
 
 const LoanCard = ({ item, remaningEmi, deleteLoanById, getLoanDetails }) => {
-  const { loan_name, emi_amount, tenure_months, id } = item;
+  const { loan_name, emi_amount, id } = item;
   const navigate = useNavigate();
 
   const handleClick = () => {
@@ -15,7 +15,10 @@ const LoanCard = ({ item, remaningEmi, deleteLoanById, getLoanDetails }) => {
     e.stopPropagation();
   };
   return (
-    <div className="loan-card" onClick={handleClick}>
+    <div
+      className={`loan-card ${remaningEmi === 0 ? "loan-done" : ""}`}
+      onClick={handleClick}
+    >
       <div className="left">
         <p className="loan-name" style={{ marginBottom: "3px" }}>
           {loan_name}
@@ -23,8 +26,15 @@ const LoanCard = ({ item, remaningEmi, deleteLoanById, getLoanDetails }) => {
         <p className="f14">
           EMI: <span className="font-bold">{formatINR(emi_amount, true)}</span>
         </p>
+
         <p className="f14 color-gray">
-          <span className="font-bold">{remaningEmi}</span> months left
+          {remaningEmi === 0 ? (
+            <span className="font-bold">Loan fully paid 🎉</span>
+          ) : (
+            <>
+              <span className="font-bold">{remaningEmi}</span> months left
+            </>
+          )}
         </p>
       </div>
       <div className="right">
