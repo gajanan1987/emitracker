@@ -167,7 +167,9 @@
 
 
    td {
-    background-color: #dedede;
+    // background-color: #dedede;
+    background-color: #d4d2d2;
+    padding: 7px 10px;
 
     &:nth-child(1) {
      color: var(--color-title);
