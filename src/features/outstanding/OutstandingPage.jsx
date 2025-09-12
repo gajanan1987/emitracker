@@ -1,4 +1,4 @@
-import { useEffect, useMemo } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { formatINR } from "../../utils/number";
 import { computeOutstanding } from "../../redux/loanSlice";
@@ -6,13 +6,33 @@ import { computeOutstanding } from "../../redux/loanSlice";
 const Remaining = () => {
   const dispatch = useDispatch();
   const { items, outstanding } = useSelector((state) => state.loans);
-  console.log("🚀 ~ Remaining ~ outstanding:", outstanding);
+  const [sortConfig, setSortConfig] = useState({ key: null, direction: "asc" });
 
-  const handleSort = (key) => {};
+  const handleSort = (key) => {
+    setSortConfig((prev) => {
+      if (prev.key === key) {
+        return { key, direction: prev.direction === "asc" ? "desc" : "asc" };
+      }
+      return { key, direction: "asc" };
+    });
+  };
+
+  const sortedOutstanding = useMemo(() => {
+    if (!sortConfig.key) return outstanding;
+    return [...outstanding].sort((a, b) => {
+      const aVal = a[sortConfig.key];
+      const bVal = b[sortConfig.key];
+      if (aVal < bVal) return sortConfig.direction === "asc" ? -1 : 1;
+      if (aVal > bVal) return sortConfig.direction === "asc" ? 1 : -1;
+      return 0;
+    });
+  }, [outstanding, sortConfig]);
 
   useEffect(() => {
-    dispatch(computeOutstanding(items));
-  }, [dispatch]);
+    if (items.length > 0) {
+      dispatch(computeOutstanding(items));
+    }
+  }, [dispatch, items]);
 
   const {
     totalLoanAmount,
@@ -22,39 +42,31 @@ const Remaining = () => {
     paidInterest,
     remainInterest,
   } = useMemo(() => {
-    const filterData = outstanding?.filter((item) => {
-      return item.loanStatus !== "fullypaid";
-    });
-
-    const totalLoanAmount = filterData?.reduce((sum, item) => {
-      return sum + item.loan_amount;
-    }, 0);
-
-    const totalEmi = filterData?.reduce((sum, item) => {
-      return sum + item.emi;
-    }, 0);
-
-    const paidPrincipal = filterData?.reduce((sum, item) => {
-      return sum + item.paidPrincipal;
-    }, 0);
-    const remainPrincipal = filterData?.reduce((sum, item) => {
-      return sum + item.remainingPrincipal;
-    }, 0);
-
-    const paidInterest = filterData?.reduce((sum, item) => {
-      return sum + item.paidInterest;
-    }, 0);
-    const remainInterest = filterData?.reduce((sum, item) => {
-      return sum + item.remainingInterest;
-    }, 0);
+    const filterData =
+      outstanding?.filter((item) => item.loanStatus !== "fullypaid") || [];
 
     return {
-      totalLoanAmount,
-      totalEmi,
-      paidPrincipal,
-      remainPrincipal,
-      paidInterest,
-      remainInterest,
+      totalLoanAmount: filterData.reduce(
+        (sum, item) => sum + item.loan_amount,
+        0
+      ),
+      totalEmi: filterData.reduce((sum, item) => sum + item.emi, 0),
+      paidPrincipal: filterData.reduce(
+        (sum, item) => sum + item.paidPrincipal,
+        0
+      ),
+      remainPrincipal: filterData.reduce(
+        (sum, item) => sum + item.remainingPrincipal,
+        0
+      ),
+      paidInterest: filterData.reduce(
+        (sum, item) => sum + item.paidInterest,
+        0
+      ),
+      remainInterest: filterData.reduce(
+        (sum, item) => sum + item.remainingInterest,
+        0
+      ),
     };
   }, [outstanding]);
 
@@ -64,9 +76,21 @@ const Remaining = () => {
       <table className="table-reponsive common-table outstanding-table">
         <thead>
           <tr>
-            <th onClick={() => handleSort("loan_name")}>Loan</th>
-            <th onClick={() => handleSort("loan_amount")}>Loan Amount</th>
-            <th onClick={() => handleSort("emi_amount")}>EMI</th>
+            <th onClick={() => handleSort("loan_name")}>
+              Loan{" "}
+              {sortConfig.key === "loan_name" &&
+                (sortConfig.direction === "asc" ? "↑" : "↓")}
+            </th>
+            <th onClick={() => handleSort("loan_amount")}>
+              Loan Amount{" "}
+              {sortConfig.key === "loan_amount" &&
+                (sortConfig.direction === "asc" ? "↑" : "↓")}
+            </th>
+            <th onClick={() => handleSort("emi")}>
+              EMI{" "}
+              {sortConfig.key === "emi" &&
+                (sortConfig.direction === "asc" ? "↑" : "↓")}
+            </th>
             <td colSpan={2} className="principle">
               <table>
                 <thead>
@@ -98,17 +122,16 @@ const Remaining = () => {
                 </thead>
               </table>
             </td>
-            {/* <th onClick={() => handleSort("nextDueDate")}>P Principal</th> */}
-            {/* <th onClick={() => handleSort("nextDueDate")}>R Principal</th> */}
-            {/* <th onClick={() => handleSort("nextDueDate")}>P Interest</th>
-            <th onClick={() => handleSort("nextDueDate")}>R Interest</th> */}
-            <th onClick={() => handleSort("remaningEmi")}>Remaining</th>
-            {/* <th onClick={() => handleSort("emiStatus")}>Loan Status</th> */}
+            <th onClick={() => handleSort("remaining")}>
+              Remaining{" "}
+              {sortConfig.key === "remaining" &&
+                (sortConfig.direction === "asc" ? "↑" : "↓")}
+            </th>
           </tr>
         </thead>
 
         <tbody>
-          {outstanding.map((item) => (
+          {sortedOutstanding.map((item) => (
             <tr className="tr-year" key={item.id}>
               <td>{item.loan_name}</td>
               <td>{formatINR(item.loan_amount, true)}</td>
@@ -120,7 +143,6 @@ const Remaining = () => {
               <td>{formatINR(item.remainingInterest, true)}</td>
 
               <td>{item.remaining} months</td>
-              {/* <td className={item.loanStatus}>{item.loanStatus}</td> */}
             </tr>
           ))}
 
@@ -134,18 +156,6 @@ const Remaining = () => {
             <td>{formatINR(paidInterest, true)}</td>
             <td>{formatINR(remainInterest, true)}</td>
             <td></td>
-
-            {/* <td colSpan="3">
-              <div>
-                <div className="paid">
-                  <span>Paid Monthaly EMI:</span> {formatINR(paidMonth, true)}
-                </div>
-                <div className="rem">
-                  <span>Remaning Monthaly EMI:</span>{" "}
-                  {formatINR(remaningMonth, true)}
-                </div>
-              </div>
-            </td> */}
           </tr>
         </tbody>
       </table>
