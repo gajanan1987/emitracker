@@ -1,11 +1,5 @@
-import { useEffect, useState } from "react";
-import { addMonths, format } from "date-fns";
+import { useState } from "react";
 import { formatINR } from "../../utils/number";
-import {
-  calculateLoanAmount,
-  calculateRemainingTenure,
-  calculateROI,
-} from "../../utils/calculateEmi";
 import LoanTable from "../loans/components/LoanTable";
 import { useDispatch, useSelector } from "react-redux";
 import {
@@ -13,7 +7,6 @@ import {
   removeSummery,
   selectScheduleState,
 } from "../../redux/loanSlice";
-import { Link, NavLink } from "react-router";
 import RoiCalc from "./components/RoiCalc";
 import PrincipalCalc from "./components/PrincipalCalc";
 
@@ -22,9 +15,9 @@ export default function LoanCalculator() {
   const dispatch = useDispatch();
   const currentSchedule = useSelector(selectScheduleState);
 
-  const [loanAmount, setLoanAmount] = useState();
-  const [interestRate, setInterestRate] = useState();
-  const [tenure, setTenure] = useState();
+  const [loanAmount, setLoanAmount] = useState("");
+  const [interestRate, setInterestRate] = useState("");
+  const [tenure, setTenure] = useState("");
 
   const [btn, setBtn] = useState("Calculate EMI");
 

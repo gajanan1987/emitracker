@@ -53,14 +53,14 @@ const LoanTable = ({ currentSchedule }) => {
 
   return (
     <>
-      <table className="table-reponsive loan-table">
+      <table className="table-reponsive common-table loan-details">
         <thead>
           <tr>
             <th>Year</th>
-            <th>Principal (A)</th>
-            <th>Interest (B)</th>
+            <th className="principal">Principal (A)</th>
+            <th className="intrest">Interest (B)</th>
             <th>EMI (A + B)</th>
-            <th>Balance</th>
+            <th className="balance">Balance</th>
           </tr>
         </thead>
         <tbody>

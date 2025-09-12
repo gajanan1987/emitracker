@@ -142,41 +142,162 @@ th {
 	}
 }
 
-.p-relative {
-	position: relative;
+.common-table {
+	background-color: #eee;
+	border-radius: 8px;
+	border: 1px solid #c7bebe;
+	border-right: none;
+
+	th {
+		background-color: #dedede;
+		font-size: 16px;
+		vertical-align: middle;
+
+		@include mq("t-768", "max") {
+			font-size: 12px;
+		}
+
+		&.principal {
+			background-color: #88a825;
+			color: var(--color-white);
+		}
+
+		&.intrest {
+			background-color: #ed8c2b;
+			color: var(--color-white);
+		}
+
+		&.balance {
+			background-color: var(--color-error);
+			color: var(--color-white);
+		}
+
+		&.green {
+			color: green;
+		}
+
+		&.red {
+			color: #ed8c2b;
+		}
+	}
+
+	th,
+	td {
+		padding: 10px;
+		border-bottom: 1px solid #c7bebe;
+		border-right: 1px solid #c7bebe;
+		color: var(--color-black);
+		text-align: center;
+	}
+
+
+	.tr-year {
+		td {
+			@include Font-Bold;
+
+			&:nth-child(1) {
+				cursor: pointer;
+				@include Font-Black;
+				color: var(--color-title);
+
+				span {
+					display: inline-flex;
+					border: 1px solid;
+					border-radius: 3px;
+					height: 13px;
+					align-items: center;
+					justify-content: center;
+					width: 12px;
+
+				}
+			}
+
+			&.Today {}
+
+			&.Pending {
+				color: #ed8c2b;
+			}
+
+			&.Done {
+				color: green;
+			}
+		}
+	}
+
+	.tr-details {
+		>td {
+			padding: 0;
+			border: none;
+		}
+
+		table {
+			margin: 0;
+			border: none;
+
+
+			td {
+				// background-color: #dedede;
+				background-color: #d4d2d2;
+				padding: 7px 10px;
+
+				&:nth-child(1) {
+					color: var(--color-title);
+					font-weight: 600;
+				}
+			}
+
+			tr.done {
+				td {
+					background-color: rgb(180, 250, 227);
+				}
+			}
+		}
+
+		div {
+			overflow: hidden;
+			max-height: 0;
+			transition: max-height 0.3s ease-in-out;
+		}
+
+		&.open {
+			div {
+				max-height: 1000px;
+			}
+
+		}
+	}
+
+	.summary-row {
+		background-color: #3c3838;
+		@include Font-Bold;
+
+		td {
+			vertical-align: middle;
+			color: var(--color-white);
+			font-size: 16px;
+
+			@include mq("t-768", "max") {
+				font-size: 14px;
+			}
+
+			div {
+				.paid {
+					color: #88a825;
+				}
+
+				.rem {
+					color: #ed8c2b
+				}
+
+				span {
+					@include Font-Medium;
+					color: var(--color-white);
+				}
+			}
+		}
+	}
 }
 
-
-.hr-lines {
+.p-relative {
 	position: relative;
-
-	&::before {
-		content: " ";
-		height: 2px;
-		width: 30%;
-		background: var(--color-pink);
-		display: block;
-		position: absolute;
-		top: 35%;
-		left: 0;
-
-		@include mq("t-768", "max") {
-			width: 50px;
-		}
-	}
-
-	&::after {
-		content: " ";
-		height: 2px;
-		width: 30%;
-		background: var(--color-pink);
-		display: block;
-		position: absolute;
-		top: 35%;
-		right: 0;
-
-		@include mq("t-768", "max") {
-			width: 50px;
-		}
-	}
 }

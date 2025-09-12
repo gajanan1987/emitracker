@@ -9,6 +9,9 @@ const LoanCalculator = lazy(() =>
 );
 const LoansList = lazy(() => import("../features/loans/LoansList"));
 const AccountPage = lazy(() => import("../features/Account"));
+const OutstandingPage = lazy(() =>
+  import("../features/outstanding/OutstandingPage")
+);
 
 const AppRoutes = () => {
   return (
@@ -20,6 +23,7 @@ const AppRoutes = () => {
         <Route element={<ProtectedRotes />}>
           <Route path="/loans-list" element={<LoansList />} />
           <Route path="/account" element={<AccountPage />} />
+          <Route path="/outstanding" element={<OutstandingPage />} />
         </Route>
       </Routes>
     </Suspense>

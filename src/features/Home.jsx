@@ -124,7 +124,7 @@ const Home = () => {
       </div>
 
       {user && sortedLoans.length > 0 && (
-        <table className="table-reponsive loan-table home-table">
+        <table className="table-reponsive common-table home-table">
           <thead>
             <tr>
               <th onClick={() => handleSort("loan_name")}>Loan</th>

@@ -196,6 +196,8 @@ export const recalcSchedule = (op) => {
     remainingPrincipal,
     remainingInterest,
     loan_name,
+    loanStatus: op.loanStatus ? op.loanStatus : "",
+    id: op.id ? op.id : "",
   };
 
   return { summery, scheduleArr };
@@ -207,6 +209,7 @@ const initialState = {
   error: null,
   currentSchedule: null,
   emiSummary: null,
+  outstanding: [],
 };
 
 const loansSlice = createSlice({
@@ -222,6 +225,10 @@ const loansSlice = createSlice({
         state.emiSummary = summery;
       }
       state.emiSummary = summery;
+    },
+    computeOutstanding: (state, action) => {
+      const results = action.payload.map((loan) => recalcSchedule(loan));
+      state.outstanding = results.map((r) => r.summery);
     },
     removeSummery: (state) => {
       state.currentSchedule = null;
@@ -319,5 +326,6 @@ export const selectScheduleState = createSelector(
   (state) => state.currentSchedule
 );
 
-export const { computeScheduleFor, removeSummery } = loansSlice.actions;
+export const { computeScheduleFor, removeSummery, computeOutstanding } =
+  loansSlice.actions;
 export default loansSlice.reducer;

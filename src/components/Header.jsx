@@ -50,6 +50,11 @@ const Header = () => {
               </NavLink>
             </li>
             <li>
+              <NavLink to="/outstanding" onClick={() => setNav(false)}>
+                Outstanding
+              </NavLink>
+            </li>
+            <li>
               <NavLink to="/account" onClick={() => setNav(false)}>
                 Account
               </NavLink>

@@ -57,8 +57,10 @@ const LoansList = () => {
 
   useEffect(() => {
     dispatch(removeSummery());
-    dispatch(fetchLoans());
   }, []);
+  useEffect(() => {
+    if (!items.length) dispatch(fetchLoans());
+  }, [dispatch, items.length]);
 
   useEffect(() => {
     if (loanStatus === "failed") {

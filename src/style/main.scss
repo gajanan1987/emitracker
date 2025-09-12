@@ -3,6 +3,8 @@
 @import "./header.scss";
 @import "./Loan/addLoan.scss";
 @import "./loanCalculator.scss";
+@import "./home.scss";
+@import "./outstanding.scss";
 
 .home-bg {
  background-image: url("https://qodgdfkdugrkqbhcpcba.supabase.co/storage/v1/object/public/emi/home-bg.jpg");
@@ -140,67 +142,4 @@
  top: 0;
  left: 0;
  z-index: -1;
-}
-
-.loan-table.home-table {
- margin-top: 24px;
-
- th {
-  cursor: pointer;
-
-  &:nth-child(5) {
-   background-color: #dedede;
-   color: initial;
-  }
- }
-
- .tr-year {
-  td {
-   @include Font-Bold;
-
-   @include mq("t-768", "max") {
-    font-size: 14px;
-   }
-
-   &.Today {}
-
-   &.Pending {
-    color: #ed8c2b;
-   }
-
-   &.Done {
-    color: green;
-   }
-  }
- }
-
- .summary-row {
-  background-color: #3c3838;
-  @include Font-Bold;
-
-  td {
-   vertical-align: middle;
-   color: var(--color-white);
-   font-size: 16px;
-
-   @include mq("t-768", "max") {
-    font-size: 14px;
-   }
-
-   div {
-    .paid {
-     color: #88a825;
-    }
-
-    .rem {
-     color: #ed8c2b
-    }
-
-    span {
-     @include Font-Medium;
-     color: var(--color-white);
-    }
-   }
-  }
- }
 }
