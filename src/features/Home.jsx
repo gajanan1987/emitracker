@@ -16,22 +16,53 @@ const Home = () => {
   const [sortKey, setSortKey] = useState("nextDueDate"); // default sort
   const [sortOrder, setSortOrder] = useState("asc"); // asc or desc
 
-  // useEffect(() => {
-  //   if (user) {
-  //     dispatch(fetchLoans());
-  //   }
-  // }, [dispatch, user]);
   useEffect(() => {
-    if (user && session) {
+    if (user) {
       dispatch(fetchLoans());
     }
-  }, [dispatch, user, session]);
+  }, [dispatch, user]);
+  // useEffect(() => {
+  //   if (user && session) {
+  //     dispatch(fetchLoans());
+  //   }
+  // }, [dispatch, user, session]);
 
   const { activeLoans, totalLoanAmount, totalEmi, paidMonth, remaningMonth } =
     useSelector(selectLoanItems);
-  // useSelector(selectLoanSummary);
-  const newdata = useSelector(selectLoanItems);
-  console.log("🚀 ~ Home ~ newdata:", newdata);
+
+  // const { activeLoans, totalLoan, totalEmi, paidMonth, remaningMonth } =
+  //   useMemo(() => {
+  //     const active = items
+  //       .map((item) => {
+  //         return item;
+  //       })
+  //       .filter((item) => {
+  //         return item.loanStatus !== "fullypaid";
+  //       }); // Exclude fully paid
+
+  //     const paidMonth = items
+  //       .filter((item) => {
+  //         return item.emiStatus === "Done" && item.loanStatus !== "fullypaid";
+  //       })
+  //       .reduce((sum, item) => {
+  //         return sum + item.emi_amount;
+  //       }, 0);
+
+  //     const remaningMonth = items
+  //       .filter((item) => {
+  //         return (
+  //           item.emiStatus === "Pending" && item.loanStatus !== "fullypaid"
+  //         );
+  //       })
+  //       .reduce((sum, item) => {
+  //         return sum + item.emi_amount;
+  //       }, 0);
+
+  //     return {
+  //       paidMonth,
+  //       remaningMonth,
+  //     };
+  //   }, [items]);
 
   const sortedLoans = useMemo(() => {
     if (!activeLoans) return [];

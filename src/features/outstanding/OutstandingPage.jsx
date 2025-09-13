@@ -9,7 +9,6 @@ const Remaining = () => {
   const [sortConfig, setSortConfig] = useState({ key: null, direction: "asc" });
 
   const summary = useSelector(selectLoanItems);
-  console.log("🚀 ~ Remaining ~ summary:", summary);
 
   const handleSort = (key) => {
     setSortConfig((prev) => {
