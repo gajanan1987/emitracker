@@ -1,8 +1,8 @@
 import React, { useEffect, useMemo, useState } from "react";
-import { Link } from "react-router";
+import { Link, Navigate } from "react-router";
 import VantaBirds from "../components/VantaBirds";
 import { useDispatch, useSelector } from "react-redux";
-import { fetchLoans } from "../redux/loanSlice";
+import { fetchLoans, selectLoanItems } from "../redux/loanSlice";
 import { formatINR } from "../utils/number";
 import { format } from "date-fns";
 import { useAuth } from "../hooks/useAuth";
@@ -12,67 +12,37 @@ const Home = () => {
   const { session, loading } = useAuth();
   const { user } = useSelector((s) => s.auth);
   const { items, status } = useSelector((s) => s.loans);
-  console.log("🚀 ~ Home ~ status:", status);
 
   const [sortKey, setSortKey] = useState("nextDueDate"); // default sort
   const [sortOrder, setSortOrder] = useState("asc"); // asc or desc
 
+  // useEffect(() => {
+  //   if (user) {
+  //     dispatch(fetchLoans());
+  //   }
+  // }, [dispatch, user]);
   useEffect(() => {
-    if (user && items.length < 1) {
+    if (user && session) {
       dispatch(fetchLoans());
     }
-  }, [dispatch, user]);
+  }, [dispatch, user, session]);
 
-  // ✅ Precompute active loans + totals
-  const { activeLoans, totalLoan, totalEmi, paidMonth, remaningMonth } =
-    useMemo(() => {
-      const active = items
-        .map((item) => {
-          return item;
-        })
-        .filter((item) => {
-          return item.loanStatus !== "fullypaid";
-        }); // Exclude fully paid
-
-      const paidMonth = items
-        .filter((item) => {
-          return item.emiStatus === "Done" && item.loanStatus !== "fullypaid";
-        })
-        .reduce((sum, item) => {
-          return sum + item.emi_amount;
-        }, 0);
-
-      const remaningMonth = items
-        .filter((item) => {
-          return (
-            item.emiStatus === "Pending" && item.loanStatus !== "fullypaid"
-          );
-        })
-        .reduce((sum, item) => {
-          return sum + item.emi_amount;
-        }, 0);
-
-      return {
-        activeLoans: active,
-        totalLoan: active.reduce((sum, item) => sum + item.loan_amount, 0),
-        totalEmi: active.reduce((sum, item) => sum + item.emi_amount, 0),
-        paidMonth,
-        remaningMonth,
-      };
-    }, [items]);
+  const { activeLoans, totalLoanAmount, totalEmi, paidMonth, remaningMonth } =
+    useSelector(selectLoanItems);
+  // useSelector(selectLoanSummary);
+  const newdata = useSelector(selectLoanItems);
+  console.log("🚀 ~ Home ~ newdata:", newdata);
 
   const sortedLoans = useMemo(() => {
-    const sorted = [...activeLoans];
-    sorted.sort((a, b) => {
+    if (!activeLoans) return [];
+    return [...activeLoans].sort((a, b) => {
       let valA = a[sortKey];
       let valB = b[sortKey];
 
-      // If date field
       if (sortKey === "nextDueDate") {
         valA = new Date(valA);
         valB = new Date(valB);
       }
-
       if (typeof valA === "string") {
         valA = valA.toLowerCase();
         valB = valB.toLowerCase();
@@ -82,7 +52,6 @@ const Home = () => {
       if (valA > valB) return sortOrder === "asc" ? 1 : -1;
       return 0;
     });
-    return sorted;
   }, [activeLoans, sortKey, sortOrder]);
 
   // ✅ Handle sort change
@@ -96,9 +65,8 @@ const Home = () => {
     }
   };
 
-  if (loading) {
-    return <div className="loading">Loading...</div>;
-  }
+  if (loading) return <p className="loading">Loading...</p>; // wait for session check
+  if (!user) return <Navigate to="/login" />;
 
   return (
     <>
@@ -132,8 +100,11 @@ const Home = () => {
 
       {user && (
         <>
-          {status === "loading" && <p>Loading loans...</p>}
+          {loading || (status === "loading" && <p>Loading loans...</p>)}
 
+          {status === "succeeded" && sortedLoans.length === 0 && (
+            <p>No loans found. Add your first loan to start tracking 🚀</p>
+          )}
           {status === "succeeded" && sortedLoans.length > 0 && (
             <table className="table-reponsive common-table home-table">
               <thead>
@@ -168,7 +139,12 @@ const Home = () => {
                     <td>{item.loan_name}</td>
                     <td>{formatINR(item.loan_amount, true)}</td>
                     <td>{formatINR(item.emi_amount, true)}</td>
-                    <td>{format(new Date(item.nextDueDate), "dd MMM yyyy")}</td>
+                    {/* <td>{format(new Date(item.nextDueDate), "dd MMM yyyy")}</td> */}
+                    <td>
+                      {item.nextDueDate
+                        ? format(new Date(item.nextDueDate), "dd MMM yyyy")
+                        : "N/A"}
+                    </td>
                     <td>{item.remaningEmi} months</td>
                     <td className={item.emiStatus}>{item.emiStatus}</td>
                   </tr>
@@ -177,7 +153,7 @@ const Home = () => {
                 {/* ✅ Summary row */}
                 <tr className="summary-row">
                   <td>Total</td>
-                  <td>{formatINR(totalLoan, true)}</td>
+                  <td>{formatINR(totalLoanAmount, true)}</td>
                   <td>{formatINR(totalEmi, true)}</td>
                   <td colSpan="3">
                     <div>

@@ -1,13 +1,12 @@
-import { isBefore } from "date-fns";
 import {
   createSlice,
   createAsyncThunk,
   createSelector,
 } from "@reduxjs/toolkit";
 import supabase from "../services/supabase";
-import { addMonths, format } from "date-fns";
 import { signOut } from "./authSlice";
 import { normalizeLoan } from "../utils/normalizeLoan";
+import { genrateEmi } from "../utils/genrateEmi";
 
 // Save only summary to DB
 export const createLoan = createAsyncThunk(
@@ -90,116 +89,6 @@ export const loanDetails = createAsyncThunk(
   }
 );
 
-const round = (n) => Math.round(n);
-
-export const recalcSchedule = (op) => {
-  const {
-    emi_date,
-    interest_rate,
-    loan_amount,
-    loan_date,
-    tenure_months,
-    loan_name,
-  } = op;
-
-  const P = parseFloat(loan_amount);
-  const annualRate = parseFloat(interest_rate);
-  const n = parseInt(tenure_months);
-  const r = annualRate / 12 / 100;
-
-  if (!P || !annualRate || !n || !loan_date || !emi_date) {
-    alert("Please fill all fields correctly!");
-    return;
-  }
-
-  const loanStart = new Date(loan_date);
-  const firstEmi = new Date(emi_date);
-
-  // ✅ validation: first EMI date should be after loan start date
-  if (firstEmi <= loanStart) {
-    alert("First EMI Date must be greater than Loan Start Date!");
-    return;
-  }
-
-  // EMI Formula
-  const emi = (P * r * Math.pow(1 + r, n)) / (Math.pow(1 + r, n) - 1);
-
-  let balance = P;
-  let scheduleArr = [];
-  let totalInterest = 0;
-  let totalPrincipal = 0;
-
-  let startDate = firstEmi;
-
-  for (let i = 1; i <= n; i++) {
-    const interestForMonth = balance * r;
-    const principalForMonth = emi - interestForMonth;
-    balance -= principalForMonth;
-
-    totalInterest += interestForMonth;
-    totalPrincipal += principalForMonth;
-
-    const emiDueDate = addMonths(startDate, i - 1);
-
-    // Normalize the dates for comparison (set hours to 00:00:00)
-    const normalizeDate = (date) => new Date(date.setHours(0, 0, 0, 0));
-
-    const normalizedEmiDueDate = normalizeDate(new Date(emiDueDate));
-    const normalizedToday = normalizeDate(new Date());
-
-    // EMI Status Calculation (Only Done or Pending)
-    const emiStatus = isBefore(normalizedEmiDueDate, normalizedToday)
-      ? "Done"
-      : "Pending";
-
-    scheduleArr.push({
-      emi: round(emi),
-      principal: round(principalForMonth),
-      interest: round(interestForMonth),
-      balance: balance > 0 ? round(balance) : 0,
-      date: emiDueDate.toISOString(),
-      emiStatus,
-    });
-  }
-
-  // Till date EMIs paid
-  const today = new Date();
-  const paid = scheduleArr.filter((row) => new Date(row.date) <= today).length;
-  const remaining = n - paid;
-
-  const paidPrincipal = scheduleArr
-    .slice(0, paid)
-    .reduce((sum, row) => sum + row.principal, 0);
-
-  const paidInterest = scheduleArr
-    .slice(0, paid)
-    .reduce((sum, row) => sum + row.interest, 0);
-
-  const remainingPrincipal = round(P - paidPrincipal);
-  const remainingInterest = round(totalInterest - paidInterest);
-
-  // setSchedule(scheduleArr);
-  const summery = {
-    emi: round(emi),
-    interest_rate,
-    loan_amount,
-    tenure_months,
-    totalInterest: round(totalInterest),
-    totalPayment: round(P + totalInterest),
-    paid,
-    remaining,
-    paidPrincipal: paidPrincipal,
-    paidInterest: paidInterest,
-    remainingPrincipal,
-    remainingInterest,
-    loan_name,
-    loanStatus: op.loanStatus ? op.loanStatus : "",
-    id: op.id ? op.id : "",
-  };
-
-  return { summery, scheduleArr };
-};
-
 const initialState = {
   items: [],
   status: "idle",
@@ -215,17 +104,13 @@ const loansSlice = createSlice({
   reducers: {
     computeScheduleFor: (state, action) => {
       const { data, type } = action.payload;
-      const { summery, scheduleArr } = recalcSchedule(data);
+      const { summery, scheduleArr } = genrateEmi(data);
 
       if (type !== "addLoan") {
         state.currentSchedule = scheduleArr;
         state.emiSummary = summery;
       }
       state.emiSummary = summery;
-    },
-    computeOutstanding: (state, action) => {
-      const results = action.payload.map((loan) => recalcSchedule(loan));
-      state.outstanding = results.map((r) => r.summery);
     },
     removeSummery: (state) => {
       state.currentSchedule = null;
@@ -234,13 +119,40 @@ const loansSlice = createSlice({
   },
   extraReducers: (builder) => {
     builder
+
+      //Fetch Loan
+      .addCase(fetchLoans.pending, (s, a) => {
+        s.status = "loading";
+      })
+      .addCase(fetchLoans.fulfilled, (s, a) => {
+        s.status = "succeeded";
+        // s.items = (a.payload || []).map(normalizeLoan);
+        s.items = (a.payload || []).map((loan) => {
+          const normalized = normalizeLoan(loan);
+          const { summery } = genrateEmi(normalized);
+          return { ...normalized, ...summery }; // merged loan object
+        });
+      })
+      .addCase(fetchLoans.rejected, (s, a) => {
+        s.status = "failed";
+        s.items = a.payload || [];
+      })
+
+      //Create Loan
       .addCase(createLoan.pending, (s) => {
         s.status = "loading";
         s.error = null;
       })
       .addCase(createLoan.fulfilled, (s, a) => {
+        // s.status = "succeeded";
+        // s.items.push(normalizeLoan(a.payload));
+        // s.currentSchedule = null;
+        // s.emiSummary = null;
+
         s.status = "succeeded";
-        s.items.push(normalizeLoan(a.payload));
+        const normalized = normalizeLoan(a.payload);
+        const { summery } = genrateEmi(normalized);
+        s.items.push({ ...normalized, ...summery });
         s.currentSchedule = null;
         s.emiSummary = null;
       })
@@ -249,26 +161,32 @@ const loansSlice = createSlice({
         s.error = a.payload;
       })
 
+      //Edit Loan
       .addCase(editLoan.pending, (s) => {
         s.status = "loading";
         s.error = null;
       })
       .addCase(editLoan.fulfilled, (s, a) => {
-        s.status = "succeeded";
-        // s.items.push(normalizeLoan(a.payload));
+        // s.status = "succeeded";
+        // const updated = normalizeLoan(a.payload);
+        // const idx = s.items.findIndex((item) => item.id === updated.id);
+        // if (idx !== -1) {
+        //   s.items[idx] = updated;
+        // } else {
+        //   s.items.push(updated);
+        // }
         // s.currentSchedule = null;
         // s.emiSummary = null;
-        // fetchLoans();
+        s.status = "succeeded";
+        const normalized = normalizeLoan(a.payload);
+        const { summery } = genrateEmi(normalized);
+        const enriched = { ...normalized, ...summery };
 
-        const updated = normalizeLoan(a.payload);
-
-        // Find existing loan index
-        const idx = s.items.findIndex((item) => item.id === updated.id);
-
+        const idx = s.items.findIndex((item) => item.id === enriched.id);
         if (idx !== -1) {
-          s.items[idx] = updated; // replace
+          s.items[idx] = enriched;
         } else {
-          s.items.push(updated); // fallback
+          s.items.push(enriched);
         }
 
         s.currentSchedule = null;
@@ -279,21 +197,7 @@ const loansSlice = createSlice({
         s.error = a.payload;
       })
 
-      ////
-      .addCase(fetchLoans.pending, (s, a) => {
-        s.status = "loading";
-      })
-      .addCase(fetchLoans.fulfilled, (s, a) => {
-        s.status = "succeeded";
-        s.items = (a.payload || []).map(normalizeLoan);
-      })
-      .addCase(fetchLoans.rejected, (s, a) => {
-        s.status = "failed";
-        s.items = a.payload || [];
-      })
-      ////
-      .addCase(loanDetails.fulfilled, (s, a) => {})
-      ////
+      //Delete Loan
       .addCase(deleteLoan.pending, (s, a) => {
         s.status = "loading";
       })
@@ -306,6 +210,10 @@ const loansSlice = createSlice({
       .addCase(deleteLoan.rejected, (s, a) => {
         s.status = "failed";
       })
+
+      //Loan Details
+      .addCase(loanDetails.fulfilled, (s, a) => {})
+
       .addCase(signOut.fulfilled, () => initialState);
   },
 });
@@ -322,6 +230,36 @@ export const selectScheduleState = createSelector(
   (state) => state.currentSchedule
 );
 
-export const { computeScheduleFor, removeSummery, computeOutstanding } =
-  loansSlice.actions;
+export const selectLoanItems = createSelector(
+  (state) => state.loans.items,
+  (items) => {
+    const activeLoans = items.filter((item) => item.loanStatus !== "fullypaid");
+
+    return {
+      totalLoanAmount: activeLoans.reduce((sum, i) => sum + i.loan_amount, 0),
+      totalEmi: activeLoans.reduce((sum, i) => sum + i.emi, 0),
+      paidPrincipal: activeLoans.reduce((sum, i) => sum + i.paidPrincipal, 0),
+      remainPrincipal: activeLoans.reduce(
+        (sum, i) => sum + i.remainingPrincipal,
+        0
+      ),
+      paidInterest: activeLoans.reduce((sum, i) => sum + i.paidInterest, 0),
+      remainInterest: activeLoans.reduce(
+        (sum, i) => sum + i.remainingInterest,
+        0
+      ),
+      activeLoans,
+      paidMonth: activeLoans.reduce(
+        (sum, loan) => sum + loan.paid * loan.emi,
+        0
+      ),
+      remaningMonth: activeLoans.reduce(
+        (sum, loan) => sum + loan.remaining * loan.emi,
+        0
+      ),
+    };
+  }
+);
+
+export const { computeScheduleFor, removeSummery } = loansSlice.actions;
 export default loansSlice.reducer;
