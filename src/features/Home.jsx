@@ -30,16 +30,8 @@ const Home = () => {
   const { activeLoans, totalLoanAmount, totalEmi, paidMonth, remaningMonth } =
     useSelector(selectLoanItems);
 
-  // const { activeLoans, totalLoan, totalEmi, paidMonth, remaningMonth } =
+  // const { paidMonth, remaningMonth } =
   //   useMemo(() => {
-  //     const active = items
-  //       .map((item) => {
-  //         return item;
-  //       })
-  //       .filter((item) => {
-  //         return item.loanStatus !== "fullypaid";
-  //       }); // Exclude fully paid
-
   //     const paidMonth = items
   //       .filter((item) => {
   //         return item.emiStatus === "Done" && item.loanStatus !== "fullypaid";

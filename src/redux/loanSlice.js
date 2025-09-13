@@ -234,6 +234,13 @@ export const selectLoanItems = createSelector(
   (state) => state.loans.items,
   (items) => {
     const activeLoans = items.filter((item) => item.loanStatus !== "fullypaid");
+    const paidM = items.filter(
+      (item) => item.emiStatus === "Done" && item.loanStatus !== "fullypaid"
+    );
+    const remaningM = items.filter(
+      (item) => item.emiStatus === "Pending" && item.loanStatus !== "fullypaid"
+    );
+    console.log("🚀 ~ remaningM:", remaningM);
 
     return {
       totalLoanAmount: activeLoans.reduce((sum, i) => sum + i.loan_amount, 0),
@@ -249,14 +256,8 @@ export const selectLoanItems = createSelector(
         0
       ),
       activeLoans,
-      paidMonth: activeLoans.reduce(
-        (sum, loan) => sum + loan.paid * loan.emi,
-        0
-      ),
-      remaningMonth: activeLoans.reduce(
-        (sum, loan) => sum + loan.remaining * loan.emi,
-        0
-      ),
+      paidMonth: paidM.reduce((sum, loan) => sum + loan.emi, 0),
+      remaningMonth: remaningM.reduce((sum, loan) => sum + loan.emi, 0),
     };
   }
 );
