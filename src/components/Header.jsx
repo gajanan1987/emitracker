@@ -28,6 +28,11 @@ const Header = () => {
       </Link>
       <ul className={`nav-links ${nav ? "show" : "hide"}`}>
         <li>
+          <NavLink to="/" onClick={() => setNav(false)}>
+            Home
+          </NavLink>
+        </li>
+        <li>
           <NavLink to="/loancalculator" onClick={() => setNav(false)}>
             EMI Calculator
           </NavLink>

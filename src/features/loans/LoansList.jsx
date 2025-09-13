@@ -44,7 +44,6 @@ const LoansList = () => {
     emiSummary,
     status: loanStatus,
   } = useSelector((s) => s.loans);
-  console.log("🚀 ~ LoansList ~ items:", items);
 
   const { status, error, user } = useSelector((s) => s.auth);
 
@@ -99,7 +98,7 @@ const LoansList = () => {
         <LoanDetails />
       ) : (
         <>
-          <div className="loan-card-wrapper">
+          {/* <div className="loan-card-wrapper">
             {items?.length > 0 ? (
               items?.map((item) => {
                 return (
@@ -123,7 +122,32 @@ const LoansList = () => {
                 </button>
               </h1>
             )}
+          </div> */}
+          <div className="loan-card-wrapper">
+            {loanStatus === "loading" ? (
+              <>Loading....</>
+            ) : loanStatus === "failed" ? (
+              <h1>Error loading loans. Please try again.</h1>
+            ) : items?.length > 0 ? (
+              items.map((item) => (
+                <LoanCard
+                  item={item}
+                  key={item.id}
+                  remaningEmi={item.remaningEmi}
+                  deleteLoanById={deleteLoanById}
+                  getLoanDetails={getLoanDetails}
+                />
+              ))
+            ) : (
+              <h1>
+                No Loans pls....{" "}
+                <button className="btn btn-primary" onClick={onOpenModal}>
+                  Add Loan
+                </button>
+              </h1>
+            )}
           </div>
+
           <div>
             <CustomModal
               open={open}

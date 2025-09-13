@@ -5,7 +5,6 @@ import { formatINR } from "../../../utils/number";
 import custMessage from "../../../utils/toast";
 
 const AddLoan = ({ emiSummary, onCloseModal }) => {
-  console.log("🚀 ~ AddLoan ~ emiSummary:", emiSummary);
   const dispatch = useDispatch();
 
   // const [formData, setFormData] = useState([]);

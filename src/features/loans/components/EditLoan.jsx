@@ -5,7 +5,6 @@ import { formatINR } from "../../../utils/number";
 import custMessage from "../../../utils/toast";
 
 const EditLoan = ({ loanEditData, onCloseModal }) => {
-  // console.log("🚀 ~ EditLoan ~ loanEditData:", loanEditData);
   const dispatch = useDispatch();
   const { emiSummary } = useSelector((s) => s.loans);
 
@@ -48,7 +47,6 @@ const EditLoan = ({ loanEditData, onCloseModal }) => {
       loan_name: formData.loanName,
       email,
     };
-    console.log("🚀 ~ editLoan ~ payload:", payload);
 
     dispatch(
       editLoan({

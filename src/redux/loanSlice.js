@@ -27,8 +27,6 @@ export const createLoan = createAsyncThunk(
 export const editLoan = createAsyncThunk(
   "loans/editLoan",
   async ({ loan, remaining, loanId }, { rejectWithValue }) => {
-    console.log("LoanId being passed:", loanId, typeof loanId);
-
     const { error, data } = await supabase
       .from("loan")
       .update({
@@ -44,7 +42,6 @@ export const editLoan = createAsyncThunk(
       .select()
       .single();
     if (error) return rejectWithValue(error.message);
-    console.log("🚀 ~ data: vbcbcbv", data);
     if (!data || data.length === 0) {
       return rejectWithValue("No loan found with that ID");
     }
@@ -264,7 +261,6 @@ const loansSlice = createSlice({
         // fetchLoans();
 
         const updated = normalizeLoan(a.payload);
-        console.log("🚀 ~ updated:", updated);
 
         // Find existing loan index
         const idx = s.items.findIndex((item) => item.id === updated.id);

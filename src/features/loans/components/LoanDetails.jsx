@@ -13,7 +13,6 @@ const LoanDetails = () => {
   const { items, currentSchedule, emiSummary, status } = useSelector(
     (s) => s.loans
   );
-  console.log("🚀 ~ LoanDetails ~ currentSchedule:", currentSchedule);
 
   const handleBack = () => {
     dispatch(removeSummery());

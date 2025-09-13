@@ -5,11 +5,14 @@ import { useDispatch, useSelector } from "react-redux";
 import { fetchLoans } from "../redux/loanSlice";
 import { formatINR } from "../utils/number";
 import { format } from "date-fns";
+import { useAuth } from "../hooks/useAuth";
 
 const Home = () => {
   const dispatch = useDispatch();
+  const { session, loading } = useAuth();
   const { user } = useSelector((s) => s.auth);
-  const { items } = useSelector((s) => s.loans);
+  const { items, status } = useSelector((s) => s.loans);
+  console.log("🚀 ~ Home ~ status:", status);
 
   const [sortKey, setSortKey] = useState("nextDueDate"); // default sort
   const [sortOrder, setSortOrder] = useState("asc"); // asc or desc
@@ -93,10 +96,14 @@ const Home = () => {
     }
   };
 
+  if (loading) {
+    return <div className="loading">Loading...</div>;
+  }
+
   return (
     <>
       <div
-        className={`home-banner ${items.length > 0 ? "logedin" : "logedout"} `}
+        className={`home-banner ${session && user ? "logedin" : "logedout"} `}
       >
         <div>
           <h1 className="color-title">
@@ -123,50 +130,72 @@ const Home = () => {
         </div>
       </div>
 
-      {user && sortedLoans.length > 0 && (
-        <table className="table-reponsive common-table home-table">
-          <thead>
-            <tr>
-              <th onClick={() => handleSort("loan_name")}>Loan</th>
-              <th onClick={() => handleSort("loan_amount")}>Loan Amount</th>
-              <th onClick={() => handleSort("emi_amount")}>EMI</th>
-              <th onClick={() => handleSort("nextDueDate")}>Due Date</th>
-              <th onClick={() => handleSort("remaningEmi")}>Remaining</th>
-              <th onClick={() => handleSort("emiStatus")}>Status</th>
-            </tr>
-          </thead>
+      {user && (
+        <>
+          {status === "loading" && <p>Loading loans...</p>}
 
-          <tbody>
-            {sortedLoans.map((item) => (
-              <tr className="tr-year" key={item.id}>
-                <td>{item.loan_name}</td>
-                <td>{formatINR(item.loan_amount, true)}</td>
-                <td>{formatINR(item.emi_amount, true)}</td>
-                <td>{format(new Date(item.nextDueDate), "dd MMM yyyy")}</td>
-                <td>{item.remaningEmi} months</td>
-                <td className={item.emiStatus}>{item.emiStatus}</td>
-              </tr>
-            ))}
+          {status === "succeeded" && sortedLoans.length > 0 && (
+            <table className="table-reponsive common-table home-table">
+              <thead>
+                <tr>
+                  <th
+                    className="loan-name"
+                    onClick={() => handleSort("loan_name")}
+                  >
+                    Loan
+                  </th>
+                  <th
+                    className="principal"
+                    onClick={() => handleSort("loan_amount")}
+                  >
+                    Loan Amount
+                  </th>
+                  <th
+                    className="intrest"
+                    onClick={() => handleSort("emi_amount")}
+                  >
+                    EMI
+                  </th>
+                  <th onClick={() => handleSort("nextDueDate")}>Due Date</th>
+                  <th onClick={() => handleSort("remaningEmi")}>Remaining</th>
+                  <th onClick={() => handleSort("emiStatus")}>Status</th>
+                </tr>
+              </thead>
 
-            {/* ✅ Summary row */}
-            <tr className="summary-row">
-              <td>Total</td>
-              <td>{formatINR(totalLoan, true)}</td>
-              <td>{formatINR(totalEmi, true)}</td>
-              <td colSpan="3">
-                <div>
-                  <div className="paid">
-                    <span>Paid Monthaly EMI:</span> {formatINR(paidMonth, true)}
-                  </div>
-                  <div className="rem">
-                    <span>Remaning Monthaly EMI:</span>{" "}
-                    {formatINR(remaningMonth, true)}
-                  </div>
-                </div>
-              </td>
-            </tr>
-          </tbody>
-        </table>
+              <tbody>
+                {sortedLoans.map((item) => (
+                  <tr className="tr-year" key={item.id}>
+                    <td>{item.loan_name}</td>
+                    <td>{formatINR(item.loan_amount, true)}</td>
+                    <td>{formatINR(item.emi_amount, true)}</td>
+                    <td>{format(new Date(item.nextDueDate), "dd MMM yyyy")}</td>
+                    <td>{item.remaningEmi} months</td>
+                    <td className={item.emiStatus}>{item.emiStatus}</td>
+                  </tr>
+                ))}
+
+                {/* ✅ Summary row */}
+                <tr className="summary-row">
+                  <td>Total</td>
+                  <td>{formatINR(totalLoan, true)}</td>
+                  <td>{formatINR(totalEmi, true)}</td>
+                  <td colSpan="3">
+                    <div>
+                      <div className="paid">
+                        <span>Paid Monthly EMI:</span>{" "}
+                        {formatINR(paidMonth, true)}
+                      </div>
+                      <div className="rem">
+                        <span>Remaining Monthly EMI:</span>{" "}
+                        {formatINR(remaningMonth, true)}
+                      </div>
+                    </div>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          )}
+        </>
       )}
     </>
   );

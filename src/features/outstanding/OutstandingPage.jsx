@@ -1,7 +1,7 @@
 import { useEffect, useMemo, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { formatINR } from "../../utils/number";
-import { computeOutstanding } from "../../redux/loanSlice";
+import { computeOutstanding, fetchLoans } from "../../redux/loanSlice";
 
 const Remaining = () => {
   const dispatch = useDispatch();
@@ -28,8 +28,16 @@ const Remaining = () => {
     });
   }, [outstanding, sortConfig]);
 
+  // useEffect(() => {
+  //   if (items.length > 0) {
+  //     dispatch(computeOutstanding(items));
+  //   }
+  // }, [dispatch, items]);
+
   useEffect(() => {
-    if (items.length > 0) {
+    if (items.length === 0) {
+      dispatch(fetchLoans());
+    } else {
       dispatch(computeOutstanding(items));
     }
   }, [dispatch, items]);
@@ -76,17 +84,17 @@ const Remaining = () => {
       <table className="table-reponsive common-table outstanding-table">
         <thead>
           <tr>
-            <th onClick={() => handleSort("loan_name")}>
+            <th className="loan-name" onClick={() => handleSort("loan_name")}>
               Loan{" "}
               {sortConfig.key === "loan_name" &&
                 (sortConfig.direction === "asc" ? "↑" : "↓")}
             </th>
-            <th onClick={() => handleSort("loan_amount")}>
+            <th className="principal" onClick={() => handleSort("loan_amount")}>
               Loan Amount{" "}
               {sortConfig.key === "loan_amount" &&
                 (sortConfig.direction === "asc" ? "↑" : "↓")}
             </th>
-            <th onClick={() => handleSort("emi")}>
+            <th className="intrest" onClick={() => handleSort("emi")}>
               EMI{" "}
               {sortConfig.key === "emi" &&
                 (sortConfig.direction === "asc" ? "↑" : "↓")}

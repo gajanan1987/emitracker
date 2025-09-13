@@ -56,7 +56,7 @@ const LoanTable = ({ currentSchedule }) => {
       <table className="table-reponsive common-table loan-details">
         <thead>
           <tr>
-            <th>Year</th>
+            <th className="loan-name">Year</th>
             <th className="principal">Principal (A)</th>
             <th className="intrest">Interest (B)</th>
             <th>EMI (A + B)</th>
