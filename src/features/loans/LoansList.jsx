@@ -45,8 +45,6 @@ const LoansList = () => {
     status: loanStatus,
   } = useSelector((s) => s.loans);
 
-  const { status, error, user } = useSelector((s) => s.auth);
-
   //cust modal
 
   async function expire() {
@@ -55,7 +53,7 @@ const LoansList = () => {
   }
 
   useEffect(() => {
-    dispatch(removeSummery());
+    if (emiSummary) dispatch(removeSummery());
   }, []);
   useEffect(() => {
     if (!items.length) dispatch(fetchLoans());
@@ -98,31 +96,6 @@ const LoansList = () => {
         <LoanDetails />
       ) : (
         <>
-          {/* <div className="loan-card-wrapper">
-            {items?.length > 0 ? (
-              items?.map((item) => {
-                return (
-                  <LoanCard
-                    item={item}
-                    key={item.id}
-                    remaningEmi={item.remaningEmi}
-                    deleteLoanById={deleteLoanById}
-                    getLoanDetails={getLoanDetails}
-                  />
-                );
-              })
-            ) : (
-              <h1>
-                No Loans pls....{" "}
-                <button
-                  className="btn btn-primary"
-                  onClick={() => onOpenModal()}
-                >
-                  Add Loan
-                </button>
-              </h1>
-            )}
-          </div> */}
           <div className="loan-card-wrapper">
             {loanStatus === "loading" ? (
               <>Loading....</>

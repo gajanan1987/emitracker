@@ -15,9 +15,9 @@ export default function LoanCalculator() {
   const dispatch = useDispatch();
   const currentSchedule = useSelector(selectScheduleState);
 
-  const [loanAmount, setLoanAmount] = useState("");
-  const [interestRate, setInterestRate] = useState("");
-  const [tenure, setTenure] = useState("");
+  const [loanAmount, setLoanAmount] = useState(3000000);
+  const [interestRate, setInterestRate] = useState(12);
+  const [tenure, setTenure] = useState(120);
 
   const [btn, setBtn] = useState("Calculate EMI");
 

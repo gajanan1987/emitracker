@@ -59,9 +59,6 @@ const LoanDetails = () => {
                 {formatINR(emiSummary.totalPayment, true)}
               </p>
               ----------------------------------------------------------------------
-              {/* <p>
-                <span>Emi Paid:</span> {emiSummary.paid}
-              </p> */}
               <p>
                 <span>Paid Interest:</span>
                 {formatINR(emiSummary.paidInterest, true)}
@@ -70,7 +67,6 @@ const LoanDetails = () => {
                 <span>Paid Principal:</span>
                 {formatINR(emiSummary.paidPrincipal, true)}
               </p>
-              {/* <p>Remaining Tenure: {emiSummary.remaining}</p> */}
               ----------------------------------------------------------------------
               <p>
                 <span>Remaining Interest: </span>

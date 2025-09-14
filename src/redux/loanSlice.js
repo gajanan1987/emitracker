@@ -95,7 +95,6 @@ const initialState = {
   error: null,
   currentSchedule: null,
   emiSummary: null,
-  outstanding: [],
 };
 
 const loansSlice = createSlice({
@@ -109,8 +108,9 @@ const loansSlice = createSlice({
       if (type !== "addLoan") {
         state.currentSchedule = scheduleArr;
         state.emiSummary = summery;
+      } else {
+        state.emiSummary = summery;
       }
-      state.emiSummary = summery;
     },
     removeSummery: (state) => {
       state.currentSchedule = null;
@@ -126,7 +126,6 @@ const loansSlice = createSlice({
       })
       .addCase(fetchLoans.fulfilled, (s, a) => {
         s.status = "succeeded";
-        // s.items = (a.payload || []).map(normalizeLoan);
         s.items = (a.payload || []).map((loan) => {
           const normalized = normalizeLoan(loan);
           const { summery } = genrateEmi(normalized);
@@ -234,13 +233,15 @@ export const selectLoanItems = createSelector(
   (state) => state.loans.items,
   (items) => {
     const activeLoans = items.filter((item) => item.loanStatus !== "fullypaid");
+    const fullypaidLoans = items.filter(
+      (item) => item.loanStatus == "fullypaid"
+    );
     const paidM = items.filter(
       (item) => item.emiStatus === "Done" && item.loanStatus !== "fullypaid"
     );
     const remaningM = items.filter(
       (item) => item.emiStatus === "Pending" && item.loanStatus !== "fullypaid"
     );
-    console.log("🚀 ~ remaningM:", remaningM);
 
     return {
       totalLoanAmount: activeLoans.reduce((sum, i) => sum + i.loan_amount, 0),
@@ -256,6 +257,7 @@ export const selectLoanItems = createSelector(
         0
       ),
       activeLoans,
+      fullypaidLoans,
       paidMonth: paidM.reduce((sum, loan) => sum + loan.emi, 0),
       remaningMonth: remaningM.reduce((sum, loan) => sum + loan.emi, 0),
     };

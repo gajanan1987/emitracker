@@ -2,7 +2,7 @@ import { lazy, Suspense } from "react";
 import { Routes, Route } from "react-router";
 import ProtectedRotes from "./ProtectedRotes";
 
-const Home = lazy(() => import("../features/Home"));
+const Home = lazy(() => import("../features/home/Home"));
 const AuthPage = lazy(() => import("../features/auth/AuthPage"));
 const LoanCalculator = lazy(() =>
   import("../features/calculator/LoanCalculator")

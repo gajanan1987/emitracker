@@ -1,38 +1,26 @@
+import { useLoanSorter } from "../../../hooks/useLoanSorter";
 import { formatINR } from "../../../utils/number";
+import OutstandingSummary from "./OutstandingSummary";
 
-const OutstandingTable = ({
-  summary,
-  sortConfig,
-  handleSort,
-  sortedOutstanding,
-}) => {
-  const {
-    totalLoanAmount,
-    totalEmi,
-    paidPrincipal,
-    remainPrincipal,
-    paidInterest,
-    remainInterest,
-  } = summary;
+const OutstandingTable = ({ summary, items }) => {
+  const { sortedLoans, handleSort, sortConfig } = useLoanSorter(items);
+
+  // helper for showing arrow
+  const sortArrow = (key) =>
+    sortConfig.key === key ? (sortConfig.direction === "asc" ? "↑" : "↓") : "";
   return (
     <>
       <table className="table-reponsive common-table outstanding-table">
         <thead>
           <tr>
             <th className="loan-name" onClick={() => handleSort("loan_name")}>
-              Loan{" "}
-              {sortConfig.key === "loan_name" &&
-                (sortConfig.direction === "asc" ? "↑" : "↓")}
+              Loan {sortArrow("loan_name")}
             </th>
             <th className="principal" onClick={() => handleSort("loan_amount")}>
-              Loan Amount{" "}
-              {sortConfig.key === "loan_amount" &&
-                (sortConfig.direction === "asc" ? "↑" : "↓")}
+              Loan Amount {sortArrow("loan_amount")}
             </th>
-            <th className="intrest" onClick={() => handleSort("emi")}>
-              EMI{" "}
-              {sortConfig.key === "emi" &&
-                (sortConfig.direction === "asc" ? "↑" : "↓")}
+            <th className="intrest" onClick={() => handleSort("emi_amount")}>
+              EMI {sortArrow("emi_amount")}
             </th>
             <td colSpan={2} className="principle">
               <table>
@@ -43,8 +31,18 @@ const OutstandingTable = ({
                     </th>
                   </tr>
                   <tr>
-                    <th className="green">Paid</th>
-                    <th className="red">Remaining</th>
+                    <th
+                      className="green"
+                      onClick={() => handleSort("paidPrincipal")}
+                    >
+                      Paid {sortArrow("paidPrincipal")}
+                    </th>
+                    <th
+                      className="red"
+                      onClick={() => handleSort("remainingPrincipal")}
+                    >
+                      Remaining {sortArrow("remainingPrincipal")}
+                    </th>
                   </tr>
                 </thead>
               </table>
@@ -59,22 +57,30 @@ const OutstandingTable = ({
                     </th>
                   </tr>
                   <tr>
-                    <th className="green">Paid</th>
-                    <th className="red">Remaining</th>
+                    <th
+                      className="green"
+                      onClick={() => handleSort("paidInterest")}
+                    >
+                      Paid {sortArrow("paidInterest")}
+                    </th>
+                    <th
+                      className="red"
+                      onClick={() => handleSort("remainingInterest")}
+                    >
+                      Remaining {sortArrow("remainingInterest")}
+                    </th>
                   </tr>
                 </thead>
               </table>
             </td>
             <th onClick={() => handleSort("remaining")}>
-              Remaining{" "}
-              {sortConfig.key === "remaining" &&
-                (sortConfig.direction === "asc" ? "↑" : "↓")}
+              Remaining {sortArrow("remaining")}
             </th>
           </tr>
         </thead>
 
         <tbody>
-          {sortedOutstanding.length === 0 ? (
+          {sortedLoans.length === 0 ? (
             <tr>
               <td colSpan={8} style={{ textAlign: "center" }}>
                 No outstanding loans
@@ -82,8 +88,11 @@ const OutstandingTable = ({
             </tr>
           ) : (
             <>
-              {sortedOutstanding.map((item) => (
-                <tr className="tr-year" key={item.id}>
+              {sortedLoans.map((item) => (
+                <tr
+                  className={`tr-year ${item.remaining === 0 ? "Done" : ""}`}
+                  key={item.id}
+                >
                   <td>{item.loan_name}</td>
                   <td>{formatINR(item.loan_amount, true)}</td>
                   <td>{formatINR(item.emi, true)}</td>
@@ -96,16 +105,9 @@ const OutstandingTable = ({
               ))}
 
               {/* ✅ Summary row */}
-              <tr className="summary-row">
-                <td>Total</td>
-                <td>{formatINR(totalLoanAmount, true)}</td>
-                <td>{formatINR(totalEmi, true)}</td>
-                <td>{formatINR(paidPrincipal, true)}</td>
-                <td>{formatINR(remainPrincipal, true)}</td>
-                <td>{formatINR(paidInterest, true)}</td>
-                <td>{formatINR(remainInterest, true)}</td>
-                <td></td>
-              </tr>
+              {sortedLoans.length > 0 && (
+                <OutstandingSummary summary={summary} />
+              )}
             </>
           )}
         </tbody>
