@@ -14,10 +14,10 @@ const Home = () => {
   const loanData = useSelector(selectLoanItems); // ✅ Get both activeLoans + summary
 
   useEffect(() => {
-    if (user) {
+    if (user && status === "idle") {
       dispatch(fetchLoans());
     }
-  }, [dispatch, user]);
+  }, [dispatch, user, status]);
 
   if (loading) return <p className="loading">Loading...</p>;
   if (!user) return <Navigate to="/login" />;
