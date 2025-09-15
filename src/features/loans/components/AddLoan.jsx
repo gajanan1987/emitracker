@@ -39,75 +39,63 @@ const AddLoan = ({ emiSummary, onCloseModal }) => {
       <h2>Add New Loan EMI</h2>
 
       <div className="form">
-        <div className="input-wrapper">
-          <Input
-            type="text"
-            label="Enter Bank Name / Loan Number Account"
-            name="loanName"
-            value={formData.loanName}
-            onChange={handleChange}
-            placeholder="Bank Name / Acc. Number"
-            required
-          />
-        </div>
+        <Input
+          type="text"
+          label="Enter Bank Name / Loan Number Account"
+          name="loanName"
+          value={formData.loanName}
+          onChange={handleChange}
+          placeholder="Bank Name / Acc. Number"
+          required
+        />
 
-        <div className="input-wrapper">
-          <Input
-            label="Enter Loan Amount"
-            name="loanAmount"
-            type="number"
-            value={formData.loanAmount}
-            onChange={handleChange}
-            placeholder="Loan Amount"
-            required
-          />
-        </div>
+        <Input
+          label="Enter Loan Amount"
+          name="loanAmount"
+          type="number"
+          value={formData.loanAmount}
+          onChange={handleChange}
+          placeholder="Loan Amount"
+          required
+        />
 
-        <div className="input-wrapper">
-          <Input
-            label="Enter Interest Rate (%)"
-            name="loanInterest"
-            type="number"
-            value={formData.loanInterest}
-            onChange={handleChange}
-            placeholder="Annual Interest Rate (%)"
-            required
-          />
-        </div>
+        <Input
+          label="Enter Interest Rate (%)"
+          name="loanInterest"
+          type="number"
+          value={formData.loanInterest}
+          onChange={handleChange}
+          placeholder="Annual Interest Rate (%)"
+          required
+        />
 
-        <div className="input-wrapper">
-          <Input
-            label="Enter Tenure (Months)"
-            name="loanTenure"
-            type="number"
-            value={formData.loanTenure}
-            onChange={handleChange}
-            placeholder="Tenure (Months)"
-            required
-          />
-        </div>
+        <Input
+          label="Enter Tenure (Months)"
+          name="loanTenure"
+          type="number"
+          value={formData.loanTenure}
+          onChange={handleChange}
+          placeholder="Tenure (Months)"
+          required
+        />
 
-        <div className="input-wrapper">
-          <Input
-            label="Loan Start Date"
-            name="loanDate"
-            type="date"
-            value={formData.loanDate}
-            onChange={handleChange}
-            required
-          />
-        </div>
+        <Input
+          label="Loan Start Date"
+          name="loanDate"
+          type="date"
+          value={formData.loanDate}
+          onChange={handleChange}
+          required
+        />
 
-        <div className="input-wrapper">
-          <Input
-            label="First EMI Date"
-            name="loanEmiDate"
-            type="date"
-            value={formData.loanEmiDate}
-            onChange={handleChange}
-            required
-          />
-        </div>
+        <Input
+          label="First EMI Date"
+          name="loanEmiDate"
+          type="date"
+          value={formData.loanEmiDate}
+          onChange={handleChange}
+          required
+        />
 
         <div className="btn-wrapper">
           <button
