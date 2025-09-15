@@ -4,7 +4,10 @@ import { useLoanSorter } from "../../../hooks/useLoanSorter";
 import LoanSummary from "./LoanSummary";
 
 const HomeTable = ({ activeLoans, summaryData }) => {
-  const { sortedLoans, handleSort, sortConfig } = useLoanSorter(activeLoans);
+  const { sortedLoans, handleSort, sortConfig } = useLoanSorter(
+    activeLoans,
+    "emiStatus"
+  );
 
   if (!sortedLoans.length) {
     return <p>No loans found. Add your first loan to start tracking 🚀</p>;

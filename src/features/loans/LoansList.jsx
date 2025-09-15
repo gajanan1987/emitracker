@@ -1,5 +1,5 @@
-import React, { useEffect, useState } from "react";
-import { Link, useNavigate } from "react-router";
+import React, { useEffect, useState, useCallback } from "react";
+import { useNavigate } from "react-router";
 import { useDispatch, useSelector } from "react-redux";
 import { signOut } from "../../redux/authSlice";
 import {
@@ -18,25 +18,13 @@ import EditLoan from "./components/EditLoan";
 
 const LoansList = () => {
   const dispatch = useDispatch();
-  const navigatin = useNavigate();
-  const [loanData, setLoanData] = useState();
-  const [loanEditData, setLoanEditData] = useState();
+  const navigate = useNavigate();
+
+  const [loanData, setLoanData] = useState(null);
+  const [loanEditData, setLoanEditData] = useState(null);
 
   const [open, setOpen] = useState(false);
-  const onOpenModal = () => setOpen(true);
-  const onCloseModal = () => {
-    setOpen(false);
-    dispatch(removeSummery());
-  };
-
-  //Modal Edit
   const [editOpen, setEditOpen] = useState(false);
-  const onEditOpenModal = () => setEditOpen(true);
-
-  const onEditCloseModal = () => {
-    setEditOpen(false);
-    dispatch(removeSummery());
-  };
 
   const {
     items,
@@ -45,50 +33,97 @@ const LoansList = () => {
     status: loanStatus,
   } = useSelector((s) => s.loans);
 
-  //cust modal
-
-  async function expire() {
+  // Expire session if fetch fails
+  const expire = useCallback(() => {
     dispatch(signOut());
-    navigatin("/");
-  }
+    navigate("/");
+  }, [dispatch, navigate]);
 
-  useEffect(() => {
-    if (emiSummary) dispatch(removeSummery());
-  }, []);
+  // Fetch loans on mount
   useEffect(() => {
     if (!items.length) dispatch(fetchLoans());
   }, [dispatch, items.length]);
 
+  // Handle failed fetch
   useEffect(() => {
-    if (loanStatus === "failed") {
-      expire();
-    }
-  }, [items]);
+    if (loanStatus === "failed") expire();
+  }, [loanStatus, expire]);
 
-  const deleteLoanById = (id, lname) => {
-    dispatch(deleteLoan(id))
-      .unwrap()
-      .then((data) => {
-        custMessage.success(`${lname} Loan Deleted successfully`);
-      })
-      .catch((err) => {});
+  const onOpenModal = () => setOpen(true);
+  const onCloseModal = () => {
+    setOpen(false);
+    dispatch(removeSummery());
   };
 
-  const getLoanDetails = async (id, type) => {
-    const fetchLoan = await dispatch(loanDetails(id)).unwrap();
-
-    if (type === "click") {
-      setLoanData(fetchLoan);
-    } else {
-      setLoanEditData(fetchLoan);
-      onEditOpenModal();
-    }
+  const onEditOpenModal = () => setEditOpen(true);
+  const onEditCloseModal = () => {
+    setEditOpen(false);
+    dispatch(removeSummery());
   };
+
+  // Delete Loan
+  const deleteLoanById = useCallback(
+    (id, lname) => {
+      dispatch(deleteLoan(id))
+        .unwrap()
+        .then(() => {
+          custMessage.success(`${lname} Loan deleted successfully`);
+        })
+        .catch((err) => {
+          custMessage.error(err.message || "Failed to delete loan");
+        });
+    },
+    [dispatch]
+  );
+
+  // Loan Details (view/edit)
+  const getLoanDetails = useCallback(
+    async (id, type) => {
+      try {
+        const fetchLoan = await dispatch(loanDetails(id)).unwrap();
+        if (type === "click") {
+          setLoanData(fetchLoan);
+        } else {
+          setLoanEditData(fetchLoan);
+          onEditOpenModal();
+        }
+      } catch (err) {
+        custMessage.error("Unable to fetch loan details");
+      }
+    },
+    [dispatch]
+  );
 
   useEffect(() => {
     if (!loanData) return;
     dispatch(computeScheduleFor({ data: loanData, type: "loanDetails" }));
-  }, [loanData]);
+  }, [loanData, dispatch]);
+
+  // Render loan list
+  const renderLoans = () => {
+    if (loanStatus === "loading") return <>Loading...</>;
+    if (loanStatus === "failed")
+      return <h1>Error loading loans. Please try again.</h1>;
+    if (items?.length > 0) {
+      return items.map((item) => (
+        <LoanCard
+          key={item.id}
+          item={item}
+          remaningEmi={item.remaningEmi}
+          deleteLoanById={deleteLoanById}
+          getLoanDetails={getLoanDetails}
+        />
+      ));
+    }
+    return (
+      <h1>
+        No Loans available.{" "}
+        <button className="btn btn-primary" onClick={onOpenModal}>
+          Add Loan
+        </button>
+      </h1>
+    );
+  };
 
   return (
     <>
@@ -96,57 +131,24 @@ const LoansList = () => {
         <LoanDetails />
       ) : (
         <>
-          <div className="loan-card-wrapper">
-            {loanStatus === "loading" ? (
-              <>Loading....</>
-            ) : loanStatus === "failed" ? (
-              <h1>Error loading loans. Please try again.</h1>
-            ) : items?.length > 0 ? (
-              items.map((item) => (
-                <LoanCard
-                  item={item}
-                  key={item.id}
-                  remaningEmi={item.remaningEmi}
-                  deleteLoanById={deleteLoanById}
-                  getLoanDetails={getLoanDetails}
-                />
-              ))
-            ) : (
-              <h1>
-                No Loans pls....{" "}
-                <button className="btn btn-primary" onClick={onOpenModal}>
-                  Add Loan
-                </button>
-              </h1>
-            )}
-          </div>
+          <div className="loan-card-wrapper">{renderLoans()}</div>
 
-          <div>
-            <CustomModal
-              open={open}
-              setOpen={setOpen}
-              onOpenModal={onOpenModal}
-              onCloseModal={onCloseModal}
-            >
-              <AddLoan emiSummary={emiSummary} onCloseModal={onCloseModal} />
-            </CustomModal>
+          {/* Add Loan Modal */}
+          <CustomModal open={open} onCloseModal={onCloseModal}>
+            <AddLoan emiSummary={emiSummary} onCloseModal={onCloseModal} />
+          </CustomModal>
 
-            <button className="add-new-loan" onClick={() => onOpenModal()}>
-              +
-            </button>
+          <button className="add-new-loan" onClick={onOpenModal}>
+            +
+          </button>
 
-            <CustomModal
-              open={editOpen}
-              setOpen={setEditOpen}
-              onOpenModal={onEditOpenModal}
+          {/* Edit Loan Modal */}
+          <CustomModal open={editOpen} onCloseModal={onEditCloseModal}>
+            <EditLoan
+              loanEditData={loanEditData}
               onCloseModal={onEditCloseModal}
-            >
-              <EditLoan
-                loanEditData={loanEditData}
-                onCloseModal={onEditCloseModal}
-              />
-            </CustomModal>
-          </div>
+            />
+          </CustomModal>
         </>
       )}
     </>

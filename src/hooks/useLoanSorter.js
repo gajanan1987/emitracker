@@ -2,7 +2,7 @@ import { useMemo, useState } from "react";
 
 export const useLoanSorter = (loans, defaultKey = null) => {
   const [sortConfig, setSortConfig] = useState({
-    key: "emi_amount",
+    key: defaultKey,
     direction: "asc",
   });
 

@@ -13,6 +13,18 @@
   font-size: 14px;
   height: 32px;
  }
+
+ &:disabled {
+  opacity: .5;
+  background-color: gray;
+  cursor: initial;
+  border-color: gray;
+  color: var(--color-white);
+
+  &:hover {
+   background-color: gray;
+  }
+ }
 }
 
 .btn-primary {

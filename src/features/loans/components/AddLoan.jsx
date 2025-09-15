@@ -1,73 +1,38 @@
-import { useEffect, useState } from "react";
-import { computeScheduleFor, createLoan } from "../../../redux/loanSlice";
-import { useDispatch, useSelector } from "react-redux";
-import { formatINR } from "../../../utils/number";
-import custMessage from "../../../utils/toast";
+import { useEffect, useRef } from "react";
+import { computeScheduleFor } from "../../../redux/loanSlice";
+import { useDispatch } from "react-redux";
+import Input from "../../../components/Input";
+import useLoanForm from "../../../hooks/useLoanForm";
+import Summary from "./Summary";
 
 const AddLoan = ({ emiSummary, onCloseModal }) => {
   const dispatch = useDispatch();
+  const summaryRef = useRef(null);
 
-  // const [formData, setFormData] = useState([]);
-  const [formData, setFormData] = useState({
-    loanAmount: 1234567,
-    loanIntrest: 12,
-    loanTenure: 40,
-    loanDate: "2025-09-01",
-    loanEmiDate: "2025-09-05",
-    loanName: "testing",
-  });
-
-  const {
-    user: { id, email },
-  } = useSelector((s) => s.auth);
-
-  const addNewLoan = async () => {
-    const payload = {
-      user_id: id,
-      loan_amount: formData.loanAmount,
-      interest_rate: formData.loanIntrest,
-      tenure_months: formData.loanTenure,
-      emi_amount: emiSummary.emi,
-      loan_date: formData.loanDate,
-      emi_date: formData.loanEmiDate,
-      loan_name: formData.loanName,
-      email,
-    };
-
-    dispatch(
-      createLoan({
-        loan: payload,
-        remaining: emiSummary.remaining,
-      })
-    ).then((data) => {
-      custMessage.success("Loan Added successfully");
-    });
-    onCloseModal();
-  };
+  const { formData, handleChange, isInvalid, setCalculated, calculated } =
+    useLoanForm();
 
   const handleCalculate = () => {
+    if (isInvalid) return;
+
     const data = {
       loan_amount: formData.loanAmount,
-      interest_rate: formData.loanIntrest,
+      interest_rate: formData.loanInterest,
       tenure_months: formData.loanTenure,
       loan_date: formData.loanDate,
       emi_date: formData.loanEmiDate,
     };
-    // const op = calculateEMI(data);
-    // dispatch(computeScheduleFor(data));
+
     dispatch(computeScheduleFor({ data, type: "addLoan" }));
+    setCalculated(true);
   };
 
-  const handleChange = (e) => {
-    const { name, value } = e.target;
-
-    const data = { ...formData, [name]: value };
-    setFormData(data);
-  };
-
+  // Auto-scroll to summary
   useEffect(() => {
-    // setSummary(emiSummary);
-  }, [emiSummary]);
+    if (calculated && emiSummary) {
+      summaryRef.current?.scrollIntoView({ behavior: "smooth" });
+    }
+  }, [calculated, emiSummary]);
 
   return (
     <div className="add-loan-form">
@@ -75,105 +40,93 @@ const AddLoan = ({ emiSummary, onCloseModal }) => {
 
       <div className="form">
         <div className="input-wrapper">
-          <label>Enter Bank Name / Loan Number Account </label>
-          <input
+          <Input
             type="text"
-            placeholder="Bank Name / Acc. Number"
-            value={formData.loanName}
+            label="Enter Bank Name / Loan Number Account"
             name="loanName"
-            onChange={(e) => handleChange(e)}
+            value={formData.loanName}
+            onChange={handleChange}
+            placeholder="Bank Name / Acc. Number"
+            required
           />
         </div>
+
         <div className="input-wrapper">
-          <label>Enter Loan Amount </label>
-          <input
-            type="number"
-            placeholder="Loan Amount"
-            value={formData.loanAmount}
+          <Input
+            label="Enter Loan Amount"
             name="loanAmount"
-            onChange={(e) => handleChange(e)}
+            type="number"
+            value={formData.loanAmount}
+            onChange={handleChange}
+            placeholder="Loan Amount"
+            required
           />
         </div>
+
         <div className="input-wrapper">
-          <label>Enter Interest Rate (%) </label>
-          <input
+          <Input
+            label="Enter Interest Rate (%)"
+            name="loanInterest"
             type="number"
+            value={formData.loanInterest}
+            onChange={handleChange}
             placeholder="Annual Interest Rate (%)"
-            value={formData.loanIntrest}
-            name="loanIntrest"
-            onChange={(e) => handleChange(e)}
+            required
           />
         </div>
+
         <div className="input-wrapper">
-          <label>Enter Tenure (Months) </label>
-          <input
-            type="number"
-            placeholder="Tenure (Months)"
-            value={formData.loanTenure}
+          <Input
+            label="Enter Tenure (Months)"
             name="loanTenure"
-            onChange={(e) => handleChange(e)}
+            type="number"
+            value={formData.loanTenure}
+            onChange={handleChange}
+            placeholder="Tenure (Months)"
+            required
           />
         </div>
+
         <div className="input-wrapper">
-          <label>Loan Start Date</label>
-          <input
+          <Input
+            label="Loan Start Date"
+            name="loanDate"
             type="date"
             value={formData.loanDate}
-            name="loanDate"
-            onChange={(e) => handleChange(e)}
+            onChange={handleChange}
+            required
           />
         </div>
+
         <div className="input-wrapper">
-          <label>First EMI Date</label>
-          <input
+          <Input
+            label="First EMI Date"
+            name="loanEmiDate"
             type="date"
             value={formData.loanEmiDate}
-            name="loanEmiDate"
-            onChange={(e) => handleChange(e)}
+            onChange={handleChange}
+            required
           />
         </div>
+
         <div className="btn-wrapper">
-          <button className="btn btn-primary-hallow" onClick={handleCalculate}>
+          <button
+            className="btn btn-primary-hallow"
+            onClick={handleCalculate}
+            disabled={isInvalid || calculated}
+          >
             Calculate
           </button>
         </div>
       </div>
 
-      {emiSummary && (
-        <div className="summary">
-          <h2>Summary</h2>
-          <p>
-            Loan Amount:{" "}
-            {formatINR(
-              emiSummary.totalPayment - emiSummary.totalInterest,
-              true
-            )}
-          </p>
-          <p>Interest: {formatINR(emiSummary.totalInterest, true)}</p>
-          <p>ROI: {emiSummary.interest_rate}%</p>
-          <p>Tenure: {emiSummary.tenure_months} Month</p>
-
-          <p>-----------------------------------------</p>
-          <p>
-            Loan Amount + Interest: {formatINR(emiSummary.totalPayment, true)}
-          </p>
-
-          <p>EMI: {formatINR(emiSummary.emi, true)}</p>
-
-          <p>Paid EMIs: {emiSummary.paid}</p>
-          <p>Remaining EMIs: {emiSummary.remaining}</p>
-          <p>Principal Paid: {formatINR(emiSummary.paidPrincipal, true)}</p>
-          <p>Interest Paid: {formatINR(emiSummary.paidInterest, true)}</p>
-          <p>
-            Remaining Principal:{" "}
-            {formatINR(emiSummary.remainingPrincipal, true)}
-          </p>
-          <p>
-            Remaining Interest: {formatINR(emiSummary.remainingInterest, true)}
-          </p>
-          <button className="btn btn-primary" onClick={addNewLoan}>
-            Save Loan
-          </button>
+      {calculated && emiSummary && (
+        <div ref={summaryRef}>
+          <Summary
+            emiSummary={emiSummary}
+            formData={formData}
+            onCloseModal={onCloseModal}
+          />
         </div>
       )}
     </div>

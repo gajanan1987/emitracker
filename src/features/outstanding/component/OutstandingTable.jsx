@@ -3,7 +3,10 @@ import { formatINR } from "../../../utils/number";
 import OutstandingSummary from "./OutstandingSummary";
 
 const OutstandingTable = ({ summary, items }) => {
-  const { sortedLoans, handleSort, sortConfig } = useLoanSorter(items);
+  const { sortedLoans, handleSort, sortConfig } = useLoanSorter(
+    items,
+    "remaining"
+  );
 
   // helper for showing arrow
   const sortArrow = (key) =>
