@@ -6,7 +6,7 @@ import LoanSummary from "./LoanSummary";
 const HomeTable = ({ activeLoans, summaryData }) => {
   const { sortedLoans, handleSort, sortConfig } = useLoanSorter(
     activeLoans,
-    "emiStatus"
+    "nextDueDate"
   );
 
   if (!sortedLoans.length) {
