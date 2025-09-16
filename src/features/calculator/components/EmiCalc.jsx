@@ -35,7 +35,6 @@ const EmiCalc = () => {
 
   // when inputs change → update value & re-enable button
   const handleChange = (setter) => {
-    console.log("🚀 ~ handleChange ~ setter:", setter);
     return (e) => {
       setter(e.target.value);
       setCalculated(false); // re-enable button

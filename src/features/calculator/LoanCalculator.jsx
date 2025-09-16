@@ -12,7 +12,6 @@ export default function LoanCalculator() {
   const dispatch = useDispatch();
   const menu = ["Calculate EMI", "Calculate ROI", "Calculate Principal"];
   const { emiSummary } = useSelector((state) => state.loans);
-  console.log("🚀 ~ LoanCalculator ~ emiSummary:", emiSummary);
   const currentSchedule = useSelector(selectScheduleState);
 
   const [btn, setBtn] = useState("Calculate EMI");

@@ -5,6 +5,7 @@ import { fetchLoans, selectLoanItems } from "../../redux/loanSlice";
 import { useAuth } from "../../hooks/useAuth";
 import HomeTable from "./component/HomeTable";
 import Banner from "./component/Banner";
+import { getProfile } from "../../redux/authSlice";
 
 const Home = () => {
   const dispatch = useDispatch();
@@ -18,6 +19,12 @@ const Home = () => {
       dispatch(fetchLoans());
     }
   }, [dispatch, user, status]);
+
+  useEffect(() => {
+    if (user) {
+      dispatch(getProfile());
+    }
+  }, [dispatch, user]);
 
   if (loading) return <p className="loading">Loading...</p>;
   if (!user) return <Navigate to="/login" />;
