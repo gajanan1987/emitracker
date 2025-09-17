@@ -1,7 +1,6 @@
 import { Navigate, Outlet } from "react-router";
 import { useSelector } from "react-redux";
 import { useAuth } from "../hooks/useAuth";
-useAuth;
 
 const ProtectedRotes = () => {
   const { session, loading } = useAuth();

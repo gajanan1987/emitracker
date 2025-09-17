@@ -1,12 +1,16 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import supabase from "../services/supabase";
+import { uploadAvatar } from "../utils/uploadAvatar";
 
 export const signUp = createAsyncThunk(
   "auth/signUp",
   async ({ email, password }, { rejectWithValue }) => {
     const { data, error } = await supabase.auth.signUp({ email, password });
+    console.log("🚀 ~ datasdsad:", data);
     if (error) return rejectWithValue(error.message);
-    return data;
+    return {
+      user: data.user,
+    };
   }
 );
 
@@ -57,8 +61,9 @@ export const signOut = createAsyncThunk("auth/signOut", async () => {
   return null;
 });
 
-export const fetchSession = createAsyncThunk("auth/session", async () => {
-  const { data } = await supabase.auth.getSession();
+export const fetchSession = createAsyncThunk("auth/fetchSession", async () => {
+  const { data, error } = await supabase.auth.getSession();
+  if (error) throw error;
   return data.session?.user ?? null;
 });
 
@@ -153,9 +158,88 @@ export const getProfile = createAsyncThunk(
   }
 );
 
+export const addProfile = createAsyncThunk(
+  "auth/addProfile",
+  async (
+    { userId, fname, lname, address, avatarFile },
+    { rejectWithValue }
+  ) => {
+    try {
+      let avatarData = { avatar_url: null, avatar_path: null };
+
+      if (avatarFile) {
+        avatarData = await uploadAvatar(userId, avatarFile);
+      }
+
+      const { data, error } = await supabase
+        .from("profile")
+        .insert([
+          {
+            user_id: userId,
+            fname,
+            lname,
+            address,
+            ...avatarData,
+          },
+        ])
+        .select()
+        .single();
+
+      if (error) throw error;
+      return data;
+    } catch (err) {
+      return rejectWithValue(err.message || err);
+    }
+  }
+);
+
+export const updateProfile = createAsyncThunk(
+  "auth/updateProfile",
+  async (
+    { userId, fname, lname, address, avatarFile },
+    { getState, rejectWithValue }
+  ) => {
+    try {
+      const state = getState();
+      const currentProfile = state.auth.profile?.[0] || {};
+
+      let avatarData = {
+        avatar_url: currentProfile.avatar_url || null,
+        avatar_path: currentProfile.avatar_path || null,
+      };
+
+      if (avatarFile) {
+        avatarData = await uploadAvatar(
+          userId,
+          avatarFile,
+          currentProfile.avatar_path || null
+        );
+      }
+
+      const { data, error } = await supabase
+        .from("profile")
+        .update({
+          fname,
+          lname,
+          address,
+          ...avatarData,
+        })
+        .eq("user_id", userId)
+        .select()
+        .single();
+
+      if (error) throw error;
+      return data;
+    } catch (err) {
+      return rejectWithValue(err.message || err);
+    }
+  }
+);
+
 const initialState = {
   user: null,
   status: "idle",
+  profileStatus: "idle",
   error: null,
   profile: null,
 };
@@ -163,7 +247,11 @@ const initialState = {
 const authSlice = createSlice({
   name: "auth",
   initialState,
-  reducers: {},
+  reducers: {
+    setUser: (state, action) => {
+      state.user = action.payload;
+    },
+  },
   extraReducers: (builder) => {
     builder
       .addCase(fetchSession.pending, (state, action) => {
@@ -205,10 +293,7 @@ const authSlice = createSlice({
       })
 
       ////
-      .addCase(signOut.fulfilled, (state) => {
-        state.status = "idle";
-        state.user = null;
-      })
+      .addCase(signOut.fulfilled, () => initialState)
 
       ////
       .addCase(forgotPassword.pending, (state) => {
@@ -223,24 +308,32 @@ const authSlice = createSlice({
         state.error = action.payload;
       })
 
-      ////
+      //// Get Profile
       .addCase(getProfile.pending, (state) => {
-        state.status = "loading";
-        state.error = null;
+        state.profileStatus = "loading";
       })
       .addCase(getProfile.fulfilled, (state, action) => {
-        state.status = "succeeded";
+        state.profileStatus = "succeeded";
         state.profile = action.payload;
       })
       .addCase(getProfile.rejected, (state, action) => {
-        state.status = "failed";
+        state.profileStatus = "failed";
         state.error = action.payload;
+      })
+
+      /// Add Profile
+      // .addCase(addProfile.fulfilled, (state, action) => {
+      //   state.profile = [action.payload];
+      // })
+
+      /// Update Profile
+      .addCase(updateProfile.fulfilled, (state, action) => {
+        state.profile = [action.payload];
       })
 
       ///
       .addCase(uploadAndReplaceAvatar.fulfilled, (state, action) => {
         if (state.user) {
-          // ✅ Update Redux state immediately
           state.user.user_metadata.avatar_url = action.payload.avatar_url;
           state.user.user_metadata.avatar_path = action.payload.avatar_path;
         }
@@ -248,4 +341,5 @@ const authSlice = createSlice({
   },
 });
 
+export const { setUser } = authSlice.actions;
 export default authSlice.reducer;

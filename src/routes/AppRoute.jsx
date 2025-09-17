@@ -8,7 +8,7 @@ const LoanCalculator = lazy(() =>
   import("../features/calculator/LoanCalculator")
 );
 const LoansList = lazy(() => import("../features/loans/LoansList"));
-const AccountPage = lazy(() => import("../features/Account"));
+const AccountPage = lazy(() => import("../features/account/Account"));
 const ResetPassword = lazy(() =>
   import("../features/auth/components/ResetPassword")
 );

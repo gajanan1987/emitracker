@@ -139,6 +139,43 @@
    width: 100%;
   }
  }
+
+ .file-wrapper {
+  display: flex;
+  flex-direction: column;
+ }
+}
+
+
+.edit-profile-modal {
+ .btn-wrapper {
+  display: flex;
+  justify-content: flex-end;
+  column-gap: 15px;
+ }
+
+ .input-wrapper {
+  margin-bottom: 10px;
+ }
+
+ h2 {
+  text-align: center;
+  margin-bottom: 15px;
+  padding-bottom: 10px;
+  border-bottom: 1px dashed var(--color-sub);
+ }
+
+ .file-wrapper {
+  display: flex;
+  flex-direction: column;
+
+  input {
+   border: none;
+   height: initial;
+   padding: 0;
+   margin-top: 5px;
+  }
+ }
 }
 
 // .loan-details {

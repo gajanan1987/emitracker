@@ -5,7 +5,6 @@ import { fetchLoans, selectLoanItems } from "../../redux/loanSlice";
 import { useAuth } from "../../hooks/useAuth";
 import HomeTable from "./component/HomeTable";
 import Banner from "./component/Banner";
-import { getProfile } from "../../redux/authSlice";
 
 const Home = () => {
   const dispatch = useDispatch();
@@ -15,19 +14,14 @@ const Home = () => {
   const loanData = useSelector(selectLoanItems); // ✅ Get both activeLoans + summary
 
   useEffect(() => {
+    if (!user) return;
     if (user && status === "idle") {
       dispatch(fetchLoans());
     }
   }, [dispatch, user, status]);
 
-  useEffect(() => {
-    if (user) {
-      dispatch(getProfile());
-    }
-  }, [dispatch, user]);
-
   if (loading) return <p className="loading">Loading...</p>;
-  if (!user) return <Navigate to="/login" />;
+  // if (!user) return <Navigate to="/login" />;
 
   return (
     <>
