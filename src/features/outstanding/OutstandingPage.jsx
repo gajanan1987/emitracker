@@ -5,12 +5,12 @@ import OutstandingTable from "./component/OutstandingTable";
 
 const Remaining = () => {
   const dispatch = useDispatch();
-  const { items } = useSelector((state) => state.loans);
+  const { items, status } = useSelector((state) => state.loans);
 
   const summary = useSelector(selectLoanItems);
 
   useEffect(() => {
-    if (items.length === 0) {
+    if (items.length === 0 && status === "idle") {
       dispatch(fetchLoans());
     }
   }, [dispatch, items]);
