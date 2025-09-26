@@ -99,8 +99,11 @@ const EditProfileModal = ({
         </div>
 
         <div className="btn-wrapper">
-          <button className="btn btn-primary-hallow" onClick={handleSubmit}>
+          <button className="btn btn-primary" onClick={handleSubmit}>
             Save
+          </button>
+          <button className="btn btn-primary-hallow" onClick={handleSubmit}>
+            Cancle
           </button>
         </div>
       </div>

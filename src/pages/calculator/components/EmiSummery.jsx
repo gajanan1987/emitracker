@@ -1,7 +1,6 @@
 import { formatINR } from "../../../utils/number";
 
 const EmiSummery = ({ emiSummary }) => {
-  console.log("🚀 ~ EmiSummery ~ emiSummary:", emiSummary);
   return (
     <>
       <div className="summary">

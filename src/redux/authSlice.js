@@ -6,7 +6,6 @@ export const signUp = createAsyncThunk(
   "auth/signUp",
   async ({ email, password }, { rejectWithValue }) => {
     const { data, error } = await supabase.auth.signUp({ email, password });
-    console.log("🚀 ~ datasdsad:", data);
     if (error) return rejectWithValue(error.message);
     return {
       user: data.user,
@@ -21,7 +20,6 @@ export const signIn = createAsyncThunk(
       email,
       password,
     });
-    console.log("🚀 ~ data:", data);
     if (error) return rejectWithValue(error.message);
     return data;
   }
@@ -150,8 +148,6 @@ export const getProfile = createAsyncThunk(
       .from("profile")
       .select("*")
       .eq("user_id", user.id);
-
-    console.log("🚀 ~ data:", data);
 
     if (error) return rejectWithValue(error.message);
     return data;

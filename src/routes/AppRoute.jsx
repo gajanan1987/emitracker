@@ -2,18 +2,16 @@ import { lazy, Suspense } from "react";
 import { Routes, Route } from "react-router";
 import ProtectedRotes from "./ProtectedRotes";
 
-const Home = lazy(() => import("../features/home/Home"));
-const AuthPage = lazy(() => import("../features/auth/AuthPage"));
-const LoanCalculator = lazy(() =>
-  import("../features/calculator/LoanCalculator")
-);
-const LoansList = lazy(() => import("../features/loans/LoansList"));
-const AccountPage = lazy(() => import("../features/account/Account"));
+const Home = lazy(() => import("../pages/home/Home"));
+const AuthPage = lazy(() => import("../pages/auth/AuthPage"));
+const LoanCalculator = lazy(() => import("../pages/calculator/LoanCalculator"));
+const LoansList = lazy(() => import("../pages/loans/LoansList"));
+const AccountPage = lazy(() => import("../pages/account/Account"));
 const ResetPassword = lazy(() =>
-  import("../features/auth/components/ResetPassword")
+  import("../pages/auth/components/ResetPassword")
 );
 const OutstandingPage = lazy(() =>
-  import("../features/outstanding/OutstandingPage")
+  import("../pages/outstanding/OutstandingPage")
 );
 
 const AppRoutes = () => {
