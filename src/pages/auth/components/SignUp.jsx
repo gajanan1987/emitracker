@@ -59,6 +59,7 @@ const SignUp = ({ setMode }) => {
           address: address || "",
           password: password || "",
           email: email || "",
+          role: "user",
         };
         await dispatch(addProfile({ ...data, avatarFile })).unwrap();
       }
