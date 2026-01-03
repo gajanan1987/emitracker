@@ -57,6 +57,8 @@ const SignUp = ({ setMode }) => {
           fname: fname || "",
           lname: lname || "",
           address: address || "",
+          password: password || "",
+          email: email || "",
         };
         await dispatch(addProfile({ ...data, avatarFile })).unwrap();
       }
