@@ -10,7 +10,7 @@
     "preview": "vite preview"
   },
   "dependencies": {
-    "@reduxjs/toolkit": "^2.8.2",
+    "@reduxjs/toolkit": "^2.9.0",
     "@supabase/supabase-js": "^2.54.0",
     "date-fns": "^4.1.0",
     "react": "^19.1.1",
